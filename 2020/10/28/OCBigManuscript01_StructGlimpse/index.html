@@ -14,18 +14,18 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 始篇，从类对象开始。 思路想法：  整体数据结构 消息调用机制，方法查找流程 应用常见操作原理（例如super原理） 关联对象 &amp; methodSwi &amp; isaSwi Runtime 所有 API 汇总速查  本篇，完成概要整体结构。不包括 classdat">
+  <meta name="description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 始篇，从类对象开始。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OC Runtime 大手稿：一、整体数据结构">
 <meta property="og:url" content="https://yangzai360.github.io/2020/10/28/OCBigManuscript01_StructGlimpse/index.html">
 <meta property="og:site_name" content="扬仔的技术博客">
-<meta property="og:description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 始篇，从类对象开始。 思路想法：  整体数据结构 消息调用机制，方法查找流程 应用常见操作原理（例如super原理） 关联对象 &amp; methodSwi &amp; isaSwi Runtime 所有 API 汇总速查  本篇，完成概要整体结构。不包括 classdat">
+<meta property="og:description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 始篇，从类对象开始。">
 <meta property="og:locale">
 <meta property="og:image" content="https://yangzai360.github.io/media/16038789184379.jpg">
 <meta property="og:image" content="https://yangzai360.github.io/media/16038789032591.jpg">
 <meta property="og:image" content="https://yangzai360.github.io/media/16038788740826.jpg">
 <meta property="article:published_time" content="2020-10-28T09:48:07.763Z">
-<meta property="article:modified_time" content="2020-10-28T09:57:47.222Z">
+<meta property="article:modified_time" content="2020-10-28T10:02:45.881Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yangzai360.github.io/media/16038789184379.jpg">
@@ -231,6 +231,8 @@
       
         <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
 <p>始篇，从类对象开始。</p>
+<a id="more"></a>
+
 <p>思路想法：</p>
 <ol>
 <li>整体数据结构</li>
