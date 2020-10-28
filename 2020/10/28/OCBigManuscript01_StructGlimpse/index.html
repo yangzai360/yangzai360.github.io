@@ -14,18 +14,18 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="OC Runtime 大手稿：一、整体数据结构复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 始篇，从类对象开始。 思路想法：  整体数据结构 消息调用机制，方法查找流程 应用常见操作原理（例如super原理） 关联对象 &amp; methodSwi &amp; isaSwi Runtime 所有 API 汇总速查  本">
+  <meta name="description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 始篇，从类对象开始。 思路想法：  整体数据结构 消息调用机制，方法查找流程 应用常见操作原理（例如super原理） 关联对象 &amp; methodSwi &amp; isaSwi Runtime 所有 API 汇总速查  本篇，完成概要整体结构。不包括 classdat">
 <meta property="og:type" content="article">
-<meta property="og:title" content="扬仔的技术博客">
+<meta property="og:title" content="OC Runtime 大手稿：一、整体数据结构">
 <meta property="og:url" content="https://yangzai360.github.io/2020/10/28/OCBigManuscript01_StructGlimpse/index.html">
 <meta property="og:site_name" content="扬仔的技术博客">
-<meta property="og:description" content="OC Runtime 大手稿：一、整体数据结构复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 始篇，从类对象开始。 思路想法：  整体数据结构 消息调用机制，方法查找流程 应用常见操作原理（例如super原理） 关联对象 &amp; methodSwi &amp; isaSwi Runtime 所有 API 汇总速查  本">
+<meta property="og:description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 始篇，从类对象开始。 思路想法：  整体数据结构 消息调用机制，方法查找流程 应用常见操作原理（例如super原理） 关联对象 &amp; methodSwi &amp; isaSwi Runtime 所有 API 汇总速查  本篇，完成概要整体结构。不包括 classdat">
 <meta property="og:locale">
 <meta property="og:image" content="https://yangzai360.github.io/media/16038789184379.jpg">
 <meta property="og:image" content="https://yangzai360.github.io/media/16038789032591.jpg">
 <meta property="og:image" content="https://yangzai360.github.io/media/16038788740826.jpg">
 <meta property="article:published_time" content="2020-10-28T09:48:07.763Z">
-<meta property="article:modified_time" content="2020-10-28T09:55:46.854Z">
+<meta property="article:modified_time" content="2020-10-28T09:57:47.222Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yangzai360.github.io/media/16038789184379.jpg">
@@ -33,7 +33,7 @@
     <link rel="alternative" href="/atom.xml" title="扬仔的技术博客" type="application/atom+xml">
   
   
-  <title>扬仔的技术博客</title>
+  <title>OC Runtime 大手稿：一、整体数据结构 | 扬仔的技术博客</title>
   
   
     <link rel="icon" href="/img/favicon-32x32-yulia.png">
@@ -211,9 +211,25 @@
             <article id="post-OCBigManuscript01_StructGlimpse" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      OC Runtime 大手稿：一、整体数据结构
+    </h1>
+  
+
+        
+          <a href="/2020/10/28/OCBigManuscript01_StructGlimpse/" class="archive-article-date">
+  	<time datetime="2020-10-28T09:48:07.763Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-28</time>
+</a>
+        
+        
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="OC-Runtime-大手稿：一、整体数据结构"><a href="#OC-Runtime-大手稿：一、整体数据结构" class="headerlink" title="OC Runtime 大手稿：一、整体数据结构"></a>OC Runtime 大手稿：一、整体数据结构</h1><p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
+        <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
 <p>始篇，从类对象开始。</p>
 <p>思路想法：</p>
 <ol>
@@ -380,7 +396,7 @@
             </li>
             <li class="post-copyright-link">
               <strong>Post link：</strong>
-              <a href="https://yangzai360.github.io/2020/10/28/OCBigManuscript01_StructGlimpse/" title="">https://yangzai360.github.io/2020/10/28/OCBigManuscript01_StructGlimpse/</a>
+              <a href="https://yangzai360.github.io/2020/10/28/OCBigManuscript01_StructGlimpse/" title="OC Runtime 大手稿：一、整体数据结构">https://yangzai360.github.io/2020/10/28/OCBigManuscript01_StructGlimpse/</a>
             </li>
             <li class="post-copyright-license">
               <strong>Copyright Notice：</strong>
@@ -489,7 +505,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OC-Runtime-%E5%A4%A7%E6%89%8B%E7%A8%BF%EF%BC%9A%E4%B8%80%E3%80%81%E6%95%B4%E4%BD%93%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">OC Runtime 大手稿：一、整体数据结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B4%E4%B8%AA%E9%80%BB%E8%BE%91%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%A6%82%E4%B8%8B"><span class="toc-number">2.</span> <span class="toc-text">整个逻辑关系图如下</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-objc-object-%E3%80%8C%E4%B8%87%E7%89%A9%E4%B9%8B%E6%BA%90%E3%80%8D"><span class="toc-number">3.</span> <span class="toc-text">1. objc_object 「万物之源」</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-id-%E5%92%8C-isa"><span class="toc-number">3.1.</span> <span class="toc-text">1.1 id 和 isa</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-class-%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%9Aobjc-class"><span class="toc-number">4.</span> <span class="toc-text">2. class 结构体：objc_class</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E7%B1%BB%E4%B8%AD%E6%95%B0%E6%8D%AE-class-data-bits-t"><span class="toc-number">5.</span> <span class="toc-text">3. 类中数据 class_data_bits_t</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E7%B1%BB%E6%95%B0%E6%8D%AE%E6%BC%94%E5%8F%98%E5%87%BA%EF%BC%9Aclass-ro-t"><span class="toc-number">5.1.</span> <span class="toc-text">3.1 类数据演变出：class_ro_t</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-1ivar-list-t-%E5%92%8C-ivar-t"><span class="toc-number">5.2.</span> <span class="toc-text">3.1.1ivar_list_t 和 ivar_t</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E7%B1%BB%E6%95%B0%E6%8D%AE%E6%BC%94%E5%8F%98%E5%87%BA%EF%BC%9Aclass-rw-t"><span class="toc-number">5.3.</span> <span class="toc-text">3.2 类数据演变出：class_rw_t</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E7%B1%BB%E6%95%B0%E6%8D%AE%E6%BC%94%E5%8F%98%E5%87%BA%EF%BC%9Aclass-rw-ext-t"><span class="toc-number">5.4.</span> <span class="toc-text">3.3 类数据演变出：class_rw_ext_t</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-method-array-t%E3%80%81-method-list-t%E3%80%81-method-t"><span class="toc-number">6.</span> <span class="toc-text">4. method_array_t、 method_list_t、 method_t</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-property-array-t%E3%80%81-property-list-t%E3%80%81-property-t"><span class="toc-number">7.</span> <span class="toc-text">5. property_array_t、 property_list_t、 property_t</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-protocol-array-t%E3%80%81-protocol-list-t%E3%80%81-protocol-t"><span class="toc-number">8.</span> <span class="toc-text">6. protocol_array_t、 protocol_list_t、 protocol_t</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-isa-%E8%B5%B0%E4%BD%8D%E5%9B%BE"><span class="toc-number">9.</span> <span class="toc-text">6.isa 走位图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%93%E5%B1%95%E7%A0%94%E7%A9%B6"><span class="toc-number">9.0.1.</span> <span class="toc-text">拓展研究</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C-memory-barrier"><span class="toc-number">9.0.1.0.1.</span> <span class="toc-text">内存屏障 memory barrier</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">9.0.2.</span> <span class="toc-text">参考链接</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B4%E4%B8%AA%E9%80%BB%E8%BE%91%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%A6%82%E4%B8%8B"><span class="toc-number">1.</span> <span class="toc-text">整个逻辑关系图如下</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-objc-object-%E3%80%8C%E4%B8%87%E7%89%A9%E4%B9%8B%E6%BA%90%E3%80%8D"><span class="toc-number">2.</span> <span class="toc-text">1. objc_object 「万物之源」</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-id-%E5%92%8C-isa"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 id 和 isa</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-class-%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%9Aobjc-class"><span class="toc-number">3.</span> <span class="toc-text">2. class 结构体：objc_class</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E7%B1%BB%E4%B8%AD%E6%95%B0%E6%8D%AE-class-data-bits-t"><span class="toc-number">4.</span> <span class="toc-text">3. 类中数据 class_data_bits_t</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E7%B1%BB%E6%95%B0%E6%8D%AE%E6%BC%94%E5%8F%98%E5%87%BA%EF%BC%9Aclass-ro-t"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 类数据演变出：class_ro_t</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-1ivar-list-t-%E5%92%8C-ivar-t"><span class="toc-number">4.2.</span> <span class="toc-text">3.1.1ivar_list_t 和 ivar_t</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E7%B1%BB%E6%95%B0%E6%8D%AE%E6%BC%94%E5%8F%98%E5%87%BA%EF%BC%9Aclass-rw-t"><span class="toc-number">4.3.</span> <span class="toc-text">3.2 类数据演变出：class_rw_t</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E7%B1%BB%E6%95%B0%E6%8D%AE%E6%BC%94%E5%8F%98%E5%87%BA%EF%BC%9Aclass-rw-ext-t"><span class="toc-number">4.4.</span> <span class="toc-text">3.3 类数据演变出：class_rw_ext_t</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-method-array-t%E3%80%81-method-list-t%E3%80%81-method-t"><span class="toc-number">5.</span> <span class="toc-text">4. method_array_t、 method_list_t、 method_t</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-property-array-t%E3%80%81-property-list-t%E3%80%81-property-t"><span class="toc-number">6.</span> <span class="toc-text">5. property_array_t、 property_list_t、 property_t</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-protocol-array-t%E3%80%81-protocol-list-t%E3%80%81-protocol-t"><span class="toc-number">7.</span> <span class="toc-text">6. protocol_array_t、 protocol_list_t、 protocol_t</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-isa-%E8%B5%B0%E4%BD%8D%E5%9B%BE"><span class="toc-number">8.</span> <span class="toc-text">6.isa 走位图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%93%E5%B1%95%E7%A0%94%E7%A9%B6"><span class="toc-number">8.0.1.</span> <span class="toc-text">拓展研究</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C-memory-barrier"><span class="toc-number">8.0.1.0.1.</span> <span class="toc-text">内存屏障 memory barrier</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">8.0.2.</span> <span class="toc-text">参考链接</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
