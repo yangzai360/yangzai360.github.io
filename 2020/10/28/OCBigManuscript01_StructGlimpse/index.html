@@ -21,15 +21,15 @@
 <meta property="og:site_name" content="扬仔的技术博客">
 <meta property="og:description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 始篇，从对类对象使用的数据结构的静态关联分析开始。也就是从源码中找到他们的定义和关联关系。不做运行的分析等。">
 <meta property="og:locale">
-<meta property="og:image" content="http://yangzai360.top/media/16038789184379.jpg">
+<meta property="og:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF1_iOS%E7%B1%BB%E7%BB%93%E6%9E%84%E5%85%B3%E7%B3%BB%E5%9B%BE.png">
 <meta property="og:image" content="http://yangzai360.top/media/16038789032591.jpg">
 <meta property="og:image" content="http://yangzai360.top/media/16038903457495.png">
 <meta property="og:image" content="http://yangzai360.top/media/16039978426745.jpg">
 <meta property="article:published_time" content="2020-10-28T09:48:07.763Z">
-<meta property="article:modified_time" content="2020-10-31T15:46:24.345Z">
+<meta property="article:modified_time" content="2020-10-31T19:49:42.363Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yangzai360.top/media/16038789184379.jpg">
+<meta name="twitter:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF1_iOS%E7%B1%BB%E7%BB%93%E6%9E%84%E5%85%B3%E7%B3%BB%E5%9B%BE.png">
   
     <link rel="alternative" href="/atom.xml" title="扬仔的技术博客" type="application/atom+xml">
   
@@ -248,7 +248,7 @@
 <li>底层调用的 C 和 C++ 开源。</li>
 <li>汇编语言<code>.mm</code>，Apple 对于一部分CC++无法实现的功能使用，例如msgSend</li>
 </ol>
-<h1 id="整个逻辑关系图如下"><a href="#整个逻辑关系图如下" class="headerlink" title="整个逻辑关系图如下"></a>整个逻辑关系图如下</h1><p><img src="/media/16038789184379.jpg" alt="iOS 类结构大手稿"></p>
+<h1 id="整个逻辑关系图如下"><a href="#整个逻辑关系图如下" class="headerlink" title="整个逻辑关系图如下"></a>整个逻辑关系图如下</h1><p><img src="/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF1_iOS%E7%B1%BB%E7%BB%93%E6%9E%84%E5%85%B3%E7%B3%BB%E5%9B%BE.png" alt="类结构大手稿"></p>
 <h1 id="1-objc-object-「万物之源」"><a href="#1-objc-object-「万物之源」" class="headerlink" title="1. objc_object 「万物之源」"></a>1. objc_object 「万物之源」</h1><p>连类的结构都是基于 <code>objc_object</code> 的，所以说 OC 里面一切皆对象呢。</p>
 <p><strong>objc_object</strong></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// Represents an instance of a class.</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">objc_object</span> &#123;</span></span><br><span class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
