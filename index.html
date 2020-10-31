@@ -220,7 +220,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
-<p>第二篇：对象销毁流程</p>
+<p>第三篇：对象销毁流程</p>
 <p>未完成，销毁涉及的流程实在太多了！！！</p>
       
 
@@ -271,15 +271,25 @@
     <article id="post-CWC02_CEOOCRuntimeInAction_CookActuallyUsedInCooking" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/31/CWC02_CEOOCRuntimeInAction_CookActuallyUsedInCooking/">常用 Runtime 操作整理</a>
+    </h1>
+  
+
+        
+          <a href="/2020/10/31/CWC02_CEOOCRuntimeInAction_CookActuallyUsedInCooking/" class="archive-article-date">
+  	<time datetime="2020-10-31T09:40:39.350Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-31</time>
+</a>
+        
+        
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-OCRuntimeInAction：CookActuallyUsedInCooking"><a href="#title-OCRuntimeInAction：CookActuallyUsedInCooking" class="headerlink" title="title:OCRuntimeInAction：CookActuallyUsedInCooking"></a>title:OCRuntimeInAction：CookActuallyUsedInCooking</h2><p>本篇英文名叫 <code>OC Runtime In Action：CEO Cook Actually Used In Cooking</code>，翻译过来的意思是开发人员实际开发的时候使用的 runtime 操作。进行积累整理。</p>
-<p>隶属于我的第二个大系列 <code>CWC</code> ：<code>Cooking With Cook</code>，翻译过来的中文意思就是 <code>作为一个长期热爱苹果的苹果开发者，陪着水果公司一起积累和成长。</code></p>
-<hr>
-<h1 id="手动打印-objc-class-isa-的指向"><a href="#手动打印-objc-class-isa-的指向" class="headerlink" title="手动打印 objc_class isa 的指向"></a>手动打印 <code>objc_class</code> isa 的指向</h1><p>直接通过位运算与上掩码来取类指针<br><img src="/media/16041390404654.jpg"></p>
-<p>这里与操作后面的值就是 ISAMASK，根据操作平台不同</p>
-
+        <p>本篇英文名叫 <code>OC Runtime In Action：CEO Cook Actually Used In Cooking</code>，翻译过来的意思是开发人员实际开发的时候使用的 runtime 操作。进行积累整理。</p>
       
 
       
@@ -348,41 +358,6 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>NFY NotFinishedYet：还没有写完。。。</p>
-<p>本篇英文名叫 <code>From LLVM To Clang: Cook Spend Money Buy A Big Kitchen</code>，翻译过来的意思是从 <code>LLVM 研究到 Clang 的一个简单了解和介绍，苹果在这个上面花了很多精力和时间的投入</code>，所以值得我们好好研究。</p>
-<p>隶属于我的第二个大系列：<code>CookingWithCook</code>，翻译过来的中文意思就是 <code>作为一个长期热爱苹果的苹果开发者，跟随苹果公司一起积累和成长。</code></p>
-<h1 id="从-LLVM-到-clang"><a href="#从-LLVM-到-clang" class="headerlink" title="从 LLVM 到 clang"></a>从 LLVM 到 clang</h1><p><img src="/media/66d317cd85d9c3272facba7694438e31fb3.jpg" alt="66d317cd85d9c3272facba7694438e31fb3"></p>
-<h1 id="1-1-简介：开发故事"><a href="#1-1-简介：开发故事" class="headerlink" title="1.1 简介：开发故事"></a>1.1 简介：开发故事</h1><p>英文全称：Low Level Virtual Machine</p>
-<p><code>LLVM</code> 计划启动于2000年，最初由美国UIUC大学的 <code>Chris Lattner</code> 博士主持开展。</p>
-<p>2006年Chris Lattner加盟<code>Apple Inc</code>. 并致力于 LLVM 在 Apple 开发体系中的应用。Apple 也是 LLVM 计划的主要资助者。</p>
-<p>目前 LLVM 已经被Apple、Microsoft、Google、Facebook等各大公司采用。</p>
-<p>Apple已经将它用在OpenCL的流水线优化，Xcode已经能使用llvm-gcc编译代码。</p>
-<p>2011-12-02 LLVM3.0发布，LLVM包括了一系列子项目，它们也同步发布了新版本，如C/C++/Objective-C前端Clang 3.0改进了C++程序编译支持；改进C++ 2011标准支持；实现支持即将发布的C1x标准的某些特性；更快的生成代码，更快的编译，等等。</p>
-<p>对于普通的开发人员来说，LLVM计划提供了越来越多的可以使用、编译器以外的其他工具。例如代码静态检查工具LLVM/Clang Static Analyzer，是一个 Clang 的子项目，能够使用同样的 Makefile 生成 HTML 格式的分析报告。</p>
-<h1 id="1-2-功能简介"><a href="#1-2-功能简介" class="headerlink" title="1.2 功能简介"></a>1.2 功能简介</h1><p>LLVM 核心库提供了与编译器相关的支持，可以作为多种语言编译器的后台来使用。能够进行程序语言的编译期优化、链接优化、在线编译优化、代码生成。</p>
-<p>LLVM是伊利诺伊大学的一个研究项目，提供一个现代化的，基于SSA的编译策略能够同时支持静态和动态的任意编程语言的编译目标。</p>
-<p>LLVM 用 C++ 编写，用于优化任意编程语言编写的程序的编译过程，包括：</p>
-<ul>
-<li>编译时间</li>
-<li>链接时间</li>
-<li>运行时间</li>
-<li>空闲时间</li>
-</ul>
-<p>LLVM的项目是一个模块化和可重复使用的编译器和工具技术的集合</p>
-<p>我们常接触的LLVM，比如经常使用如下的命令去编译 main.c </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">clang -rewrite-objc main.m -o main.cpp</span><br><span class="line"></span><br><span class="line">clang -rewrite-objc -fobjc-arc -fobjc&#x3D;runtime&#x3D;ios-13.0.0 -istroot &#x2F;Applications&#x2F;Xcode.app&#x2F;Contents&#x2F;Developer&#x2F;Plantforms&#x2F;iPhoneSimulator.plantform&#x2F;Developer&#x2F;SDKs&#x2F;iPhoneSimulator13.0.sdk main.m main.m -o main.cpp</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;xcode 安装自带一个 xcrun 命令，其实xcrun 是继宇 clang 进行的封装，更好用一些</span><br><span class="line"></span><br><span class="line">xcrun -SDK iphonesimulator clang -arch arm64 -rewrite-objc main.m -o main-arm64.cpp (模拟器)</span><br><span class="line"></span><br><span class="line">xcrun -SDK iphoneos clang -arch arm64 -rewrite-objc main.m -o main-arm64.cpp (手机)</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p><a target="_blank" rel="noopener" href="https://llvm.org/">llvm.org</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.codercto.com/a/41721.html">LLVM 入门篇</a><br>作者说国内有关LLVM的东西太缺乏了</p>
-<p><a target="_blank" rel="noopener" href="https://developer.apple.com/library/content/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/">苹果官方简介文档</a></p>
-<p><a target="_blank" rel="noopener" href="https://developer.apple.com/videos/developer-tools/compiler-and-llvm">WWDC Session 关于 LLVM 的部分</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.oschina.net/p/llvm">https://www.oschina.net/p/llvm</a></p>
-<p>系列会<br><a target="_blank" rel="noopener" href="http://llvm-hpc2-workshop.github.io/">http://llvm-hpc2-workshop.github.io</a></p>
-<p><a target="_blank" rel="noopener" href="https://llvm.comptechs.cn/docs/">https://llvm.comptechs.cn/docs/</a><br>如果您是仅对使用基于LLVM的编译器感兴趣的用户，则应该查看Clang文档：<br><a target="_blank" rel="noopener" href="https://clang.llvm.org/">https://clang.llvm.org</a></p>
-<h2 id="短博客"><a href="#短博客" class="headerlink" title="短博客"></a>短博客</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yayaayaya123/article/details/83993041">博客：LLVM编译原理和使用</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1367dad95445">博客：深入浅出让你理解什么是LLVM</a></p>
-<p><a target="_blank" rel="noopener" href="https://my.oschina.net/u/4360182/blog/3279626">https://my.oschina.net/u/4360182/blog/3279626</a></p>
-
       
 
       
