@@ -198,6 +198,77 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-OCBigManuscript04_ClassLayout" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/01/OCBigManuscript04_ClassLayout/">OC Runtime 大手稿：四、类布局过程</a>
+    </h1>
+  
+
+        
+          <a href="/2020/11/01/OCBigManuscript04_ClassLayout/" class="archive-article-date">
+  	<time datetime="2020-11-01T03:35:19.688Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-01</time>
+</a>
+        
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
+<p>第三篇：类布局过程</p>
+<p>在执行到 main 之前，</p>
+
+      
+
+      
+      
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/11/01/OCBigManuscript04_ClassLayout/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-OCBigManuscript03_ObjectDealloc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -221,7 +292,14 @@
       
         <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
 <p>第三篇：对象销毁流程</p>
-<p>未完成，销毁涉及的流程实在太多了！！！</p>
+<p>未完成!NFY Not finished yet.</p>
+<p>基本的流程已经梳理完了，图显得有些突兀，主要是因为右上角的那个方法中有很多官方的注释，以及我没有对其进行拆解和简化。</p>
+<p>这里面有一些知识点没有特别细致的展开，例如：</p>
+<ul>
+<li>sidetable 结构和应用操作的整理汇总</li>
+<li>weak 散列表的操作展开讲</li>
+<li>最后一些流程用到的方法查找函数是仅仅提供给查找 <code>构造函数</code> 和 <code>析构函数</code> 使用的</li>
+</ul>
       
 
       
