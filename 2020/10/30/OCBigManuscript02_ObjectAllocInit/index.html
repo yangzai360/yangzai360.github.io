@@ -23,7 +23,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF2_%E5%AE%9E%E4%BE%8B%E5%8C%96%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B-1.png">
 <meta property="article:published_time" content="2020-10-29T18:36:59.398Z">
-<meta property="article:modified_time" content="2020-11-01T00:38:41.449Z">
+<meta property="article:modified_time" content="2020-11-03T19:00:43.840Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF2_%E5%AE%9E%E4%BE%8B%E5%8C%96%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B-1.png">
@@ -229,6 +229,13 @@
 <hr>
 <h1 id="上图"><a href="#上图" class="headerlink" title="上图"></a>上图</h1><p><img src="/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF2_%E5%AE%9E%E4%BE%8B%E5%8C%96%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B-1.png" alt="OC底层大手稿2_实例化源码流程"></p>
 <p>这篇画图废了10多个小时时间，先不展开写了，后面有空再补上吧</p>
+<h1 id="先占位一个简单地逐字稿"><a href="#先占位一个简单地逐字稿" class="headerlink" title="先占位一个简单地逐字稿"></a>先占位一个简单地逐字稿</h1><p>alloc init 这个方法，在 LLVM 的 CGObjC.cpp 中有一个 tryGenerateSpecializedMessageSend，给ObjCRuntime 提供了一些更快的代码执行入口点，相比于普通常规的 msgsend 的方法选择器来比较的，这个快速入口保证了一样的执行效果。如果这个入口点的内部只是一个消息发送的原生实现，使用它是一个这种方案，牺牲了几个循环的开销，以节省少量代码。</p>
+<p>通过这个机制， alloc init 之后调用根本没有调用 NSObject 的 alloc 方法。</p>
+<p>调用的是objc_alloc_init(cls)方法，再调用 callAlloc(Class cls, bool checkNil, bool allocWithZone=false)方法，传值(cls, true, false)，这里也解释了为什么，真正的allocinit不会去调用allocWithZone。</p>
+<p>cls拿到ISA指针蒙版运算得到objcClass<br>这个时候离开了NSObject层，来到runtime层，调用_objc_rootAllocWithZone，调用一个核心的方法 _createInstanceFromZone，但是zone传的是NULL，也就是是这个函数里面去组装填充所有ISA指针里面的信息，并且完成第一次的字节对齐，这里对齐是向上16对齐对齐，目前还没有调用calloc方法。</p>
+<p>然后计算好size之后，调用 libmalloc 工程里面的 calloc 方法，这个方法会调用libmalloc里面的层层调用，最后在segregated_size_to_fit完成了16字节桶空间对齐，似的一个对象的内存大小总是16字节的整数倍。</p>
+<p>InitInstanceIsa 初始化实例对象的 isa 指针，进行关联类对象实例。</p>
+<p>然后完成之后回到上上上层方法，完成alloc，调用_objc_rootInit，然后就没有然后了，就返回对象了。</p>
 <h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9d649ce6d0b8">https://www.jianshu.com/p/9d649ce6d0b8</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/myiphon/article/details/105159233">https://blog.csdn.net/myiphon/article/details/105159233</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md#%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90-objc-%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84">https://github.com/draveness/analyze/blob/master/contents/objc/深入解析%20ObjC%20中方法的结构.md#深入解析-objc-中方法的结构</a></p>
@@ -393,7 +400,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8A%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">上图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">2.</span> <span class="toc-text">References</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8A%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">上图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%88%E5%8D%A0%E4%BD%8D%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E5%9C%B0%E9%80%90%E5%AD%97%E7%A8%BF"><span class="toc-number">2.</span> <span class="toc-text">先占位一个简单地逐字稿</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">3.</span> <span class="toc-text">References</span></a></li></ol>
                     </div>
                 </span>
             </div>

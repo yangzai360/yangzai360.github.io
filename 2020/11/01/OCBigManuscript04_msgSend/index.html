@@ -14,22 +14,24 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第三篇：类布局过程 在执行到 main 之前，">
+  <meta name="description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第四篇：msgSend 全流程 从调用msgSend到最后崩溃，涉及多个流程：  cache_t 缓存的查找 类结构中去查找 动态方法决议 消息的快速转发 方法签名">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OC Runtime 大手稿：四、类布局过程">
-<meta property="og:url" content="http://yangzai360.top/2020/11/01/OCBigManuscript04_ClassLayout/index.html">
+<meta property="og:title" content="OC Runtime 大手稿：四、msgSend 全流程">
+<meta property="og:url" content="http://yangzai360.top/2020/11/01/OCBigManuscript04_msgSend/index.html">
 <meta property="og:site_name" content="扬仔的技术博客">
-<meta property="og:description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第三篇：类布局过程 在执行到 main 之前，">
+<meta property="og:description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第四篇：msgSend 全流程 从调用msgSend到最后崩溃，涉及多个流程：  cache_t 缓存的查找 类结构中去查找 动态方法决议 消息的快速转发 方法签名">
 <meta property="og:locale">
+<meta property="og:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF4_msgSend.png">
 <meta property="article:published_time" content="2020-11-01T03:35:19.688Z">
-<meta property="article:modified_time" content="2020-11-01T03:36:42.691Z">
+<meta property="article:modified_time" content="2020-11-04T20:23:51.947Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF4_msgSend.png">
   
     <link rel="alternative" href="/atom.xml" title="扬仔的技术博客" type="application/atom+xml">
   
   
-  <title>OC Runtime 大手稿：四、类布局过程 | 扬仔的技术博客</title>
+  <title>OC Runtime 大手稿：四、msgSend 全流程 | 扬仔的技术博客</title>
   
   
     <link rel="icon" href="/img/favicon-32x32-yulia.png">
@@ -200,19 +202,19 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-OCBigManuscript04_ClassLayout" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-OCBigManuscript04_msgSend" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      OC Runtime 大手稿：四、类布局过程
+      OC Runtime 大手稿：四、msgSend 全流程
     </h1>
   
 
         
-          <a href="/2020/11/01/OCBigManuscript04_ClassLayout/" class="archive-article-date">
+          <a href="/2020/11/01/OCBigManuscript04_msgSend/" class="archive-article-date">
   	<time datetime="2020-11-01T03:35:19.688Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-01</time>
 </a>
         
@@ -222,8 +224,35 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
-<p>第三篇：类布局过程</p>
-<p>在执行到 main 之前，</p>
+<p>第四篇：msgSend 全流程</p>
+<p>从调用msgSend到最后崩溃，涉及多个流程：</p>
+<ol>
+<li>cache_t 缓存的查找</li>
+<li>类结构中去查找</li>
+<li>动态方法决议</li>
+<li>消息的快速转发</li>
+<li>方法签名</li>
+</ol>
+<a id="more"></a>
+
+
+<p><img src="/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF4_msgSend.png" alt="OC底层大手稿4_msgSend"></p>
+<p>未完成!NFY Not finished yet.</p>
+<p>图画完了，文字版本，值写了 四五 亮点，123三点觉得很简单，先不写了。</p>
+<h1 id="1-cache-t-缓存的查找"><a href="#1-cache-t-缓存的查找" class="headerlink" title="1. cache_t 缓存的查找"></a>1. cache_t 缓存的查找</h1><h1 id="2-类结构中去查找"><a href="#2-类结构中去查找" class="headerlink" title="2. 类结构中去查找"></a>2. 类结构中去查找</h1><h1 id="3-动态方法决议"><a href="#3-动态方法决议" class="headerlink" title="3. 动态方法决议"></a>3. 动态方法决议</h1><h1 id="4-0-快速转发-的研究准备"><a href="#4-0-快速转发-的研究准备" class="headerlink" title="4.0 快速转发 的研究准备"></a>4.0 快速转发 的研究准备</h1><p>随便走一个崩溃断点，LLDB 打 <code>image list</code></p>
+<p>找到 CoreFoundation 的地址，找到可执行的unix文件，然后使用 Hopper，打开 unix 文件，</p>
+<h1 id="4-1-快速转发"><a href="#4-1-快速转发" class="headerlink" title="4.1 快速转发"></a>4.1 快速转发</h1><p>当完成了第三步的 impLookupOrForwarding 最后的 resolve 之后，如果返回的是 forwardingIMP，就会调用对象的</p>
+<pre><code>- (id)forwardingTargetForSelector:(SEL)aSelector;</code></pre>
+<p>官方文档这里说的清楚:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">如果一个对象实现（或继承）此方法，并返回一个非nil（和非self）结果，则返回的对象将用作新的接收方对象，消息分派将恢复到该新对象。（显然，如果从该方法返回self，代码将陷入无限循环中。）</span><br><span class="line"></span><br><span class="line">如果您在非根类中实现此方法，如果您的类对于给定的选择器没有任何可返回的内容，那么您应该返回调用&#96;super&#96;实现的结果。</span><br><span class="line"></span><br><span class="line">此方法使对象有机会在更昂贵的 &#96;forwardInvocation:&#96; machine接管之前重定向发送给它的未知消息。当您只想将消息重定向到另一个对象时，这很有用，并且可以比常规转发快一个数量级。如果转发的目标是捕获 &#96;NSInvocation&#96;，或者在转发过程中操纵参数或返回值，那么它是没有用的。</span><br></pre></td></tr></table></figure>
+
+<p>也就是说如果你返回了一个对象A，那么就重新跟A来走整个这篇的流程。</p>
+<p>如果这个方法你还是没有返回一个背锅的对象，还是没有找到的话，则进入最后的一次挽救机会，下一段落。</p>
+<h1 id="5-方法签名"><a href="#5-方法签名" class="headerlink" title="5. 方法签名"></a>5. 方法签名</h1><p>调用这个 <code>methodSignatureForSelector</code>，然后对这个aSelector进行签名，如果返回Nil，就报错： <code>Unrecognized selector</code>，如果处理了就按照如下的方法进行签名，需要写上 typeCoding。</p>
+<p><code>forwardInvocation</code>方法调用之后，走了方法内部的东西之后，就真的再也不处理了，就这样了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector&#123;</span><br><span class="line">    NSLog(@<span class="string">&quot;%s - %@&quot;</span>,__func__,NSStringFromSelector(aSelector));</span><br><span class="line">    <span class="keyword">return</span> [NSMethodSignature signatureWithObjCTypes:<span class="string">&quot;v@:&quot;</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)forwardInvocation:(NSInvocation *)anInvocation&#123;</span><br><span class="line">    NSLog(@<span class="string">&quot;%s - %@&quot;</span>,__func__,anInvocation);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>无论在forwardInvocation方法中是否处理invocation事务，程序都不会崩溃。</p>
 
       
 
@@ -264,7 +293,7 @@
             </li>
             <li class="post-copyright-link">
               <strong>Post link：</strong>
-              <a href="http://yangzai360.top/2020/11/01/OCBigManuscript04_ClassLayout/" title="OC Runtime 大手稿：四、类布局过程">http://yangzai360.top/2020/11/01/OCBigManuscript04_ClassLayout/</a>
+              <a href="http://yangzai360.top/2020/11/01/OCBigManuscript04_msgSend/" title="OC Runtime 大手稿：四、msgSend 全流程">http://yangzai360.top/2020/11/01/OCBigManuscript04_msgSend/</a>
             </li>
             <li class="post-copyright-license">
               <strong>Copyright Notice：</strong>
@@ -330,7 +359,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://qr.liantu.com/api.php?text=http://yangzai360.top/2020/11/01/OCBigManuscript04_ClassLayout/" alt="微信分享二维码">
+      <img src="http://qr.liantu.com/api.php?text=http://yangzai360.top/2020/11/01/OCBigManuscript04_msgSend/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -343,6 +372,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2020/11/02/CWC03_HowCookChangeHerCookingSkill/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          New Method Swizzling in 2020.
+        
+      </div>
+    </a>
   
   
     <a href="/2020/10/31/OCBigManuscript03_ObjectDealloc/" id="article-nav-older" class="article-nav-link-wrap">
@@ -373,7 +411,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-cache-t-%E7%BC%93%E5%AD%98%E7%9A%84%E6%9F%A5%E6%89%BE"><span class="toc-number">1.</span> <span class="toc-text">1. cache_t 缓存的查找</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%B1%BB%E7%BB%93%E6%9E%84%E4%B8%AD%E5%8E%BB%E6%9F%A5%E6%89%BE"><span class="toc-number">2.</span> <span class="toc-text">2. 类结构中去查找</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%8A%A8%E6%80%81%E6%96%B9%E6%B3%95%E5%86%B3%E8%AE%AE"><span class="toc-number">3.</span> <span class="toc-text">3. 动态方法决议</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-0-%E5%BF%AB%E9%80%9F%E8%BD%AC%E5%8F%91-%E7%9A%84%E7%A0%94%E7%A9%B6%E5%87%86%E5%A4%87"><span class="toc-number">4.</span> <span class="toc-text">4.0 快速转发 的研究准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-1-%E5%BF%AB%E9%80%9F%E8%BD%AC%E5%8F%91"><span class="toc-number">5.</span> <span class="toc-text">4.1 快速转发</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E6%96%B9%E6%B3%95%E7%AD%BE%E5%90%8D"><span class="toc-number">6.</span> <span class="toc-text">5. 方法签名</span></a></li></ol>
                     </div>
                 </span>
             </div>

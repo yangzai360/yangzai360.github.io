@@ -22,7 +22,7 @@
 <meta property="og:description" content="本篇英文名叫 Kitchen Tools That Cook Loves，翻译过来的意思是苹果源码中出现的一些数据结构，不断积累更新。 隶属于我的第二个大系列 CWC ：Cooking With Cook，翻译过来的中文意思就是 作为一个长期热爱苹果的苹果开发者，陪着水果公司一起积累和成长。  目前：entsize_list_tt、list_array_tt…">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-10-28T10:00:23.399Z">
-<meta property="article:modified_time" content="2020-10-31T15:46:24.335Z">
+<meta property="article:modified_time" content="2020-11-01T14:58:24.277Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
   
@@ -227,7 +227,7 @@
 <p>目前：<code>entsize_list_tt</code>、<code>list_array_tt</code>…</p>
 <a id="more"></a>
 
-<h1 id="entsize-list-tt"><a href="#entsize-list-tt" class="headerlink" title="entsize_list_tt"></a>entsize_list_tt</h1><p>entsize_list_tt 其实就是一个通用的容器，可以获取 内部的迭代器，用于遍历内部存储的元素</p>
+<h1 id="1-entsize-list-tt"><a href="#1-entsize-list-tt" class="headerlink" title="1. entsize_list_tt"></a>1. entsize_list_tt</h1><p>entsize_list_tt 其实就是一个通用的容器，可以获取 内部的迭代器，用于遍历内部存储的元素</p>
 <ul>
 <li>Element: 元素的类型</li>
 <li>List: 指定容器的具体实现类型</li>
@@ -246,7 +246,7 @@
 <p>entsize_list_t 定义源码，省略大部分方法：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/***********************************************************************</span></span><br><span class="line"><span class="comment">* entsize_list_tt&lt;Element, List, FlagMask&gt;</span></span><br><span class="line"><span class="comment">* 一系列非精致结构体的数组的实现</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* Element 元素是结构体类型 (e.g. method_t)</span></span><br><span class="line"><span class="comment">* List 是这个结构体的特殊实现子类 (e.g. method_list_t)</span></span><br><span class="line"><span class="comment">* FFlagMask 用于在 entsize 字段中存储额外的位</span></span><br><span class="line"><span class="comment">*   (e.g. method list fixup markers)</span></span><br><span class="line"><span class="comment">**********************************************************************/</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Element, <span class="keyword">typename</span> List, <span class="keyword">uint32_t</span> FlagMask&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">entsize_list_tt</span> &#123;</span></span><br><span class="line">    <span class="keyword">uint32_t</span> entsizeAndFlags;</span><br><span class="line">    <span class="keyword">uint32_t</span> count;</span><br><span class="line">    Element first;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">iterator</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">iterator</span> &#123;</span></span><br><span class="line">        <span class="keyword">uint32_t</span> entsize;</span><br><span class="line">        <span class="keyword">uint32_t</span> index;  <span class="comment">// keeping track of this saves a divide in operator-</span></span><br><span class="line">        Element* element;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">typedef</span> <span class="built_in">std</span>::random_access_iterator_tag iterator_category;</span><br><span class="line">        <span class="keyword">typedef</span> Element value_type;</span><br><span class="line">        <span class="keyword">typedef</span> <span class="keyword">ptrdiff_t</span> difference_type;</span><br><span class="line">        <span class="keyword">typedef</span> Element* pointer;</span><br><span class="line">        <span class="keyword">typedef</span> Element&amp; reference;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="list-array-tt"><a href="#list-array-tt" class="headerlink" title="list_array_tt"></a>list_array_tt</h1><p>这个类用来表示一个空、单数组、或者多数组。它和 list 的区别就是 多了一个多维数组的封装。</p>
+<h1 id="2-list-array-tt"><a href="#2-list-array-tt" class="headerlink" title="2. list_array_tt"></a>2. list_array_tt</h1><p>这个类用来表示一个空、单数组、或者多数组。它和 list 的区别就是 多了一个多维数组的封装。</p>
 <p>出现场景：</p>
 <ol>
 <li>类的 <code>rw</code> <code>rwe</code> 中的 <code>method_array_t</code></li>
@@ -260,6 +260,88 @@
 <p><code>list_array_tt</code> 源码部分如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/***********************************************************************</span></span><br><span class="line"><span class="comment">* list_array_tt&lt;Element, List&gt;</span></span><br><span class="line"><span class="comment">* 元数据的通用实现，可以按类别进行扩展。</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* Element：基础元数据类型(e.g. method_t)</span></span><br><span class="line"><span class="comment">* List： 元数据的列表类型(e.g. method_list_t)</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">*  list_array_tt具有以下三个值之一：</span></span><br><span class="line"><span class="comment">* - 空</span></span><br><span class="line"><span class="comment">* - 指向单个列表的指针</span></span><br><span class="line"><span class="comment">* - 指向多个列表的指针的数组</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* countLists/beginLists/endLists 迭代元数据</span></span><br><span class="line"><span class="comment">* count/begin/end 迭代基础元数据元素</span></span><br><span class="line"><span class="comment">**********************************************************************/</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Element, <span class="keyword">typename</span> List&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">list_array_tt</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">array_t</span> &#123;</span></span><br><span class="line">        <span class="keyword">uint32_t</span> count;</span><br><span class="line">        List* lists[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">size_t</span> <span class="title">byteSize</span><span class="params">(<span class="keyword">uint32_t</span> count)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">sizeof</span>(<span class="keyword">array_t</span>) + count*<span class="keyword">sizeof</span>(lists[<span class="number">0</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">size_t</span> <span class="title">byteSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> byteSize(count);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h1 id="3-cache-t-使用的-buckets"><a href="#3-cache-t-使用的-buckets" class="headerlink" title="3. cache_t 使用的 buckets"></a>3. cache_t 使用的 buckets</h1><p><strong>cache_t 的结构体定义：</strong></p>
+<table>
+<thead>
+<tr>
+<th>定义类型</th>
+<th>变量名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bucket_t</td>
+<td>_buckets</td>
+<td>这段讲解的桶</td>
+</tr>
+<tr>
+<td>mask_t</td>
+<td>_mask</td>
+<td>其实就是个32无符号int uint32_t</td>
+</tr>
+<tr>
+<td>uint16_t</td>
+<td>_flags</td>
+<td>一些位置标记</td>
+</tr>
+<tr>
+<td>uint16_t</td>
+<td>_occupied</td>
+<td>占位的数量，内部元素的数量</td>
+</tr>
+</tbody></table>
+<p>buckets 的内部是一个连续的存储空间，存储是一个散列表。<br>开辟声明的函数调用的是 calloc</p>
+<p>当 msgSend 的时候，就会调用 fillCache 进行方法的缓存，存储的涉及 cls sel 和 imp</p>
+<h3 id="比较有意思的-bucket-t-内部的顺序定义"><a href="#比较有意思的-bucket-t-内部的顺序定义" class="headerlink" title="比较有意思的 bucket_t 内部的顺序定义"></a>比较有意思的 bucket_t 内部的顺序定义</h3><p>bucket_t 的结构体很有意思，arm64 和 i386 的两个值的顺序是反着的。</p>
+<p><code>arm64</code> 的时候是 :</p>
+<table>
+<thead>
+<tr>
+<th>定义类型</th>
+<th>变量名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>explicit_atomic&lt;uintptr_t&gt;</code></td>
+<td>_imp</td>
+</tr>
+<tr>
+<td><code>explicit_atomic&lt;SEL&gt;</code></td>
+<td>_sel</td>
+</tr>
+</tbody></table>
+<p><code>armv7*</code>，<code>i386</code> 和 <code>x86_64</code> 的时候是：</p>
+<table>
+<thead>
+<tr>
+<th>定义类型</th>
+<th>变量名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>explicit_atomic&lt;SEL&gt;</code></td>
+<td>_sel</td>
+</tr>
+<tr>
+<td><code>explicit_atomic&lt;uintptr_t&gt;</code></td>
+<td>_imp</td>
+</tr>
+</tbody></table>
+<p>源码注释：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// IMP-first对arm64e的参数更好，而对arm64的效果更好。</span></span><br><span class="line"><span class="comment">// 对于armv7*，i386和x86_64，SEL-first更好。</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="散列表和哈希值的计算"><a href="#散列表和哈希值的计算" class="headerlink" title="散列表和哈希值的计算"></a>散列表和哈希值的计算</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里 hash 的计算是用 sel 指针和「capacity-1」做与操作计算</span></span><br><span class="line"><span class="comment">// 下面的 do-while 去处理 hash 冲突的寻址。</span></span><br><span class="line"><span class="comment">// 这里解决冲突的方法不是顺序+1，</span></span><br><span class="line"><span class="comment">// 而是使用这个方法再次计算hash值</span></span><br><span class="line"><span class="comment">// 「fastpath((i = cache_next(i, m)) != begin)」</span></span><br><span class="line">    <span class="keyword">mask_t</span> m = capacity - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">mask_t</span> begin = cache_hash(sel, m);</span><br></pre></td></tr></table></figure>
+
+<h3 id="扩容"><a href="#扩容" class="headerlink" title="扩容:"></a>扩容:</h3><p>初始的 <code>capacity</code> 是 4。<br>源码中 <code>cache_t::insert(cls, sel, imp, reveiver)</code> 方法调用的时候，判断扩容。</p>
+<p><code>fastpath(newOccupied + CACHE_END_MARKER &lt;= capacity / 4 * 3)</code></p>
+<p>也就是说当大于四分之三的时候，就会进行扩容操作，每次 double 扩容</p>
+<p><code>capacity = capacity ? capacity * 2 : INIT_CACHE_SIZE;</code></p>
+<p>当然不是无限制的扩容，有一个最大容量的限制：</p>
+<p><code>MAX_CACHE_SIZE = 1 &lt;&lt; 16</code></p>
+<h1 id="NFY-占坑-explicit-atomic"><a href="#NFY-占坑-explicit-atomic" class="headerlink" title="NFY 占坑 explicit_atomic"></a>NFY 占坑 explicit_atomic</h1><p> 这个类型应该是执行最多次的，看一些文章说一秒钟iOS中执行几百万次</p>
+<p>explicit_atomic用来给catchT缓存方法用，核心是原子性和线程安全。</p>
+<h1 id="NFY-占坑-sideTable"><a href="#NFY-占坑-sideTable" class="headerlink" title="NFY 占坑 sideTable"></a>NFY 占坑 sideTable</h1><p>weak弱引用的散列表</p>
 <h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><p>扩展：<strong>non-fragile structs</strong> 是什么？OC 1.0 （iOS自始至终都是2.0起的，Mac最开始是1.0）译器生成了一个 ivar 布局，显示了在类中从哪可以访问<code>ivars</code>，对 ivar 的访问就可以通过 <code>对象地址 ＋ ivar偏移字节</code> 的方法。苹果更新了NSObject类，例如增加一些属性，这个又是静态库，发布新版本的系统，这个时候布局就出错了，就不得不重新编译子类来恢复兼容性。(那如果是在线上运行的app，升级系统后就没办法运行了)</p>
 <p>使用 <code>Non Fragile ivars</code> 时，程序进行检测来调整类中新增的 ivar 的偏移量。 这样就可以通过 <code>对象地址 ＋ 基类大小 + ivar偏移字节</code> 的方法来计算出 ivar 相应的地址，并访问到相应的 ivar。(即使升级iOS系统，之前的app也能正常运行)</p>
 <p>扩展再扩展：<strong>为什么OC类不能动态添加成员变量？</strong>runtime函数中，确实有一个class_addIvar()函数用于给类添加成员变量，但是文档中特别说明：<code>This function may only be called after objc_allocateClassPair and before objc_registerClassPair. Adding an instance variable to an existing class is not supported.  </code>这个函数只能在“构建一个类的过程中”调用。一旦完成类定义，就不能再添加成员变量了。经过编译的类在程序启动后就被runtime加载，没有机会调用addIvar。程序在运行时动态构建的类需要在调用objc_registerClassPair之后才可以被使用，同样没有机会再添加成员变量。<br>理论上说，我还是认为可以添加，只是为什么一定不可以，就不得而知了。</p>
@@ -425,7 +507,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#entsize-list-tt"><span class="toc-number">1.</span> <span class="toc-text">entsize_list_tt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#list-array-tt"><span class="toc-number">2.</span> <span class="toc-text">list_array_tt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-number">3.</span> <span class="toc-text">扩展</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">4.</span> <span class="toc-text">References</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-entsize-list-tt"><span class="toc-number">1.</span> <span class="toc-text">1. entsize_list_tt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-list-array-tt"><span class="toc-number">2.</span> <span class="toc-text">2. list_array_tt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-cache-t-%E4%BD%BF%E7%94%A8%E7%9A%84-buckets"><span class="toc-number">3.</span> <span class="toc-text">3. cache_t 使用的 buckets</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%94%E8%BE%83%E6%9C%89%E6%84%8F%E6%80%9D%E7%9A%84-bucket-t-%E5%86%85%E9%83%A8%E7%9A%84%E9%A1%BA%E5%BA%8F%E5%AE%9A%E4%B9%89"><span class="toc-number">3.0.1.</span> <span class="toc-text">比较有意思的 bucket_t 内部的顺序定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%A3%E5%88%97%E8%A1%A8%E5%92%8C%E5%93%88%E5%B8%8C%E5%80%BC%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="toc-number">3.0.2.</span> <span class="toc-text">散列表和哈希值的计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%AE%B9"><span class="toc-number">3.0.3.</span> <span class="toc-text">扩容:</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NFY-%E5%8D%A0%E5%9D%91-explicit-atomic"><span class="toc-number">4.</span> <span class="toc-text">NFY 占坑 explicit_atomic</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NFY-%E5%8D%A0%E5%9D%91-sideTable"><span class="toc-number">5.</span> <span class="toc-text">NFY 占坑 sideTable</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-number">6.</span> <span class="toc-text">扩展</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">7.</span> <span class="toc-text">References</span></a></li></ol>
                     </div>
                 </span>
             </div>
