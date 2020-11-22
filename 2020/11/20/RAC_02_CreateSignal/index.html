@@ -14,18 +14,25 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="扬仔的技术博客">
-<meta property="og:url" content="http://yangzai360.top/archives/2020/index.html">
+  <meta name="description" content="[TOC]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RAC 学习探究：二、创建订阅信号流程">
+<meta property="og:url" content="http://yangzai360.top/2020/11/20/RAC_02_CreateSignal/index.html">
 <meta property="og:site_name" content="扬仔的技术博客">
+<meta property="og:description" content="[TOC]">
 <meta property="og:locale">
+<meta property="og:image" content="http://yangzai360.top/media/16058131900481.jpg">
+<meta property="og:image" content="http://yangzai360.top/media/iOS%E6%A1%86%E6%9E%B6_RAC01_signalCreate@40.png">
+<meta property="article:published_time" content="2020-11-19T19:10:23.465Z">
+<meta property="article:modified_time" content="2020-11-22T08:10:41.476Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yangzai360.top/media/16058131900481.jpg">
   
     <link rel="alternative" href="/atom.xml" title="扬仔的技术博客" type="application/atom+xml">
   
   
-  <title>Archives: 2020 | 扬仔的技术博客</title>
+  <title>RAC 学习探究：二、创建订阅信号流程 | 扬仔的技术博客</title>
   
   
     <link rel="icon" href="/img/favicon-32x32-yulia.png">
@@ -196,295 +203,292 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-RAC_02_CreateSignal" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      RAC 学习探究：二、创建订阅信号流程
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/20/RAC_02_CreateSignal/" class="archive-article-date">
+
+        
+          <a href="/2020/11/20/RAC_02_CreateSignal/" class="archive-article-date">
   	<time datetime="2020-11-19T19:10:23.465Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-20</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/20/RAC_02_CreateSignal/">RAC 学习探究：二、创建订阅信号流程</a>
-    </h1>
-  
+        
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<p><img src="/media/16058131900481.jpg" alt="-w814"></p>
+<a id="more"></a>
 
-        <div class="article-info info-on-right">
-          
-          
+<p><img src="/media/iOS%E6%A1%86%E6%9E%B6_RAC01_signalCreate@40.png" alt="iOS框架_RAC01_signalCreate@40"></p>
+<h1 id="Subscriber-like-todo-：-订阅者的操作"><a href="#Subscriber-like-todo-：-订阅者的操作" class="headerlink" title="Subscriber like todo ： 订阅者的操作"></a>Subscriber like todo ： 订阅者的操作</h1><p>订阅者 Subscriber 可以调用三个常见的方法，sendNext，sendError，sendComplete</p>
+<p>sendNext可以发送很多次，但是直到遇到了Error或者Complete之后就结束了。</p>
+<p>这里可以查看三个方法的源码，得到这个的证明：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> mark RACSubscriber</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)sendNext:(<span class="keyword">id</span>)value &#123;</span><br><span class="line">	<span class="keyword">@synchronized</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">		<span class="keyword">void</span> (^nextBlock)(<span class="keyword">id</span>) = [<span class="keyword">self</span>.next <span class="keyword">copy</span>];</span><br><span class="line">		<span class="keyword">if</span> (nextBlock == <span class="literal">nil</span>) <span class="keyword">return</span>;</span><br><span class="line">		nextBlock(value);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)sendError:(<span class="built_in">NSError</span> *)e &#123;</span><br><span class="line">	<span class="keyword">@synchronized</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">		<span class="keyword">void</span> (^errorBlock)(<span class="built_in">NSError</span> *) = [<span class="keyword">self</span>.error <span class="keyword">copy</span>];</span><br><span class="line">		[<span class="keyword">self</span>.disposable dispose]; <span class="comment">// 先销毁，再调用 errorBlock</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (errorBlock == <span class="literal">nil</span>) <span class="keyword">return</span>;</span><br><span class="line">		errorBlock(e);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)sendCompleted &#123;</span><br><span class="line">	<span class="keyword">@synchronized</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">		<span class="keyword">void</span> (^completedBlock)(<span class="keyword">void</span>) = [<span class="keyword">self</span>.completed <span class="keyword">copy</span>];</span><br><span class="line">		[<span class="keyword">self</span>.disposable dispose]; <span class="comment">// 先销毁，再调用 completedBlock</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (completedBlock == <span class="literal">nil</span>) <span class="keyword">return</span>;</span><br><span class="line">		completedBlock();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h1 id="RACPassthroughSubscriber-核心穿透订阅者"><a href="#RACPassthroughSubscriber-核心穿透订阅者" class="headerlink" title="RACPassthroughSubscriber 核心穿透订阅者"></a>RACPassthroughSubscriber 核心穿透订阅者</h1><p>订阅的流程，调用的 <code>RACSignal</code> 类中的 <code>subscriptNext</code> 方法，其实是调用类本身的另外一个方法：<code>subscribe：subscriber</code>方法，实现如下：</p>
+<p>详见上图中有这个方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (RACDisposable *)subscribe:(<span class="keyword">id</span>&lt;RACSubscriber&gt;)subscriber &#123;</span><br><span class="line">	<span class="built_in">NSCParameterAssert</span>(subscriber != <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//    Dispose 销毁者 最后返回销毁者</span></span><br><span class="line">	RACCompoundDisposable *disposable = [RACCompoundDisposable compoundDisposable];</span><br><span class="line">	subscriber = [[RACPassthroughSubscriber alloc] initWithSubscriber:subscriber signal:<span class="keyword">self</span> disposable:disposable];</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">self</span>.didSubscribe != <span class="literal">NULL</span>) &#123;</span><br><span class="line">		RACDisposable *schedulingDisposable = [RACScheduler.subscriptionScheduler schedule:^&#123;</span><br><span class="line"><span class="comment">//            调用了 didSubscriber </span></span><br><span class="line">			RACDisposable *innerDisposable = <span class="keyword">self</span>.didSubscribe(subscriber);</span><br><span class="line">			[disposable addDisposable:innerDisposable];</span><br><span class="line">		&#125;];</span><br><span class="line"></span><br><span class="line">		[disposable addDisposable:schedulingDisposable];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> disposable;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有一个核心类：<code>RACPassthroughSubscriber</code>，我把他称之为<code>穿透订阅者</code>。</p>
+<p>穿透订阅者的这个生成方法，我们一看传入了三个参数：subscriber，signal，disposable，有了这桑个参数，是不是基本上可以重写RAC了，所以这个类很关键，可以说它是<code>核心穿透订阅者</code>了。</p>
+<p>RACPassthroughSubscriber 的 init 方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)initWithSubscriber:(<span class="keyword">id</span>&lt;RACSubscriber&gt;)subscriber</span><br><span class="line">                            signal:(RACSignal *)signal</span><br><span class="line">                        disposable:(RACCompoundDisposable *)disposable &#123;</span><br><span class="line">    <span class="comment">// 核心穿透订阅者 的init 入参 非常全面，</span></span><br><span class="line"><span class="comment">//    有： subscriber signal disposable</span></span><br><span class="line">    <span class="comment">// 这三个参数连起来念，订阅信号销毁，它大概就是做这个的。</span></span><br><span class="line">	<span class="built_in">NSCParameterAssert</span>(subscriber != <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line"></span><br><span class="line">	_innerSubscriber = subscriber;</span><br><span class="line">	_signal = signal;</span><br><span class="line">	_disposable = disposable;</span><br><span class="line"></span><br><span class="line">	[<span class="keyword">self</span>.innerSubscriber didSubscribeWithDisposable:<span class="keyword">self</span>.disposable];</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后给 _innerSubscriber 其实也就是 订阅者 subscriber 关联了一个回调方法，在销毁的时候互相回调使用的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)didSubscribeWithDisposable:(RACCompoundDisposable *)d &#123;</span><br><span class="line">	<span class="keyword">if</span> (d.disposed) <span class="keyword">return</span>;</span><br><span class="line">	[<span class="keyword">self</span>.disposable addDisposable:d];</span><br><span class="line"></span><br><span class="line">	@weakify(<span class="keyword">self</span>, d);</span><br><span class="line">	[d addDisposable:[RACDisposable disposableWithBlock:^&#123;</span><br><span class="line">		@strongify(<span class="keyword">self</span>, d);</span><br><span class="line">		[<span class="keyword">self</span>.disposable removeDisposable:d];</span><br><span class="line">	&#125;]];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="调度者-RACSchedule"><a href="#调度者-RACSchedule" class="headerlink" title="调度者 RACSchedule"></a>调度者 RACSchedule</h1><p><code>Schedule</code> 里面全部都是多线程相关的操作</p>
+<p><code>SRCSubscriptionScheduler</code> 是一个单例对象，订阅调度者。</p>
+<pre><code>    RACDisposable *schedulingDisposable = [RACScheduler.subscriptionScheduler schedule:</code></pre>
+<p>这个方法调用的时候，调用了 <code>RACSubscriptionScheduler.m</code> 的  <code>schedule</code> 方法：</p>
+<p><strong>RACSubscriptionScheduler.m ———— schedule</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (RACDisposable *)schedule:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block &#123;</span><br><span class="line">	<span class="built_in">NSCParameterAssert</span>(block != <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (RACScheduler.currentScheduler == <span class="literal">nil</span>) <span class="keyword">return</span> [<span class="keyword">self</span>.backgroundScheduler schedule:block];</span><br><span class="line"></span><br><span class="line">	block();</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它会调用 <code>scheduler</code> 的 <code>currentScheduler</code> 判断：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">+ (RACScheduler *)currentScheduler &#123;</span><br><span class="line">    <span class="comment">// 从当前线程的线程字典里面 tls 里面取一个字符串的value，</span></span><br><span class="line"><span class="comment">//    第一次肯定为nil没有值，然后就设置成一个</span></span><br><span class="line">	RACScheduler *scheduler = <span class="built_in">NSThread</span>.currentThread.threadDictionary[RACSchedulerCurrentSchedulerKey];</span><br><span class="line">	<span class="keyword">if</span> (scheduler != <span class="literal">nil</span>) <span class="keyword">return</span> scheduler;</span><br><span class="line">    <span class="comment">// 如果在主线程上，就默认返回主线程，否则返回nil</span></span><br><span class="line">	<span class="keyword">if</span> ([<span class="keyword">self</span>.class isOnMainThread]) <span class="keyword">return</span> RACScheduler.mainThreadScheduler;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以这个代码有三种情况：</p>
+<ol>
+<li>主线程第一次进入：当前线程的TLS里面，没有这个key对应的值，判断是否在主线程，在的话返回主线程的 <code>mainThreadScheduler</code></li>
+<li>子线程第一次进入：…不在主线程，返回<code>nil</code></li>
+<li>第二次进入，这个表里面有值了，之前子线程进来的时候下面章节填充上的，返回取出来的scheduler。存值的实际后面讲。</li>
+</ol>
+<p>发生了第二个情况的话，返回的是nil，<strong>RACSubscriptionScheduler.m ———— schedule</strong>里面就会继续调用一个属性叫做 <code>backgroundScheduler</code></p>
+<p>这个<code>backgroundScheduler</code> 的声明路程是这样的：</p>
+<ol>
+<li>init初始化的时候他被init <code>[RACScheduler scheduler]</code></li>
+<li>scheduler 这个方法返回了：<code>[self schedulerWithPriority:RACSchedulerPriorityDefault]</code></li>
+<li><code>[self schedulerWithPriority:priority name:@&quot;org.reactivecocoa.ReactiveObjC.RACScheduler.backgroundScheduler&quot;];</code></li>
+<li>板凳君自己创建了一个全局并发队列:<code>[[RACTargetQueueScheduler alloc] initWithName:name targetQueue:dispatch_get_global_queue(priority, 0)];</code><br> 解释一下参数，优先级是上面第二点传递过来的<code>RACSchedulerPriorityDefault</code></li>
+<li>这个方法的实现：</li>
+</ol>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)initWithName:(<span class="built_in">NSString</span> *)name</span><br><span class="line">                 targetQueue:(<span class="built_in">dispatch_queue_t</span>)targetQueue &#123;</span><br><span class="line">	<span class="built_in">NSCParameterAssert</span>(targetQueue != <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (name == <span class="literal">nil</span>) &#123;</span><br><span class="line">		name = [<span class="built_in">NSString</span> stringWithFormat:</span><br><span class="line">                <span class="string">@&quot;org.reactivecocoa.ReactiveObjC.RACTargetQueueScheduler(%s)&quot;</span>,</span><br><span class="line">                dispatch_queue_get_label(targetQueue)];</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(name.UTF8String,</span><br><span class="line">                                                   DISPATCH_QUEUE_SERIAL);</span><br><span class="line">	<span class="keyword">if</span> (queue == <span class="literal">NULL</span>) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line">	dispatch_set_target_queue(queue, targetQueue);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> [<span class="keyword">super</span> initWithName:name queue:queue];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里可以看到，串行一个队列，串行子线程操作它保证异步，但是调度的时候串行来入队<br>牺牲了信号的并发，保证调度的有序。</p>
+<p><strong>所以这个<code>backgroundScheduler</code> 就是一个自定义的串行队列</strong></p>
+<p>那么这个自定义串行上调用了 <code>schedule</code> 方法，实现如下：</p>
+<p><strong>RACQueueScheduler.m ———— schedule</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (RACDisposable *)schedule:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block &#123;</span><br><span class="line">	<span class="built_in">NSCParameterAssert</span>(block != <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">	RACDisposable *disposable = [[RACDisposable alloc] init];</span><br><span class="line"></span><br><span class="line">	<span class="built_in">dispatch_async</span>(<span class="keyword">self</span>.queue, ^&#123;</span><br><span class="line">		<span class="keyword">if</span> (disposable.disposed) <span class="keyword">return</span>;</span><br><span class="line">		[<span class="keyword">self</span> performAsCurrentScheduler:block];</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> disposable;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>performAsCurrentScheduler</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)performAsCurrentScheduler:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block &#123;</span><br><span class="line">	<span class="built_in">NSCParameterAssert</span>(block != <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//    如果我们正在使用并发队列，</span></span><br><span class="line"><span class="comment">//    那么我们可以并发地结束在这里， 在这种情况下，</span></span><br><span class="line"><span class="comment">//    我们*不想*希望在块完成执行后立即清除当前调度程序，</span></span><br><span class="line"><span class="comment">//    而只能*在*所有并发之后 调用完成。</span></span><br><span class="line">	RACScheduler *previousScheduler = RACScheduler.currentScheduler;</span><br><span class="line">	<span class="built_in">NSThread</span>.currentThread.threadDictionary[RACSchedulerCurrentSchedulerKey] = <span class="keyword">self</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">		block();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (previousScheduler != <span class="literal">nil</span>) &#123;</span><br><span class="line">		<span class="built_in">NSThread</span>.currentThread.threadDictionary[RACSchedulerCurrentSchedulerKey] = previousScheduler;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		[<span class="built_in">NSThread</span>.currentThread.threadDictionary removeObjectForKey:RACSchedulerCurrentSchedulerKey];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>把 self 自己，放进刚刚的那个线程里面的TLS的字典里面去，下次很方便。执行Block。更新字典表（目前是板凳调度者，如果有previous也就是主体的那个调度者，就把主体调度者放进字典表）。</p>
+<p>这里操作了字典表，当前线程的TLS里面也有值了，所以第三点也成立了，子线程进来之后直接取值出调度者，直接执行了block，不用再调用 <code>backgroundScheduler</code> 的方法了</p>
+<h1 id="RACObserve-原理"><a href="#RACObserve-原理" class="headerlink" title="RACObserve 原理"></a>RACObserve 原理</h1><p>试用的第一个Demo，给copy过来，凑一下字数和排版</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// count 是 self 的 @property</span></span><br><span class="line">    [RACObserve(<span class="keyword">self</span>, count) subscribeNext:^(<span class="keyword">id</span>  _Nullable x) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;new count value : %@&quot;</span>,x);</span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure>
+
+<p><code>RACObserve</code> 的原理，这个是一个宏，两句话可以说明白：</p>
+<p>第一句话：观察体封装成了一个对象 <code>RACKVOTrampoline</code>，这一通操作，返回 <code>RACSignal</code>。</p>
+<p>第二句话：接收观察的中间代理 proxy 是个全局单例，接收所有的 observer 回调，进行派发。</p>
+<p>remove 的原理：<code>RACKVOTrampoline</code>的析构，delloc 里面 remove 所有的观察。</p>
+<h1 id="RACSubject-全能订阅者"><a href="#RACSubject-全能订阅者" class="headerlink" title="RACSubject 全能订阅者"></a>RACSubject 全能订阅者</h1><p>单独使用它既可以发送也可以订阅，但是记住先订阅再发送，demo如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RACSubject *sub = [RACSubject subject];</span><br><span class="line">[sub subscribeNext:^(<span class="keyword">id</span>  _Nullable x) &#123;</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>, x);</span><br><span class="line">&#125;];</span><br><span class="line">[sub sendNext:<span class="string">@&quot;打印出来的字符串&quot;</span>];</span><br></pre></td></tr></table></figure>
+
+<p>整个流程跟上面篇章里面的订阅流程类似。</p>
+<h2 id="Subject-实现自主收发的原理"><a href="#Subject-实现自主收发的原理" class="headerlink" title="Subject 实现自主收发的原理"></a>Subject 实现自主收发的原理</h2><p>三点：</p>
+<ol>
+<li><code>RACSubject</code> 在工厂方法初始化的时候，内部创建了一个订阅者的数组。</li>
+<li>在 <code>subscribeNext</code> 的时候，进行了把刚创建的<code>核心穿透订阅者</code>添加到数组的操作。</li>
+<li>在<code>sendNext</code>的时候，遍历了这个数组，挨个发送了<code>block</code>。</li>
+</ol>
+<p>根据这三点扒一下源代码：</p>
+<h3 id="1-RACSubjext-init-时初始化数组："><a href="#1-RACSubjext-init-时初始化数组：" class="headerlink" title="1. RACSubjext init 时初始化数组："></a>1. RACSubjext init 时初始化数组：</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)init &#123;</span><br><span class="line">	<span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">self</span> == <span class="literal">nil</span>) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line">	_disposable = [RACCompoundDisposable compoundDisposable];</span><br><span class="line">	_subscribers = [[<span class="built_in">NSMutableArray</span> alloc] initWithCapacity:<span class="number">1</span>];</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-核心穿透订阅者-创建后就被添加进数组"><a href="#2-核心穿透订阅者-创建后就被添加进数组" class="headerlink" title="2. 核心穿透订阅者 创建后就被添加进数组"></a>2. <code>核心穿透订阅者</code> 创建后就被添加进数组</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- (RACDisposable *)subscribe:(<span class="keyword">id</span>&lt;RACSubscriber&gt;)subscriber &#123;</span><br><span class="line">	<span class="built_in">NSCParameterAssert</span>(subscriber != <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line">	RACCompoundDisposable *disposable = [RACCompoundDisposable compoundDisposable];</span><br><span class="line">	subscriber = [[RACPassthroughSubscriber alloc]</span><br><span class="line">                  initWithSubscriber:subscriber</span><br><span class="line">                    signal:<span class="keyword">self</span></span><br><span class="line">                    disposable:disposable];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//把 核心穿透订阅者 添加到了 订阅者数组里面了</span></span><br><span class="line">    <span class="comment">//后面发送信号的实质就是，遍历这个subscribers数组发送就可以了</span></span><br><span class="line">	<span class="built_in">NSMutableArray</span> *subscribers = <span class="keyword">self</span>.subscribers;</span><br><span class="line">	<span class="keyword">@synchronized</span> (subscribers) &#123;</span><br><span class="line">		[subscribers addObject:subscriber];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	[disposable addDisposable:[RACDisposable disposableWithBlock:^&#123;</span><br><span class="line">		<span class="keyword">@synchronized</span> (subscribers) &#123;</span><br><span class="line">			<span class="comment">// 由于较新的订户的寿命通常较短</span></span><br><span class="line">            <span class="comment">// 所以搜索从列表的末尾开始</span></span><br><span class="line">			<span class="built_in">NSUInteger</span> index = [subscribers</span><br><span class="line">                                indexOfObjectWithOptions:<span class="built_in">NSEnumerationReverse</span></span><br><span class="line">                                passingTest:^ <span class="built_in">BOOL</span> (<span class="keyword">id</span>&lt;RACSubscriber&gt; obj,</span><br><span class="line">                                                    <span class="built_in">NSUInteger</span> index,</span><br><span class="line">                                                    <span class="built_in">BOOL</span> *stop) &#123;</span><br><span class="line">				<span class="keyword">return</span> obj == subscriber;</span><br><span class="line">			&#125;];</span><br><span class="line">			<span class="keyword">if</span> (index != <span class="built_in">NSNotFound</span>) [subscribers removeObjectAtIndex:index];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;]];</span><br><span class="line">	<span class="keyword">return</span> disposable;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-sendNext遍历数组，发送-Block"><a href="#3-sendNext遍历数组，发送-Block" class="headerlink" title="3. sendNext遍历数组，发送 Block"></a>3. <code>sendNext</code>遍历数组，发送 Block</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)sendNext:(<span class="keyword">id</span>)value &#123;</span><br><span class="line">	[<span class="keyword">self</span> enumerateSubscribersUsingBlock:^(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber) &#123;</span><br><span class="line">		[subscriber sendNext:value];</span><br><span class="line">	&#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)enumerateSubscribersUsingBlock:(<span class="keyword">void</span> (^)(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber))block &#123;</span><br><span class="line">	<span class="built_in">NSArray</span> *subscribers;</span><br><span class="line">	<span class="keyword">@synchronized</span> (<span class="keyword">self</span>.subscribers) &#123;</span><br><span class="line">		subscribers = [<span class="keyword">self</span>.subscribers <span class="keyword">copy</span>];</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line"><span class="comment">//    就是一个for循环，遍历调用</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber <span class="keyword">in</span> subscribers) &#123;</span><br><span class="line">		block(subscriber);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="RACMulticastConnection"><a href="#RACMulticastConnection" class="headerlink" title="RACMulticastConnection"></a>RACMulticastConnection</h1><p>工厂的方法是publish，调用connect.subscribeNext 不会重复生成。</p>
+<h1 id="RAC-宏定义"><a href="#RAC-宏定义" class="headerlink" title="RAC 宏定义"></a>RAC 宏定义</h1><p>RAC 的宏在预编译阶段，是一个特别宏大的系统，他提个的是一个宏定义系统，可以单独研究很久很久。。。。。。</p>
+<h2 id="weakify"><a href="#weakify" class="headerlink" title="@weakify"></a>@weakify</h2><p>@ 的作用是从C语言编译到OC，例如字符串。<br>weakify最终的效果就是</p>
+<pre><code>__weak __typeof__(self) self_weak_ = self;</code></pre>
+<!--
+# command
+command 可以监听前后的状态信息
+-->
+
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢 请给我一支兰州<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+      
+      
+        <div class="post-copyright">
+          <ul>
+            <li class="post-copyright-author">
+              <strong>Post author：</strong>
+              yangzai360
+            </li>
+            <li class="post-copyright-link">
+              <strong>Post link：</strong>
+              <a href="http://yangzai360.top/2020/11/20/RAC_02_CreateSignal/" title="RAC 学习探究：二、创建订阅信号流程">http://yangzai360.top/2020/11/20/RAC_02_CreateSignal/</a>
+            </li>
+            <li class="post-copyright-license">
+              <strong>Copyright Notice：</strong>
+              All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
+            </li>
+          </ul>
+        </div>
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://qr.liantu.com/api.php?text=http://yangzai360.top/2020/11/20/RAC_02_CreateSignal/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/19/RAC_01_Starter/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:25:53.611Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/19/RAC_01_Starter/">RAC 学习探究：一、简单起步</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-          
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/19/RAC_01_Starter/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">RAC 学习探究：一、简单起步</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/19/OC_ThirdPart_AFN_06_UIImageCategory/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:24:41.971Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/19/OC_ThirdPart_AFN_06_UIImageCategory/">AFNetworking 探究：六、UIImageCategory背后</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-          
-
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/19/OC_ThirdPart_AFN_05_NetworkingReachability/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:24:30.661Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Subscriber-like-todo-%EF%BC%9A-%E8%AE%A2%E9%98%85%E8%80%85%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">Subscriber like todo ： 订阅者的操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RACPassthroughSubscriber-%E6%A0%B8%E5%BF%83%E7%A9%BF%E9%80%8F%E8%AE%A2%E9%98%85%E8%80%85"><span class="toc-number">2.</span> <span class="toc-text">RACPassthroughSubscriber 核心穿透订阅者</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E8%80%85-RACSchedule"><span class="toc-number">3.</span> <span class="toc-text">调度者 RACSchedule</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RACObserve-%E5%8E%9F%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">RACObserve 原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RACSubject-%E5%85%A8%E8%83%BD%E8%AE%A2%E9%98%85%E8%80%85"><span class="toc-number">5.</span> <span class="toc-text">RACSubject 全能订阅者</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Subject-%E5%AE%9E%E7%8E%B0%E8%87%AA%E4%B8%BB%E6%94%B6%E5%8F%91%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">5.1.</span> <span class="toc-text">Subject 实现自主收发的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-RACSubjext-init-%E6%97%B6%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E7%BB%84%EF%BC%9A"><span class="toc-number">5.1.1.</span> <span class="toc-text">1. RACSubjext init 时初始化数组：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E7%A9%BF%E9%80%8F%E8%AE%A2%E9%98%85%E8%80%85-%E5%88%9B%E5%BB%BA%E5%90%8E%E5%B0%B1%E8%A2%AB%E6%B7%BB%E5%8A%A0%E8%BF%9B%E6%95%B0%E7%BB%84"><span class="toc-number">5.1.2.</span> <span class="toc-text">2. 核心穿透订阅者 创建后就被添加进数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-sendNext%E9%81%8D%E5%8E%86%E6%95%B0%E7%BB%84%EF%BC%8C%E5%8F%91%E9%80%81-Block"><span class="toc-number">5.1.3.</span> <span class="toc-text">3. sendNext遍历数组，发送 Block</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RACMulticastConnection"><span class="toc-number">6.</span> <span class="toc-text">RACMulticastConnection</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RAC-%E5%AE%8F%E5%AE%9A%E4%B9%89"><span class="toc-number">7.</span> <span class="toc-text">RAC 宏定义</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#weakify"><span class="toc-number">7.1.</span> <span class="toc-text">@weakify</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/19/OC_ThirdPart_AFN_05_NetworkingReachability/">AFNetworking 探究：五、网络可达：reachability</a>
-    </h1>
-  
+        
+    </div>
+</aside>
 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/19/OC_ThirdPart_AFN_04_cer/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:24:18.827Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/19/OC_ThirdPart_AFN_04_cer/">AFNetworking 探究：四、Https 安全</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/19/OC_ThirdPart_AFN_03_ResponseSerializer/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:24:07.332Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/19/OC_ThirdPart_AFN_03_ResponseSerializer/">AFNetworking 探究：三、响应序列化</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/19/OC_ThirdPart_AFN_02_MultipartFormRequest/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:23:34.212Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/19/OC_ThirdPart_AFN_02_MultipartFormRequest/">AFNetworking 探究：二、MultipartForm 表单请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/19/OC_ThirdPart_AFN_01_NormalRequest/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:23:21.787Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/19/OC_ThirdPart_AFN_01_NormalRequest/">AFNetworking 探究：一、正常请求流程</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/19/OC_GCD_04_Group/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:22:34.096Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/19/OC_GCD_04_Group/">GCD探究四：GCD group 原理</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/19/OC_GCD_03_synchronized/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:22:14.304Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/19/OC_GCD_03_synchronized/">GCD探究三：synchronized原理</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2020/page/2/">2</a><a class="page-number" href="/archives/2020/page/3/">3</a><a class="extend next" rel="next" href="/archives/2020/page/2/">Next »</a>
-    </nav>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 
 
@@ -515,8 +519,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
