@@ -198,33 +198,12 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-OCBigManuscript05_AppStart" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_ThirdPart_AFN_06_UIImageCategory" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/05/OCBigManuscript05_AppStart/">OC Runtime 大手稿：五、App? Start!</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/05/OCBigManuscript05_AppStart/" class="archive-article-date">
-  	<time datetime="2020-11-05T10:59:39.072Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-05</time>
-</a>
-        
-        
-      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
-<p>第五篇：App? Start!</p>
-<p>首先放出整体图</p>
-<p><img src="/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF5__dyld_start.png" alt="OC底层大手稿5__dyld_start"></p>
-<h1 id="0-准备的源码工程"><a href="#0-准备的源码工程" class="headerlink" title="0. 准备的源码工程"></a>0. 准备的源码工程</h1><p>dyld-750.6<br>objc4-781</p>
-<h1 id="1-dyld-出现的地方"><a href="#1-dyld-出现的地方" class="headerlink" title="1. dyld 出现的地方"></a>1. dyld 出现的地方</h1><p>dyld（the dynamic link editor）是苹果的动态链接器，是苹果操作系统的重要组成部分，在app被编译打包成可执行文件格式的Mach-O文件后，交由dyld负责连接，加载程序。</p>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
       
 
       
@@ -241,7 +220,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/05/OCBigManuscript05_AppStart/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_06_UIImageCategory/">展开全文 >></a>
         </p>
       
 
@@ -271,37 +250,12 @@
 
 
   
-    <article id="post-OCBigManuscript04_msgSend" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_ThirdPart_AFN_05_NetworkingReachability" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/01/OCBigManuscript04_msgSend/">OC Runtime 大手稿：四、msgSend 全流程</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/01/OCBigManuscript04_msgSend/" class="archive-article-date">
-  	<time datetime="2020-11-01T03:35:19.688Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-01</time>
-</a>
-        
-        
-      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
-<p>第四篇：msgSend 全流程</p>
-<p>从调用msgSend到最后崩溃，涉及多个流程：</p>
-<ol>
-<li>cache_t 缓存的查找</li>
-<li>类结构中去查找</li>
-<li>动态方法决议</li>
-<li>消息的快速转发</li>
-<li>方法签名</li>
-</ol>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
       
 
       
@@ -318,7 +272,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/01/OCBigManuscript04_msgSend/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_05_NetworkingReachability/">展开全文 >></a>
         </p>
       
 
@@ -348,37 +302,12 @@
 
 
   
-    <article id="post-OCBigManuscript03_ObjectDealloc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_ThirdPart_AFN_04_cer" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/31/OCBigManuscript03_ObjectDealloc/">OC Runtime 大手稿：三、对象销毁流程</a>
-    </h1>
-  
-
-        
-          <a href="/2020/10/31/OCBigManuscript03_ObjectDealloc/" class="archive-article-date">
-  	<time datetime="2020-10-31T13:57:15.140Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-31</time>
-</a>
-        
-        
-      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
-<p>第三篇：对象销毁流程</p>
-<p>未完成!NFY Not finished yet.</p>
-<p>基本的流程已经梳理完了，图显得有些突兀，主要是因为右上角的那个方法中有很多官方的注释，以及我没有对其进行拆解和简化。</p>
-<p>这里面有一些知识点没有特别细致的展开，例如：</p>
-<ul>
-<li>sidetable 结构和应用操作的整理汇总</li>
-<li>weak 散列表的操作展开讲</li>
-<li>最后一些流程用到的方法查找函数是仅仅提供给查找 <code>构造函数</code> 和 <code>析构函数</code> 使用的</li>
-</ul>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
       
 
       
@@ -395,7 +324,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/31/OCBigManuscript03_ObjectDealloc/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_04_cer/">展开全文 >></a>
         </p>
       
 
@@ -425,28 +354,12 @@
 
 
   
-    <article id="post-CWC02_OCRuntimeInAction_CookActuallyUsedInCooking" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_ThirdPart_AFN_03_ResponseSerializer" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/31/CWC02_OCRuntimeInAction_CookActuallyUsedInCooking/">常用 Runtime 操作整理</a>
-    </h1>
-  
-
-        
-          <a href="/2020/10/31/CWC02_OCRuntimeInAction_CookActuallyUsedInCooking/" class="archive-article-date">
-  	<time datetime="2020-10-31T09:40:39.350Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-31</time>
-</a>
-        
-        
-      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>本篇英文名叫 <code>OC Runtime In Action：CEO Cook Actually Used In Cooking</code>，翻译过来的意思是开发人员实际开发的时候使用的 runtime 操作。进行积累整理。</p>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
       
 
       
@@ -463,7 +376,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/31/CWC02_OCRuntimeInAction_CookActuallyUsedInCooking/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_03_ResponseSerializer/">展开全文 >></a>
         </p>
       
 
@@ -493,28 +406,12 @@
 
 
   
-    <article id="post-From_LLVM_to_clang" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_ThirdPart_AFN_02_MultipartFormRequest" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/31/From_LLVM_to_clang/">从 LLVM 到 clang</a>
-    </h1>
-  
-
-        
-          <a href="/2020/10/31/From_LLVM_to_clang/" class="archive-article-date">
-  	<time datetime="2020-10-31T06:32:48.421Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-31</time>
-</a>
-        
-        
-      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>NFY NotFinishedYet：还没有写完。。。</p>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
       
 
       
@@ -531,7 +428,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/31/From_LLVM_to_clang/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_02_MultipartFormRequest/">展开全文 >></a>
         </p>
       
 
@@ -561,29 +458,12 @@
 
 
   
-    <article id="post-OCBigManuscript02_ObjectAllocInit" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_ThirdPart_AFN_01_NormalRequest" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/30/OCBigManuscript02_ObjectAllocInit/">OC Runtime 大手稿：二、实例化源码流程</a>
-    </h1>
-  
-
-        
-          <a href="/2020/10/30/OCBigManuscript02_ObjectAllocInit/" class="archive-article-date">
-  	<time datetime="2020-10-29T18:36:59.398Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-30</time>
-</a>
-        
-        
-      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
-<p>第二篇：实例化源码流程</p>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
       
 
       
@@ -600,7 +480,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/30/OCBigManuscript02_ObjectAllocInit/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_01_NormalRequest/">展开全文 >></a>
         </p>
       
 
@@ -630,31 +510,12 @@
 
 
   
-    <article id="post-CWC01_KitchenToolsThatCookLoves" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_GCD_04_Group" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/28/CWC01_KitchenToolsThatCookLoves/">Apple 源码用到的一些数据结构</a>
-    </h1>
-  
-
-        
-          <a href="/2020/10/28/CWC01_KitchenToolsThatCookLoves/" class="archive-article-date">
-  	<time datetime="2020-10-28T10:00:23.399Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-28</time>
-</a>
-        
-        
-      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>本篇英文名叫 <code>Kitchen Tools That Cook Loves</code>，翻译过来的意思是<code>苹果源码中出现的一些数据结构</code>，不断积累更新。</p>
-<p>隶属于我的第二个大系列 <code>CWC</code> ：<code>Cooking With Cook</code>，翻译过来的中文意思就是 <code>作为一个长期热爱苹果的苹果开发者，陪着水果公司一起积累和成长。</code></p>
-<hr>
-<p>目前：<code>entsize_list_tt</code>、<code>list_array_tt</code>…</p>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
       
 
       
@@ -671,7 +532,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/28/CWC01_KitchenToolsThatCookLoves/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/19/OC_GCD_04_Group/">展开全文 >></a>
         </p>
       
 
@@ -701,29 +562,12 @@
 
 
   
-    <article id="post-OCBigManuscript01_StructGlimpse" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_GCD_03_synchronized" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/28/OCBigManuscript01_StructGlimpse/">OC Runtime 大手稿：一、整体数据结构</a>
-    </h1>
-  
-
-        
-          <a href="/2020/10/28/OCBigManuscript01_StructGlimpse/" class="archive-article-date">
-  	<time datetime="2020-10-28T09:48:07.763Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-28</time>
-</a>
-        
-        
-      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
-<p>始篇，从对类对象使用的数据结构的静态关联分析开始。也就是从源码中找到他们的定义和关联关系。不做运行的分析等。</p>
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
       
 
       
@@ -740,7 +584,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/28/OCBigManuscript01_StructGlimpse/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/19/OC_GCD_03_synchronized/">展开全文 >></a>
         </p>
       
 
@@ -770,6 +614,114 @@
 
 
   
+    <article id="post-OC_GCD_02_sync&amp;async" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
+      
+
+      
+      
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/11/19/OC_GCD_02_sync&async/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-OC_GCD_01_CreateQueue" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
+      
+
+      
+      
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/11/19/OC_GCD_01_CreateQueue/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next »</a>
+    </nav>
   
 
 

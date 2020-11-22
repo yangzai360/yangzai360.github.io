@@ -14,19 +14,19 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第五篇：App? Start! 首先放出整体图  0. 准备的源码工程dyld-750.6objc4-781 1. dyld 出现的地方dyld（the dynamic link editor）是苹果的动态链接器，是苹果操作系统的重要组成部分，在app被编译打包成可执行文件格">
+  <meta name="description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第五篇：App? Start! 首先放出整体图  0. 准备的源码工程dyld-750.6objc4-781 1. dyld 出现的地方dyld（the dynamic link editor）是苹果的动态链接器，是苹果操作系统的重要组成部分，在 app 被编译打包成可执行文">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OC Runtime 大手稿：五、App? Start!">
 <meta property="og:url" content="http://yangzai360.top/2020/11/05/OCBigManuscript05_AppStart/index.html">
 <meta property="og:site_name" content="扬仔的技术博客">
-<meta property="og:description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第五篇：App? Start! 首先放出整体图  0. 准备的源码工程dyld-750.6objc4-781 1. dyld 出现的地方dyld（the dynamic link editor）是苹果的动态链接器，是苹果操作系统的重要组成部分，在app被编译打包成可执行文件格">
+<meta property="og:description" content="复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第五篇：App? Start! 首先放出整体图  0. 准备的源码工程dyld-750.6objc4-781 1. dyld 出现的地方dyld（the dynamic link editor）是苹果的动态链接器，是苹果操作系统的重要组成部分，在 app 被编译打包成可执行文">
 <meta property="og:locale">
 <meta property="og:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF5__dyld_start.png">
 <meta property="og:image" content="http://yangzai360.top/media/16045850327180.jpg">
 <meta property="og:image" content="http://yangzai360.top/media/16045858082839.jpg">
 <meta property="og:image" content="http://yangzai360.top/media/16045860927585.jpg">
 <meta property="article:published_time" content="2020-11-05T10:59:39.072Z">
-<meta property="article:modified_time" content="2020-11-05T18:15:19.201Z">
+<meta property="article:modified_time" content="2020-11-05T18:15:51.240Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF5__dyld_start.png">
@@ -231,7 +231,7 @@
 <p>首先放出整体图</p>
 <p><img src="/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF5__dyld_start.png" alt="OC底层大手稿5__dyld_start"></p>
 <h1 id="0-准备的源码工程"><a href="#0-准备的源码工程" class="headerlink" title="0. 准备的源码工程"></a>0. 准备的源码工程</h1><p>dyld-750.6<br>objc4-781</p>
-<h1 id="1-dyld-出现的地方"><a href="#1-dyld-出现的地方" class="headerlink" title="1. dyld 出现的地方"></a>1. dyld 出现的地方</h1><p>dyld（the dynamic link editor）是苹果的动态链接器，是苹果操作系统的重要组成部分，在app被编译打包成可执行文件格式的Mach-O文件后，交由dyld负责连接，加载程序。</p>
+<h1 id="1-dyld-出现的地方"><a href="#1-dyld-出现的地方" class="headerlink" title="1. dyld 出现的地方"></a>1. dyld 出现的地方</h1><p>dyld（the dynamic link editor）是苹果的动态链接器，是苹果操作系统的重要组成部分，在 app 被编译打包成可执行文件格式的 Mach-O 文件后，交由 dyld 负责连接，加载程序。</p>
 <a id="more"></a>
 
 <p><img src="/media/16045850327180.jpg" alt="随处我们都可见 _dyld_start"><br>跟踪这个方法，找到 arm64 的流程</p>
@@ -357,6 +357,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2020/11/06/iOSMechanism_01GCD/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          iOS 各种系统机制：01 大中枢派发
+        
+      </div>
+    </a>
   
   
     <a href="/2020/11/01/OCBigManuscript04_msgSend/" id="article-nav-older" class="article-nav-link-wrap">
