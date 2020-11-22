@@ -201,9 +201,28 @@
     <article id="post-OCBigManuscript06_ClassLoad" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/19/OCBigManuscript06_ClassLoad/">OC Runtime 大手稿：六、类加载</a>
+    </h1>
+  
+
+        
+          <a href="/2020/11/19/OCBigManuscript06_ClassLoad/" class="archive-article-date">
+  	<time datetime="2020-11-19T15:20:48.081Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
+</a>
+        
+        
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
+        <a id="more"></a>
+
+<p><img src="/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF6_ClassLoad@40.png" alt="OC底层大手稿6_ClassLoad@40"></p>
+
       
 
       
@@ -221,77 +240,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2020/11/19/OCBigManuscript06_ClassLoad/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-iOSMechanism_01GCD" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/06/iOSMechanism_01GCD/">iOS 各种系统机制：01 大中枢派发</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/06/iOSMechanism_01GCD/" class="archive-article-date">
-  	<time datetime="2020-11-06T11:06:16.316Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-06</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>GCD 调用iOS系统级别的任务调度逻辑，将需要执行的任务添加进队列，并指明执行任务的函数。</p>
-<p>打下断点看到 symblo，libdispatch 库的 dispatch_queue_create</p>
-<p>// 6618342 Contact the team that owns the Instrument DTrace probe before<br>//         renaming this symbol<br>struct dispatch_queue_static_s _dispatch_main_q = {<br>    DISPATCH_GLOBAL_OBJECT_HEADER(queue_main),<br>#if !DISPATCH_USE_RESOLVERS<br>    .do_targetq = _dispatch_get_default_queue(true),<br>#endif<br>    .dq_state = DISPATCH_QUEUE_STATE_INIT_VALUE(1) |<br>            DISPATCH_QUEUE_ROLE_BASE_ANON,<br>    .dq_label = “com.apple.main-thread”,<br>    .dq_atomic_flags = DQF_THREAD_BOUND | DQF_WIDTH(1),<br>    .dq_serialnum = 1,<br>};</p>
-
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/06/iOSMechanism_01GCD/">展开全文 >></a>
         </p>
       
 
