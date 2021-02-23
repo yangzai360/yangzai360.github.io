@@ -14,18 +14,24 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="扬仔的技术博客">
-<meta property="og:url" content="http://yangzai360.top/archives/2020/page/3/index.html">
+  <meta name="description" content="[TOC] 复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第三篇：对象销毁流程 未完成!NFY Not finished yet. 基本的流程已经梳理完了，图显得有些突兀，主要是因为右上角的那个方法中有很多官方的注释，以及我没有对其进行拆解和简化。 这里面有一些知识点没有特别细致的展开，例如：  sidetable 结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OC Runtime 大手稿：三、对象销毁流程">
+<meta property="og:url" content="http://yangzai360.top/2020/11/26/OCBigManuscript03_ObjectDealloc/index.html">
 <meta property="og:site_name" content="扬仔的技术博客">
+<meta property="og:description" content="[TOC] 复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第三篇：对象销毁流程 未完成!NFY Not finished yet. 基本的流程已经梳理完了，图显得有些突兀，主要是因为右上角的那个方法中有很多官方的注释，以及我没有对其进行拆解和简化。 这里面有一些知识点没有特别细致的展开，例如：  sidetable 结构">
 <meta property="og:locale">
+<meta property="og:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF3_%E5%AF%B9%E8%B1%A1Dealloc-3.png">
+<meta property="article:published_time" content="2020-11-25T19:35:40.000Z">
+<meta property="article:modified_time" content="2020-11-25T19:35:40.000Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF3_%E5%AF%B9%E8%B1%A1Dealloc-3.png">
   
     <link rel="alternative" href="/atom.xml" title="扬仔的技术博客" type="application/atom+xml">
   
   
-  <title>Archives: 2020 | 扬仔的技术博客</title>
+  <title>OC Runtime 大手稿：三、对象销毁流程 | 扬仔的技术博客</title>
   
   
     <link rel="icon" href="/img/favicon-32x32-yulia.png">
@@ -196,79 +202,326 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-OCBigManuscript03_ObjectDealloc" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/05/OCBigManuscript04_msgSend/" class="archive-article-date">
-  	<time datetime="2020-11-04T20:23:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-05</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/05/OCBigManuscript04_msgSend/">OC Runtime 大手稿：四、msgSend 全流程</a>
+    <h1 class="article-title" itemprop="name">
+      OC Runtime 大手稿：三、对象销毁流程
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/04/OCBigManuscript02_ObjectAllocInit/" class="archive-article-date">
-  	<time datetime="2020-11-03T19:00:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-04</time>
+        
+          <a href="/2020/11/26/OCBigManuscript03_ObjectDealloc/" class="archive-article-date">
+  	<time datetime="2020-11-25T19:35:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-26</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/04/OCBigManuscript02_ObjectAllocInit/">OC Runtime 大手稿：二、实例化源码流程</a>
-    </h1>
-  
+        
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
+<p>第三篇：对象销毁流程</p>
+<p>未完成!NFY Not finished yet.</p>
+<p>基本的流程已经梳理完了，图显得有些突兀，主要是因为右上角的那个方法中有很多官方的注释，以及我没有对其进行拆解和简化。</p>
+<p>这里面有一些知识点没有特别细致的展开，例如：</p>
+<ul>
+<li>sidetable 结构和应用操作的整理汇总</li>
+<li>weak 散列表的操作展开讲</li>
+<li>最后一些流程用到的方法查找函数是仅仅提供给查找 <code>构造函数</code> 和 <code>析构函数</code> 使用的</li>
+</ul>
+<a id="more"></a>
 
-        <div class="article-info info-on-right">
-          
-          
+<p><img src="/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF3_%E5%AF%B9%E8%B1%A1Dealloc-3.png" alt="OC底层大手稿3_对象Dealloc"></p>
+<h1 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h1><p>最近面了一些试，某位非常有水平的面试官问了我一个有意思的问题:</p>
+<pre><code>delloc 的时候增加引用计数，会防止销毁吗？</code></pre>
+<p>当时猜测了一下，没答很全面，好好梳理一下 delloc 的流程。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 调用Dealloc之前的流程</span><br><span class="line"><span class="number">2.</span> Dealloc()</span><br><span class="line"><span class="number">2.1</span> 析构 CxxDestruct，以及到底是什么！</span><br><span class="line"><span class="number">2.2</span> 移除关联对象，复习关联对象实现</span><br><span class="line"><span class="number">1.</span> clearDeallocationg()，处理weak</span><br><span class="line"><span class="number">2.</span> <span class="built_in">free</span>(obj)</span><br><span class="line"><span class="number">3.</span> 父类的 Dealloc 呢？</span><br></pre></td></tr></table></figure>
 
+<p>穿插研究复习几个问题，提供几个真正属于 runtime 的面试题：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> customRR是什么？</span><br><span class="line"><span class="number">2.</span> SideTable里操作Weak在什么环节？</span><br><span class="line"><span class="number">3.</span> CxxDestruct是什么？</span><br><span class="line"><span class="number">4.</span> 源码里没有，那父类Dealloc如何调用的？</span><br><span class="line"><span class="number">5.</span> 一个Strong一个weak在delloc里面指向对象自己会怎么样？</span><br><span class="line"><span class="number">6.</span> 为什么自己写 dealloc 里面不需要写 [super dealloc]?</span><br></pre></td></tr></table></figure>
+
+<h1 id="1-调用Dealloc之前的流程"><a href="#1-调用Dealloc之前的流程" class="headerlink" title="1. 调用Dealloc之前的流程"></a>1. 调用Dealloc之前的流程</h1><p>首先创造一个简单对象的 delloc 流程下符号断点 delloc ：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">      Fruit *banana = [[Fruit alloc] init];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以捕获断点 <code>bt</code> 出来：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;Fruit: 0x100658430&gt; (lldb) bt * thread #1, queue = &#x27;com.apple.main-thread&#x27;, stop reason = breakpoint 6.2</span><br><span class="line"></span><br><span class="line">    frame #<span class="number">0</span>: <span class="number">0x000000010031e3f0</span> libobjc.A.dylib` -[NSObject dealloc](self=<span class="number">0x0000000100658430</span>, _cmd=<span class="string">&quot;dealloc&quot;</span>) at NSObject.mm:<span class="number">2350</span>:<span class="number">23</span></span><br><span class="line"></span><br><span class="line">    frame #<span class="number">1</span>: <span class="number">0x00000001002c616b</span>  libobjc.A.dylib`_objc_release [inlined]  objc_object::rootRelease(<span class="keyword">this</span>=<span class="number">0x0000000100658430</span>, performDealloc=<span class="literal">true</span>, =<span class="literal">false</span>)  at objc-object.h:<span class="number">701</span>:<span class="number">9</span></span><br><span class="line"></span><br><span class="line">    frame #<span class="number">2</span>: <span class="number">0x00000001002c5a98</span>  libobjc.A.dylib`_objc_release [inlined] objc_object::rootRelease(<span class="keyword">this</span>=<span class="number">0x0000000100658430</span>) at objc-object.h:<span class="number">571</span></span><br><span class="line"></span><br><span class="line">    frame #<span class="number">3</span>: <span class="number">0x00000001002c5a98</span> libobjc.A.dylib`_objc_release [inlined] objc_object::release(<span class="keyword">this</span>=<span class="number">0x0000000100658430</span>) at objc-object.h:<span class="number">550</span></span><br><span class="line"></span><br><span class="line">    frame #<span class="number">4</span>: <span class="number">0x00000001002c5a09</span> libobjc.A.dylib`_objc_release(obj=<span class="number">0x0000000100658430</span>) at NSObject.mm:<span class="number">1598</span></span><br><span class="line"></span><br><span class="line">    frame #<span class="number">5</span>: <span class="number">0x0000000100317bef</span> libobjc.A.dylib`objc_storeStrong( location=<span class="number">0x00007ffeefbff4f0</span>, obj=<span class="number">0x0000000000000000</span>) at NSObject.mm:<span class="number">256</span>:<span class="number">5</span></span><br><span class="line"></span><br><span class="line">  * frame #<span class="number">6</span>: <span class="number">0x0000000100000dfa</span> `main(argc=<span class="number">1</span>, argv=<span class="number">0x00007ffeefbff528</span>) at main.m:<span class="number">17</span>:<span class="number">9</span> [opt]</span><br><span class="line"></span><br><span class="line">    frame #<span class="number">7</span>: <span class="number">0x00007fff67a7ecc9</span> libdyld.dylib`start + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    frame #<span class="number">8</span>: <span class="number">0x00007fff67a7ecc9</span> libdyld.dylib`start + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到进入的流程：<code>objc_storeStrong</code> –&gt; <code>_objc_release</code>  –&gt; <code>release</code> ……这就够了，最新的代码走起：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// PS: 如果不喜欢 bt 这个词的话，可以直接看：</span></span><br><span class="line"><span class="comment">// [Always Show Disassembly]</span></span><br><span class="line"><span class="comment">// 总之找到这个 dealloc 的入口是 objc_storeStrong() 就够了</span></span><br><span class="line"></span><br><span class="line">-&gt;  <span class="number">0x100001b5f</span> &lt;+<span class="number">31</span>&gt;: movq   <span class="number">0x173a</span>(%rip), %rdi        ; (<span class="keyword">void</span> *)<span class="number">0x00000001000032e8</span>: Fruit</span><br><span class="line">    <span class="number">0x100001b66</span> &lt;+<span class="number">38</span>&gt;: callq  <span class="number">0x100001d4a</span>               ; symbol stub <span class="keyword">for</span>: objc_alloc_init</span><br><span class="line">    <span class="number">0x100001b6b</span> &lt;+<span class="number">43</span>&gt;: movq   %rax, <span class="number">-0x10</span>(%rbp)</span><br><span class="line">    <span class="number">0x100001b6f</span> &lt;+<span class="number">47</span>&gt;: leaq   <span class="number">-0x10</span>(%rbp), %rdi</span><br><span class="line">    <span class="number">0x100001b73</span> &lt;+<span class="number">51</span>&gt;: xorl   %esi, %esi</span><br><span class="line">    <span class="number">0x100001b75</span> &lt;+<span class="number">53</span>&gt;: callq  <span class="number">0x100001d6e</span>               ; symbol stub <span class="keyword">for</span>: objc_storeStrong</span><br></pre></td></tr></table></figure>
+
+
+<p>调用了 <code>NSObject.mm</code> 的 <code>objc_storeStrong()</code>方法，传入的参数是 对象的地址以及 obj 为 nil，其实就是一个赋空值的过程。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">objc_storeStrong(id *location, id obj)</span><br><span class="line">&#123;</span><br><span class="line">    id prev = *location;</span><br><span class="line">    <span class="comment">// 判断上一个值跟目前的值是否同一地址</span></span><br><span class="line">    <span class="keyword">if</span> (obj == prev) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 两个值，retain新值，release旧的值</span></span><br><span class="line">    objc_retain(obj);</span><br><span class="line">    *location = obj;</span><br><span class="line">    objc_release(prev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很明显这个 <code>objc_retain(nil);</code> 没什么作用，重点就是 <code>objc_release(banana);</code></p>
+<p>objc_release() 方法的实现很简单，第一判空返回，第二判TaggedPointer返回，第三调用<code>obj-&gt;release()</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">__attribute__((aligned(<span class="number">16</span>), flatten, noinline))</span><br><span class="line"><span class="keyword">void</span> </span><br><span class="line">objc_release(id obj)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!obj) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span> (obj-&gt;isTaggedPointer()) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">return</span> obj-&gt;release();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续调用 <code>objc_object::release()</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 等同于调用 [this release], 如果没有重写的话，就走一个捷径</span></span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span></span><br><span class="line">objc_object::release()</span><br><span class="line">&#123;</span><br><span class="line">    ASSERT(!isTaggedPointer());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (fastpath(!ISA()-&gt;hasCustomRR())) &#123;</span><br><span class="line">        rootRelease();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((<span class="keyword">void</span>(*)(objc_object *, SEL))objc_msgSend)(<span class="keyword">this</span>, @selector(release));</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>插入去研究了 什么是 customRR 和 customCore：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//class 或 superclass 实现了默认的 retain/release/autorelease/retainCount/ _tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference 方法</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//class 或 superclass 有默认的 new/self/class/respondsToSelector/isKindOfClass 方法</span></span><br><span class="line"><span class="comment">//源码：</span></span><br><span class="line"><span class="comment">// class or superclass has default retain/release/autorelease/retainCount/</span></span><br><span class="line"><span class="comment">//   _tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> RW_HAS_DEFAULT_RR     (1&lt;&lt;14)</span></span><br><span class="line"><span class="comment">// class or superclass has default new/self/class/respondsToSelector/isKindOfClass</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> RW_HAS_DEFAULT_CORE   (1&lt;&lt;13)</span></span><br></pre></td></tr></table></figure>
+
+<p>也就是说，👆这里 fastpath 大多数情况会调用 rootRelease，如果你的类自己实现了RR方法，就给 msgSend release 方法。</p>
+<p>继续跟踪 <code>rootRelease()</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ALWAYS_INLINE <span class="keyword">bool</span> </span><br><span class="line">objc_object::rootRelease()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> rootRelease(<span class="literal">true</span>, <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>rootRelease(true, false);</code> 代码太多，看图里有详情，这里解释一下做的事情:</p>
+<ol>
+<li>判 Tagged Pointer 返 false</li>
+<li>sideTable 和 extra_rc 的引用计数合并，如果都没有了，就通过 msgSend dealloc</li>
+</ol>
+<p>另外这里提到：<strong>sidetable 使用的锁是自旋</strong></p>
+<p><strong>问题1：Tagged Pointer 为啥这个时候返回False</strong><br>TP不参与任何的引用计数，引用本身即是值，因为他很单纯，指针混淆、身体里大部分都是值。讲TP文章太多，在此不赘述了。</p>
+<p><strong>问题2：为什么会有 sideTable 和 extra_rc？</strong><br>首先：nonpointerISA 对象的引用计数优先放在isa里面的ExtraRc里面，直到突破了那个区域的限制，就转到 SideTable 中的 两个Map中存储。<br>其次：而 pointerISA 直接在 SideTable 中的 两个Map中存储。</p>
+<p><strong>问题3：开篇的面试题</strong><br>没有用，会继续释放，因为进入 dealloc 之前，问题2，已经判断了引用计数。</p>
+<p><strong>引发了另一个我想到的问题</strong><br>一个Strong一个weak在delloc里面指向对象自己，会怎么样？稍后尝试！！！<br>我这里根据下面的推测猜测一下，strong 可能会有问题，甚至可能野指针，weak的话后面会释放，所以没关系。</p>
+<h1 id="2-Dealloc"><a href="#2-Dealloc" class="headerlink" title="2. Dealloc()"></a>2. Dealloc()</h1><p>通过msgSend进入Dealloc</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NSObject.mm</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Replaced by NSZombies</span></span><br><span class="line">- (<span class="keyword">void</span>)dealloc &#123;</span><br><span class="line">    _objc_rootDealloc(self);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span></span><br><span class="line">_objc_rootDealloc(id obj)</span><br><span class="line">&#123;</span><br><span class="line">    ASSERT(obj);</span><br><span class="line">    obj-&gt;rootDealloc();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// objc-object.h</span></span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span></span><br><span class="line">objc_object::rootDealloc()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// fixme necessary? 源：有必要吗？</span></span><br><span class="line">    <span class="keyword">if</span> (isTaggedPointer()) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (fastpath(isa.nonpointer  &amp;&amp;  </span><br><span class="line">                 !isa.weakly_referenced  &amp;&amp;  </span><br><span class="line">                 !isa.has_assoc  &amp;&amp;  </span><br><span class="line">                 !isa.has_cxx_dtor  &amp;&amp;  </span><br><span class="line">                 !isa.has_sidetable_rc))</span><br><span class="line">    &#123;</span><br><span class="line">        assert(!sidetable_present());</span><br><span class="line">        <span class="built_in">free</span>(<span class="keyword">this</span>);</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        object_dispose((id)<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>好如果你这个对象：是nonpointter的话，请问你<code>是否有弱引用</code>或者<code>你是否有关联对象</code>或者<code>是否有析构函数</code>或者<code>是否你的引用计数太打了，存到sidetable里面去了</code>。</p>
+<p>以上问题，如果你有一项的话，跟我们走一趟，调用下面的<code>object_dispose((id)this)</code></p>
+<p>如果以上你都没有，那好你是一个很单纯的对象，恭喜你，<code>free()</code> and go！</p>
+<p>另外，去执行 <code>object_dispose((id)this)</code> 的对象也不要担心，看下面的实现，只是在 <code>free(obj)</code>之前多调用了一个 <code>objc_destructInstance(obj)</code> 而已。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************************</span></span><br><span class="line"><span class="comment">* object_dispose</span></span><br><span class="line"><span class="comment">* fixme</span></span><br><span class="line"><span class="comment">* Locking: none</span></span><br><span class="line"><span class="comment">************************/</span></span><br><span class="line">id </span><br><span class="line">object_dispose(id obj)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!obj) <span class="keyword">return</span> nil;</span><br><span class="line"></span><br><span class="line">    objc_destructInstance(obj);    </span><br><span class="line">    <span class="built_in">free</span>(obj);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> nil;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>objc_destructInstance</code> 这个是本篇的核心方法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************************************</span></span><br><span class="line"><span class="comment">* objc_destructInstance</span></span><br><span class="line"><span class="comment">* Destroys an instance without freeing memory. </span></span><br><span class="line"><span class="comment">* Calls C++ destructors.</span></span><br><span class="line"><span class="comment">* Calls ARC ivar cleanup.</span></span><br><span class="line"><span class="comment">* Removes associative references.</span></span><br><span class="line"><span class="comment">* Returns `obj`. Does nothing if `obj` is nil.</span></span><br><span class="line"><span class="comment">*************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">objc_destructInstance</span><span class="params">(id obj)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (obj) &#123;</span><br><span class="line">        <span class="comment">// Read all of the flags at once for performance.</span></span><br><span class="line">        <span class="keyword">bool</span> cxx = obj-&gt;hasCxxDtor();</span><br><span class="line">        <span class="keyword">bool</span> assoc = obj-&gt;hasAssociatedObjects();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// This order is important.</span></span><br><span class="line">        <span class="keyword">if</span> (cxx) object_cxxDestruct(obj);  </span><br><span class="line">        <span class="keyword">if</span> (assoc) _object_remove_assocations(obj);</span><br><span class="line">        obj-&gt;clearDeallocating();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-1-析构-CxxDestruct，以及到底是什么！"><a href="#2-1-析构-CxxDestruct，以及到底是什么！" class="headerlink" title="2.1 析构 CxxDestruct，以及到底是什么！"></a>2.1 析构 CxxDestruct，以及到底是什么！</h1><p>你看上面的源码说了，先执行析构函数还是先删除关联对象，先析构再移除关联。</p>
+<p><code>object_cxxDestruct(obj)</code> 往下走是 objc-class.mm 这个文件：两个方法，代码就不全粘了，核心就是一个for循环：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 源：先调用 cls 的析构，再不断调用父类的析构函数</span></span><br><span class="line"><span class="keyword">for</span> ( ; cls; cls = cls-&gt;superclass) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!cls-&gt;hasCxxDtor()) <span class="keyword">return</span>; </span><br><span class="line">    dtor = (<span class="keyword">void</span>(*)(id))</span><br><span class="line">        lookupMethodInClassAndLoadCache(cls, SEL_cxx_destruct);</span><br><span class="line">    <span class="keyword">if</span> (dtor != (<span class="keyword">void</span>(*)(id))_objc_msgForward_impcache) &#123;</span><br><span class="line">        <span class="keyword">if</span> (PrintCxxCtors) &#123;</span><br><span class="line">            _objc_inform(<span class="string">&quot;CXX: calling C++ destructors for class %s&quot;</span>, </span><br><span class="line">                         cls-&gt;nameForLogging());</span><br><span class="line">        &#125;</span><br><span class="line">        (*dtor)(obj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看看这个for循环有意思，Cook多骚气，<code>for ( ; cls; cls = cls-&gt;superclass)</code>，然后里面判断了<code>hasCxxDtor</code>，没有C++Dtor的话人家不写<code>break</code>，直接<code>return</code>了。</p>
+<p>如果这个for循环找到了C++析构，就调用lookupMethodInClassAndLoadCache，方法寻址，这个方法有注释，仅在构造和析构的时候使用，也做了断言，很安全。</p>
+<p>内部实现是一个方法寻址，找到的话填充缓存返回。</p>
+<p>关于这个C++的析构函数，这里详细说明下，这里详细释放了对象的每一个实例变量！所以这个方法一点是 LLVM 的 clang 中的 代码生成模块搞出来的。</p>
+<p><a target="_blank" rel="noopener" href="http://clang.llvm.org/doxygen/CodeGenModule_8cpp-source.html">http://clang.llvm.org/doxygen/CodeGenModule_8cpp-source.html</a></p>
+<p>它的方法实现核心就是对于这个对象所有实例变量，遍历调用<code>objc_storeStrong()</code>，然后这个实例变量就解除retain 了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">id <span class="title">objc_storeStrong</span><span class="params">(id *object, id value)</span> </span>&#123;</span><br><span class="line">  value = [value retain];</span><br><span class="line">  id oldValue = *object;</span><br><span class="line">  *object = value;</span><br><span class="line">  [oldValue release];</span><br><span class="line">  <span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="2-2-移除关联对象，复习关联对象实现"><a href="#2-2-移除关联对象，复习关联对象实现" class="headerlink" title="2.2 移除关联对象，复习关联对象实现"></a>2.2 移除关联对象，复习关联对象实现</h1><p>看到这里你要知道，我们通过API添加的关联对象，不管你ARC还是MRC，都没必要手动Remove。</p>
+<p><code>objc-references.mm</code> 里面</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 与设置/获取关联的引用不同，</span></span><br><span class="line"><span class="comment">// 此函数对性能敏感，</span></span><br><span class="line"><span class="comment">// 因为原始的isa对象（例如OS对象）</span></span><br><span class="line"><span class="comment">// 无法跟踪它们是否具有关联的对象。</span></span><br><span class="line"><span class="keyword">void</span></span><br><span class="line">_object_remove_assocations(id object)</span><br><span class="line">&#123;</span><br><span class="line">    ObjectAssociationMap refs&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        AssociationsManager manager;</span><br><span class="line">        <span class="function">AssociationsHashMap &amp;<span class="title">associations</span><span class="params">(manager.get())</span></span>;</span><br><span class="line">        AssociationsHashMap::iterator i = associations.find((objc_object *)object);</span><br><span class="line">        <span class="keyword">if</span> (i != associations.end()) &#123;</span><br><span class="line">            refs.swap(i-&gt;second);</span><br><span class="line">            associations.erase(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// release everything (outside of the lock).</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;i: refs) &#123;</span><br><span class="line">        i.second.releaseHeldValue();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看删除就能看出来关联对象是如何管理的，这里复习一下：</p>
+<ol>
+<li>有一个单例 <code>AssociationsManager</code></li>
+<li>通过 <code>get()</code> 获取了一个 <code>AssociationsHashMap</code></li>
+<li>这个 <code>AssociationsHashMap</code> 里面 K：V 是 <code>disguise(obj)</code>：<code>ObjectAssociation</code></li>
+<li><code>ObjectAssociation</code>：结构体存储着：<code>policy</code>，<code>value</code></li>
+</ol>
+<h1 id="3-clearDeallocationg-，处理weak"><a href="#3-clearDeallocationg-，处理weak" class="headerlink" title="3. clearDeallocationg()，处理weak"></a>3. clearDeallocationg()，处理weak</h1><p>继续前面的流程，完成2.1 2.2 之后 调用了 <code>objc-object.h</code>里面的 <code>clearDeallocating</code>方法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// objc-object.h</span></span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> </span><br><span class="line">objc_object::clearDeallocating()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (slowpath(!isa.nonpointer)) &#123;</span><br><span class="line">        <span class="comment">// Slow path for raw pointer isa.</span></span><br><span class="line">        sidetable_clearDeallocating();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (slowpath(isa.weakly_referenced  ||  isa.has_sidetable_rc)) &#123;</span><br><span class="line">        <span class="comment">// Slow path for non-pointer isa with weak refs and/or side table data.</span></span><br><span class="line">        clearDeallocating_slow();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    assert(!sidetable_present());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后这里才去 side table 里面去处理指针和弱引用问题。</p>
+<p>注意 isa.nonpointer 分开两个逻辑。</p>
+<p>通过这个对象取出 <code>Side Table</code>，处理里面的 <code>weakTable</code>，调用 <code> weak_clear_no_lock(&amp;table.weak_table, (id)this)</code> 和 <code>table.refcnts.erase(it)</code>完成清除。</p>
+<p>将所有weak引用指nil，就是在这里实现的。</p>
+<p>最后有一个debug的断言，专门写一个函数来做debug的断言，这个也是非常谨慎的体现，粘出来纪念一下Cook做饭的谨慎：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NSObject.mm</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> DEBUG</span></span><br><span class="line"><span class="comment">//DEBUG 模式下才启用 ：用于  断言 side table 中不存在对象。</span></span><br><span class="line"><span class="keyword">bool</span></span><br><span class="line">objc_object::sidetable_present()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">bool</span> result = <span class="literal">false</span>;</span><br><span class="line">    SideTable&amp; table = SideTables()[<span class="keyword">this</span>];</span><br><span class="line"></span><br><span class="line">    table.lock();</span><br><span class="line"></span><br><span class="line">    RefcountMap::iterator it = table.refcnts.find(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">if</span> (it != table.refcnts.end()) result = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (weak_is_registered_no_lock(&amp;table.weak_table, (id)<span class="keyword">this</span>)) result = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    table.unlock();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h1 id="4-free-obj"><a href="#4-free-obj" class="headerlink" title="4. free(obj)"></a>4. free(obj)</h1><p>最后不管对象付不复杂，都会调用 <code>free(obj)</code> </p>
+<p>Free 的实现在malloc的源码里面：</p>
+<h1 id="5-父类的-Dealloc-呢？"><a href="#5-父类的-Dealloc-呢？" class="headerlink" title="5. 父类的 Dealloc 呢？"></a>5. 父类的 Dealloc 呢？</h1><p>至今看源码看不到任何调用父类dealloc 的地方，这个网上搜了一下，发现结果在这里！</p>
+<p> <a target="_blank" rel="noopener" href="http://clang.llvm.org/doxygen/CGObjC_8cpp_source.html">http://clang.llvm.org/doxygen/CGObjC_8cpp_source.html</a> </p>
+<p> clang 在 ARC 的 dealloc 结束的时候插入了如雷的dealloc 的调用。</p>
+<p>通过 forward 给 superclass 调用 <code>dealloc</code>，才实现的<code>[super dealloc]</code>操作。</p>
+<p>这个时候上面有一个隐藏的问题也就解释了，其实 msgSend 来调用 dealloc 方法，会先调用 Fruit 的 dealloc (如果有的话)，然后因为ClangCodeGen的插手，才有的调用父类一直到根类的 dealloc。</p>
+<p>所有dealloc不需要我们手动写 super dealloc。</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34161064/article/details/91376214">OC 看objc源码认识retain、release、dealloc</a>。第一个断点出现之前有一大堆retain release 和 side table 的操作，看不太懂，看了这篇文档</li>
+<li><a target="_blank" rel="noopener" href="https://swift.gg/2018/06/11/friday-qa-2015-05-29-concurrent-memory-deallocation-in-the-objective-c-runtime/">Objective-C Runtime 中内存释放的并发问题</a>感谢译者 @一只羊的北京，找这个 static int _collecting_in_critical(void)，有点点不理解的地方，讲的很透彻，全网中文资料独此一篇</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="http://zhoulingyu.com/2017/02/15/Advanced-iOS-Study-objc-Memory-2/">http://zhoulingyu.com/2017/02/15/Advanced-iOS-Study-objc-Memory-2/</a><br>iOS进阶——iOS（Objective-C）内存管理·二</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢 请给我一支兰州<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+      
+      
+        <div class="post-copyright">
+          <ul>
+            <li class="post-copyright-author">
+              <strong>Post author：</strong>
+              yangzai360
+            </li>
+            <li class="post-copyright-link">
+              <strong>Post link：</strong>
+              <a href="http://yangzai360.top/2020/11/26/OCBigManuscript03_ObjectDealloc/" title="OC Runtime 大手稿：三、对象销毁流程">http://yangzai360.top/2020/11/26/OCBigManuscript03_ObjectDealloc/</a>
+            </li>
+            <li class="post-copyright-license">
+              <strong>Copyright Notice：</strong>
+              All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
+            </li>
+          </ul>
+        </div>
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://qr.liantu.com/api.php?text=http://yangzai360.top/2020/11/26/OCBigManuscript03_ObjectDealloc/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2020/11/28/RAC_02_CreateSignal/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          RAC 学习探究 二、创建订阅信号流程
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2020/11/25/CWC03_CooksFavoriteKnife/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">可以使用的隐藏工具</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0. 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E8%B0%83%E7%94%A8Dealloc%E4%B9%8B%E5%89%8D%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">1. 调用Dealloc之前的流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Dealloc"><span class="toc-number">3.</span> <span class="toc-text">2. Dealloc()</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-1-%E6%9E%90%E6%9E%84-CxxDestruct%EF%BC%8C%E4%BB%A5%E5%8F%8A%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%81"><span class="toc-number">4.</span> <span class="toc-text">2.1 析构 CxxDestruct，以及到底是什么！</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-2-%E7%A7%BB%E9%99%A4%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1%EF%BC%8C%E5%A4%8D%E4%B9%A0%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">2.2 移除关联对象，复习关联对象实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-clearDeallocationg-%EF%BC%8C%E5%A4%84%E7%90%86weak"><span class="toc-number">6.</span> <span class="toc-text">3. clearDeallocationg()，处理weak</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-free-obj"><span class="toc-number">7.</span> <span class="toc-text">4. free(obj)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E7%88%B6%E7%B1%BB%E7%9A%84-Dealloc-%E5%91%A2%EF%BC%9F"><span class="toc-number">8.</span> <span class="toc-text">5. 父类的 Dealloc 呢？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">9.</span> <span class="toc-text">References</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
   
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/2020/page/2/">« Prev</a><a class="page-number" href="/archives/2020/">1</a><a class="page-number" href="/archives/2020/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 
 
@@ -299,8 +552,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

@@ -14,18 +14,22 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="扬仔的技术博客">
-<meta property="og:url" content="http://yangzai360.top/archives/2020/page/3/index.html">
+  <meta name="description" content="[TOC] 我文章中的所有源码基于 ReactiveCocoa - ReactiveObjC v3.1 编程范式简单分为：面向对象 面向过程 链式 函数式 响应式 reactiveObjC：编程范式集大成者 此篇文章，先记录 RAC 简单的记录使用的一些方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RAC 学习探究 一、简单起步">
+<meta property="og:url" content="http://yangzai360.top/2020/11/28/RAC_01_Starter/index.html">
 <meta property="og:site_name" content="扬仔的技术博客">
+<meta property="og:description" content="[TOC] 我文章中的所有源码基于 ReactiveCocoa - ReactiveObjC v3.1 编程范式简单分为：面向对象 面向过程 链式 函数式 响应式 reactiveObjC：编程范式集大成者 此篇文章，先记录 RAC 简单的记录使用的一些方法">
 <meta property="og:locale">
+<meta property="article:published_time" content="2020-11-27T16:22:48.000Z">
+<meta property="article:modified_time" content="2020-11-27T16:22:48.000Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="扬仔的技术博客" type="application/atom+xml">
   
   
-  <title>Archives: 2020 | 扬仔的技术博客</title>
+  <title>RAC 学习探究 一、简单起步 | 扬仔的技术博客</title>
   
   
     <link rel="icon" href="/img/favicon-32x32-yulia.png">
@@ -196,79 +200,275 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-RAC_01_Starter" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/05/OCBigManuscript04_msgSend/" class="archive-article-date">
-  	<time datetime="2020-11-04T20:23:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-05</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/05/OCBigManuscript04_msgSend/">OC Runtime 大手稿：四、msgSend 全流程</a>
+    <h1 class="article-title" itemprop="name">
+      RAC 学习探究 一、简单起步
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/04/OCBigManuscript02_ObjectAllocInit/" class="archive-article-date">
-  	<time datetime="2020-11-03T19:00:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-04</time>
+        
+          <a href="/2020/11/28/RAC_01_Starter/" class="archive-article-date">
+  	<time datetime="2020-11-27T16:22:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-28</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/04/OCBigManuscript02_ObjectAllocInit/">OC Runtime 大手稿：二、实例化源码流程</a>
-    </h1>
-  
+        
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<p>我文章中的所有源码基于 <a target="_blank" rel="noopener" href="https://github.com/ReactiveCocoa/ReactiveObjC">ReactiveCocoa - ReactiveObjC v3.1</a></p>
+<p>编程范式简单分为：<br>面向对象 面向过程 链式 函数式 响应式</p>
+<p>reactiveObjC：编程范式集大成者</p>
+<p>此篇文章，先记录 RAC 简单的记录使用的一些方法</p>
+<a id="more"></a>
 
-        <div class="article-info info-on-right">
-          
-          
+<h1 id="试用"><a href="#试用" class="headerlink" title="试用"></a>试用</h1><h3 id="通过-KVO-监听-Property"><a href="#通过-KVO-监听-Property" class="headerlink" title="通过 KVO 监听 Property"></a>通过 KVO 监听 Property</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// count 是 self 的 @property</span></span><br><span class="line">    [RACObserve(<span class="keyword">self</span>, count) subscribeNext:^(<span class="keyword">id</span>  _Nullable x) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;new count value : %@&quot;</span>,x);</span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure>
 
+<h3 id="监听-NSNotification"><a href="#监听-NSNotification" class="headerlink" title="监听 NSNotification"></a>监听 NSNotification</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[[<span class="built_in">NSNotificationCenter</span> defaultCenter] rac_addObserverForName:<span class="built_in">UIKeyboardWillShowNotification</span> object:<span class="literal">nil</span>] subscribeNext:^(<span class="built_in">NSNotification</span> * _Nullable x) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;UIKeyboardWillShowNotification :\n%@&quot;</span>, x);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+<h3 id="监听-Protocol"><a href="#监听-Protocol" class="headerlink" title="监听 Protocol"></a>监听 Protocol</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="keyword">self</span> rac_signalForSelector:<span class="keyword">@selector</span>(textFieldDidBeginEditing:) fromProtocol:<span class="class"><span class="keyword">@protocol</span>(<span class="title">UITextFieldDelegate</span>)] <span class="title">subscribeNext</span>:^(<span class="title">RACTuple</span> * <span class="title">_Nullable</span> <span class="title">x</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;textFieldDidBeginEditing :\n%@&quot;</span>, x);</span><br><span class="line">&#125;];</span><br><span class="line">[<span class="keyword">self</span>.textField setDelegate:<span class="keyword">self</span>];</span><br></pre></td></tr></table></figure>
+
+<h2 id="UI-中的使用"><a href="#UI-中的使用" class="headerlink" title="UI 中的使用"></a>UI 中的使用</h2><h3 id="监听-button-点击"><a href="#监听-button-点击" class="headerlink" title="监听 button 点击"></a>监听 button 点击</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="keyword">self</span>.button rac_signalForControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>] subscribeNext:^(__kindof <span class="built_in">UIControl</span> * _Nullable x) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;button&quot;</span>);</span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure>
+
+<h3 id="监听-textField-的-text"><a href="#监听-textField-的-text" class="headerlink" title="监听 textField 的 text"></a>监听 textField 的 text</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="keyword">self</span>.textField rac_textSignal] subscribeNext:^(<span class="built_in">NSString</span> * _Nullable x) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>, x);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+<p><code>rac_textSignal</code>，是 textField 的 property，通过分类添加 set get 以及关联对象完成。</p>
+<h3 id="手势"><a href="#手势" class="headerlink" title="手势"></a>手势</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UITapGestureRecognizer</span> *tap = [[<span class="built_in">UITapGestureRecognizer</span> alloc] init];</span><br><span class="line"><span class="keyword">self</span>.view.userInteractionEnabled = <span class="literal">YES</span>;</span><br><span class="line">[<span class="keyword">self</span>.view addGestureRecognizer:tap];</span><br><span class="line">[[tap rac_gestureSignal] subscribeNext:^(__kindof <span class="built_in">UIGestureRecognizer</span> * _Nullable x) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;TAP:\n%@&quot;</span>, x);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+<h1 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h1><h2 id="热冷信号"><a href="#热冷信号" class="headerlink" title="热冷信号"></a>热冷信号</h2><p>以上的所有的 signal，都是信号。</p>
+<p>冷热需要分区请求清楚，所以有三篇经典文章。</p>
+<p>冷热信号不展开讲了，一定要看<strong>美团移动的三篇文章</strong>，相当劲爆：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/2015/09/08/talk-about-reactivecocoas-cold-signal-and-hot-signal-part-1.html">细说ReactiveCocoa的冷信号与热信号（一）</a></li>
+<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/2015/09/28/talk-about-reactivecocoas-cold-signal-and-hot-signal-part-2.html">细说ReactiveCocoa的冷信号与热信号（二）：为什么要区分冷热信号</a></li>
+<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/2015/11/03/talk-about-reactivecocoas-cold-signal-and-hot-signal-part-3.html">细说ReactiveCocoa的冷信号与热信号（三）：怎么处理冷信号与热信号</a></li>
+</ol>
+<h1 id="集合类型"><a href="#集合类型" class="headerlink" title="集合类型"></a>集合类型</h1><h2 id="序列-RACArraySequence"><a href="#序列-RACArraySequence" class="headerlink" title="序列 RACArraySequence"></a>序列 RACArraySequence</h2><p>RACArraySequence</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  序列 sequence</span></span><br><span class="line">    <span class="built_in">NSArray</span> *ary = @[@<span class="number">1</span>, @<span class="number">2</span>, @<span class="number">3</span>, @<span class="number">4</span>, @<span class="number">5</span>, @<span class="number">6</span>, @<span class="number">7</span>, @<span class="number">8</span>];</span><br><span class="line">    [ary.rac_sequence.signal subscribeNext:^(<span class="keyword">id</span>  _Nullable x) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;x: %@&quot;</span>, x);</span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure>
+
+<h2 id="元组-RACTuple"><a href="#元组-RACTuple" class="headerlink" title="元组 RACTuple"></a>元组 RACTuple</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSDictionary</span> *dic = @&#123;<span class="string">@&quot;key1&quot;</span>: @<span class="number">1</span>,</span><br><span class="line">                      <span class="string">@&quot;key2&quot;</span>: @<span class="number">2</span>,</span><br><span class="line">                      <span class="string">@&quot;key3&quot;</span>: @<span class="number">3</span>,</span><br><span class="line">                      <span class="string">@&quot;key4&quot;</span>: @<span class="number">4</span>&#125;;</span><br><span class="line">[dic.rac_sequence.signal subscribeNext:^(<span class="keyword">id</span>  _Nullable x) &#123;</span><br><span class="line"><span class="comment">// RACTwoTuple</span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;x: %@&quot;</span>, x);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+<h1 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h1><p>所有的高教函数：</p>
+<ol>
+<li>信号映射：<code>map</code> <code>flattenMap</code></li>
+<li>信号过滤：<code>filter</code> <code>ignore</code> <code>distinctUntilChanged</code></li>
+<li>信号合并：<code>combineLatest</code> <code>reduce</code> <code>merge</code> <code>zipWith</code></li>
+<li>信号连接：<code>concat</code> <code>then</code></li>
+<li>信号操作时间：<code>timeout</code> <code>interval</code> <code>delay</code></li>
+<li>信号取值：<code>take</code> <code>takeLast</code> <code>takeUntil</code></li>
+<li>信号跳过：<code>skip</code></li>
+<li>信号发送顺序：<code>doNext</code> <code>doCompleted</code></li>
+<li>获取信号中的信号：<code>switchToLatest</code></li>
+<li>信号错误重试：<code>retry</code></li>
+</ol>
+<h2 id="flattenMap"><a href="#flattenMap" class="headerlink" title="flattenMap"></a>flattenMap</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[[ary.rac_sequence.signal flattenMap:^__kindof RACSignal * _Nullable(<span class="keyword">id</span>  _Nullable value) &#123;</span><br><span class="line">    <span class="keyword">id</span> result =  [value integerValue] &gt; <span class="number">4</span> ? @<span class="number">1</span> : @<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> [RACSignal <span class="keyword">return</span>:result];</span><br><span class="line">&#125;] subscribeNext:^(<span class="keyword">id</span>  _Nullable x) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;x: %@&quot;</span>, x);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+<h2 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[[[<span class="keyword">self</span>.textField rac_textSignal] filter:^<span class="built_in">BOOL</span>(<span class="built_in">NSString</span> * _Nullable value) &#123;</span><br><span class="line">    <span class="keyword">return</span> value.length &gt; <span class="number">5</span>; <span class="comment">// 长度小于等于 5的时候，算作无效输入，过滤信号</span></span><br><span class="line">&#125;] subscribeNext:^(<span class="built_in">NSString</span> * _Nullable x) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;x: %@&quot;</span>, x);</span><br><span class="line">&#125;];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="combine"><a href="#combine" class="headerlink" title="combine"></a>combine</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">    RACSignal *s1 = <span class="keyword">self</span>.textField.rac_textSignal;</span><br><span class="line">    RACSignal *s2 = [<span class="keyword">self</span>.button rac_signalForControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line">    RACSignal *s12 = [s1 combineLatestWith:s2];</span><br><span class="line">    [s12 subscribeNext:^(<span class="keyword">id</span>  _Nullable x) &#123;</span><br><span class="line"><span class="comment">//        NSLog(@&quot;%@&quot;, x);</span></span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//另外一种写法：</span></span><br><span class="line">    [[<span class="keyword">self</span>.textField.rac_textSignal combineLatestWith:[<span class="keyword">self</span>.button rac_signalForControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>]] subscribeNext:^(RACTwoTuple&lt;<span class="built_in">NSString</span> *,<span class="keyword">id</span>&gt; * _Nullable x) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>, x);</span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure>
+
+<h2 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[[[<span class="keyword">self</span>.textField.rac_textSignal combineLatestWith:[<span class="keyword">self</span>.button rac_signalForControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>]] reduceEach:^<span class="keyword">id</span> (<span class="keyword">id</span> a, <span class="keyword">id</span> b) &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@===%@&quot;</span>, a, b];</span><br><span class="line">&#125;] subscribeNext:^(<span class="keyword">id</span>  _Nullable x) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>, x);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+
+<!--
+后面还想写的一些东西
+1
+    [self rac_liftSelector:@selector(updateUIWithData1:Data2:Data3:) withSignalsFromArray:@[firstSignal, secondSignal, thirdSignal]];
+
+
+2
+    // RACMulticastConnection 其实是一个连接类,可以实现不管订阅多少次信号,信号的block 都只请求一次
+
+结尾处必须使用[connection connect]进行连接才有效果.
+
+RACMulticastConnection 内部实现原理分析
+
+在publish 方法中首先创建了一个subject.
+通过[self multicast:subject]保存在connection 中
+通RACMulticastConnection的初始化方法alloc init操作保存signal自身和 传递进来的subject.
+-->
+
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢 请给我一支兰州<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+      
+      
+        <div class="post-copyright">
+          <ul>
+            <li class="post-copyright-author">
+              <strong>Post author：</strong>
+              yangzai360
+            </li>
+            <li class="post-copyright-link">
+              <strong>Post link：</strong>
+              <a href="http://yangzai360.top/2020/11/28/RAC_01_Starter/" title="RAC 学习探究 一、简单起步">http://yangzai360.top/2020/11/28/RAC_01_Starter/</a>
+            </li>
+            <li class="post-copyright-license">
+              <strong>Copyright Notice：</strong>
+              All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
+            </li>
+          </ul>
+        </div>
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://qr.liantu.com/api.php?text=http://yangzai360.top/2020/11/28/RAC_01_Starter/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2020/11/28/RAC_02_CreateSignal/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">RAC 学习探究 二、创建订阅信号流程</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%95%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">试用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-KVO-%E7%9B%91%E5%90%AC-Property"><span class="toc-number">1.0.1.</span> <span class="toc-text">通过 KVO 监听 Property</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%91%E5%90%AC-NSNotification"><span class="toc-number">1.0.2.</span> <span class="toc-text">监听 NSNotification</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%91%E5%90%AC-Protocol"><span class="toc-number">1.0.3.</span> <span class="toc-text">监听 Protocol</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UI-%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">1.1.</span> <span class="toc-text">UI 中的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%91%E5%90%AC-button-%E7%82%B9%E5%87%BB"><span class="toc-number">1.1.1.</span> <span class="toc-text">监听 button 点击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%91%E5%90%AC-textField-%E7%9A%84-text"><span class="toc-number">1.1.2.</span> <span class="toc-text">监听 textField 的 text</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%BF"><span class="toc-number">1.1.3.</span> <span class="toc-text">手势</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7"><span class="toc-number">2.</span> <span class="toc-text">信号</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%AD%E5%86%B7%E4%BF%A1%E5%8F%B7"><span class="toc-number">2.1.</span> <span class="toc-text">热冷信号</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">集合类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F%E5%88%97-RACArraySequence"><span class="toc-number">3.1.</span> <span class="toc-text">序列 RACArraySequence</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%83%E7%BB%84-RACTuple"><span class="toc-number">3.2.</span> <span class="toc-text">元组 RACTuple</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">高阶函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#flattenMap"><span class="toc-number">4.1.</span> <span class="toc-text">flattenMap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#filter"><span class="toc-number">4.2.</span> <span class="toc-text">filter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#combine"><span class="toc-number">4.3.</span> <span class="toc-text">combine</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reduce"><span class="toc-number">4.4.</span> <span class="toc-text">reduce</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
   
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/2020/page/2/">« Prev</a><a class="page-number" href="/archives/2020/">1</a><a class="page-number" href="/archives/2020/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 
 
@@ -299,8 +499,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

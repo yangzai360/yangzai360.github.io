@@ -198,6 +198,225 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-RAC_01_Starter" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/28/RAC_01_Starter/">RAC 学习探究 一、简单起步</a>
+    </h1>
+  
+
+        
+          <a href="/2020/11/28/RAC_01_Starter/" class="archive-article-date">
+  	<time datetime="2020-11-27T16:22:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-28</time>
+</a>
+        
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<p>我文章中的所有源码基于 <a target="_blank" rel="noopener" href="https://github.com/ReactiveCocoa/ReactiveObjC">ReactiveCocoa - ReactiveObjC v3.1</a></p>
+<p>编程范式简单分为：<br>面向对象 面向过程 链式 函数式 响应式</p>
+<p>reactiveObjC：编程范式集大成者</p>
+<p>此篇文章，先记录 RAC 简单的记录使用的一些方法</p>
+      
+
+      
+      
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/11/28/RAC_01_Starter/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-RAC_02_CreateSignal" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/28/RAC_02_CreateSignal/">RAC 学习探究 二、创建订阅信号流程</a>
+    </h1>
+  
+
+        
+          <a href="/2020/11/28/RAC_02_CreateSignal/" class="archive-article-date">
+  	<time datetime="2020-11-27T16:22:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-28</time>
+</a>
+        
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<p><img src="/media/16058131900481.jpg" alt="-w814"></p>
+      
+
+      
+      
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/11/28/RAC_02_CreateSignal/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-OCBigManuscript03_ObjectDealloc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/26/OCBigManuscript03_ObjectDealloc/">OC Runtime 大手稿：三、对象销毁流程</a>
+    </h1>
+  
+
+        
+          <a href="/2020/11/26/OCBigManuscript03_ObjectDealloc/" class="archive-article-date">
+  	<time datetime="2020-11-25T19:35:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-26</time>
+</a>
+        
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
+<p>第三篇：对象销毁流程</p>
+<p>未完成!NFY Not finished yet.</p>
+<p>基本的流程已经梳理完了，图显得有些突兀，主要是因为右上角的那个方法中有很多官方的注释，以及我没有对其进行拆解和简化。</p>
+<p>这里面有一些知识点没有特别细致的展开，例如：</p>
+<ul>
+<li>sidetable 结构和应用操作的整理汇总</li>
+<li>weak 散列表的操作展开讲</li>
+<li>最后一些流程用到的方法查找函数是仅仅提供给查找 <code>构造函数</code> 和 <code>析构函数</code> 使用的</li>
+</ul>
+      
+
+      
+      
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/11/26/OCBigManuscript03_ObjectDealloc/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-CWC03_CooksFavoriteKnife" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -211,7 +430,7 @@
 
         
           <a href="/2020/11/25/CWC03_CooksFavoriteKnife/" class="archive-article-date">
-  	<time datetime="2020-11-25T12:45:20.685Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-25</time>
+  	<time datetime="2020-11-25T12:51:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-25</time>
 </a>
         
         
@@ -267,20 +486,20 @@
 
 
   
-    <article id="post-RAC_02_CreateSignal" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_GCD_03_synchronized" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/20/RAC_02_CreateSignal/">RAC 学习探究 二、创建订阅信号流程</a>
+      <a class="article-title" href="/2020/11/22/OC_GCD_03_synchronized/">GCD探究三：synchronized原理</a>
     </h1>
   
 
         
-          <a href="/2020/11/20/RAC_02_CreateSignal/" class="archive-article-date">
-  	<time datetime="2020-11-19T19:10:23.465Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-20</time>
+          <a href="/2020/11/22/OC_GCD_03_synchronized/" class="archive-article-date">
+  	<time datetime="2020-11-22T09:19:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-22</time>
 </a>
         
         
@@ -288,8 +507,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<p><img src="/media/16058131900481.jpg" alt="-w814"></p>
+        <p>synchronized 关键字来加锁的最大好处就是写起来非常方便，但是锁的性能分析文章都说它是性能最差的。</p>
       
 
       
@@ -306,355 +524,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/20/RAC_02_CreateSignal/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-RAC_01_Starter" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/19/RAC_01_Starter/">RAC 学习探究 一、简单起步</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/19/RAC_01_Starter/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:25:53.611Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[TOC]</p>
-<p>我文章中的所有源码基于 <a target="_blank" rel="noopener" href="https://github.com/ReactiveCocoa/ReactiveObjC">ReactiveCocoa - ReactiveObjC v3.1</a></p>
-<p>编程范式简单分为：<br>面向对象 面向过程 链式 函数式 响应式</p>
-<p>reactiveObjC：编程范式集大成者</p>
-<p>此篇文章，先记录 RAC 简单的记录使用的一些方法</p>
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/19/RAC_01_Starter/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-OC_ThirdPart_AFN_06_UIImageCategory" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/19/OC_ThirdPart_AFN_06_UIImageCategory/">AFNetworking 探究：六、UIImageCategory背后</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/19/OC_ThirdPart_AFN_06_UIImageCategory/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:24:41.971Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="/media/iOS%E6%A1%86%E6%9E%B6_AFNetWorking06UIImageCategory@40.png" alt="iOS框架_AFNetWorking06UIImageCategory@40"></p>
-
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_06_UIImageCategory/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-OC_ThirdPart_AFN_05_NetworkingReachability" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/19/OC_ThirdPart_AFN_05_NetworkingReachability/">AFNetworking 探究：五、网络可达：reachability</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/19/OC_ThirdPart_AFN_05_NetworkingReachability/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:24:30.661Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="/media/iOS%E6%A1%86%E6%9E%B6_AFNetWorking05NetworkingReachability@40.png" alt="iOS框架_AFNetWorking05NetworkingReachability@40"></p>
-
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_05_NetworkingReachability/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-OC_ThirdPart_AFN_04_cer" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/19/OC_ThirdPart_AFN_04_cer/">AFNetworking 探究：四、Https 安全</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/19/OC_ThirdPart_AFN_04_cer/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:24:18.827Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="/media/iOS%E6%A1%86%E6%9E%B6_AFNetWorking04cer@40.png" alt="iOS框架_AFNetWorking04cer@40"></p>
-
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_04_cer/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-OC_ThirdPart_AFN_03_ResponseSerializer" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/19/OC_ThirdPart_AFN_03_ResponseSerializer/">AFNetworking 探究：三、响应序列化</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/19/OC_ThirdPart_AFN_03_ResponseSerializer/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:24:07.332Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="/media/iOS%E6%A1%86%E6%9E%B6_AFNetWorking03ResponseSerializer@40.png" alt="iOS框架_AFNetWorking03ResponseSerializer@40"></p>
-
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_03_ResponseSerializer/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/22/OC_GCD_03_synchronized/">展开全文 >></a>
         </p>
       
 
@@ -691,13 +561,13 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/19/OC_ThirdPart_AFN_02_MultipartFormRequest/">AFNetworking 探究：二、MultipartForm 表单请求</a>
+      <a class="article-title" href="/2020/11/22/OC_ThirdPart_AFN_02_MultipartFormRequest/">AFNetworking 探究：二、MultipartForm 表单请求</a>
     </h1>
   
 
         
-          <a href="/2020/11/19/OC_ThirdPart_AFN_02_MultipartFormRequest/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:23:34.212Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
+          <a href="/2020/11/22/OC_ThirdPart_AFN_02_MultipartFormRequest/" class="archive-article-date">
+  	<time datetime="2020-11-22T07:53:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-22</time>
 </a>
         
         
@@ -723,7 +593,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_02_MultipartFormRequest/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/22/OC_ThirdPart_AFN_02_MultipartFormRequest/">展开全文 >></a>
         </p>
       
 
@@ -753,20 +623,20 @@
 
 
   
-    <article id="post-OC_ThirdPart_AFN_01_NormalRequest" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_ThirdPart_AFN_06_UIImageCategory" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/19/OC_ThirdPart_AFN_01_NormalRequest/">AFNetworking 探究：一、正常请求流程</a>
+      <a class="article-title" href="/2020/11/22/OC_ThirdPart_AFN_06_UIImageCategory/">AFNetworking 探究：六、UIImageCategory背后</a>
     </h1>
   
 
         
-          <a href="/2020/11/19/OC_ThirdPart_AFN_01_NormalRequest/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:23:21.787Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
+          <a href="/2020/11/22/OC_ThirdPart_AFN_06_UIImageCategory/" class="archive-article-date">
+  	<time datetime="2020-11-22T07:52:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-22</time>
 </a>
         
         
@@ -774,7 +644,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="/media/iOS%E6%A1%86%E6%9E%B6_AFNetWorking01NormalRequest@40.png" alt="iOS框架_AFNetWorking01NormalRequest@40"></p>
+        <p><img src="/media/iOS%E6%A1%86%E6%9E%B6_AFNetWorking06UIImageCategory@40.png" alt="iOS框架_AFNetWorking06UIImageCategory@40"></p>
 
       
 
@@ -792,7 +662,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/19/OC_ThirdPart_AFN_01_NormalRequest/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/22/OC_ThirdPart_AFN_06_UIImageCategory/">展开全文 >></a>
         </p>
       
 
@@ -822,20 +692,20 @@
 
 
   
-    <article id="post-OC_GCD_04_Group" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-OC_ThirdPart_AFN_05_NetworkingReachability" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/19/OC_GCD_04_Group/">GCD探究四：GCD group 原理</a>
+      <a class="article-title" href="/2020/11/22/OC_ThirdPart_AFN_05_NetworkingReachability/">AFNetworking 探究：五、网络可达：reachability</a>
     </h1>
   
 
         
-          <a href="/2020/11/19/OC_GCD_04_Group/" class="archive-article-date">
-  	<time datetime="2020-11-19T15:22:34.096Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-19</time>
+          <a href="/2020/11/22/OC_ThirdPart_AFN_05_NetworkingReachability/" class="archive-article-date">
+  	<time datetime="2020-11-22T07:52:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-22</time>
 </a>
         
         
@@ -843,7 +713,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="/media/iOS%E6%9C%BA%E5%88%B6%E6%89%8B%E7%A8%BF4_GCDGroup@40.png" alt="iOS机制手稿4_GCDGroup@40"></p>
+        <p><img src="/media/iOS%E6%A1%86%E6%9E%B6_AFNetWorking05NetworkingReachability@40.png" alt="iOS框架_AFNetWorking05NetworkingReachability@40"></p>
 
       
 
@@ -861,7 +731,145 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/19/OC_GCD_04_Group/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/11/22/OC_ThirdPart_AFN_05_NetworkingReachability/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-OC_ThirdPart_AFN_04_cer" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/22/OC_ThirdPart_AFN_04_cer/">AFNetworking 探究：四、Https 安全</a>
+    </h1>
+  
+
+        
+          <a href="/2020/11/22/OC_ThirdPart_AFN_04_cer/" class="archive-article-date">
+  	<time datetime="2020-11-22T07:51:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-22</time>
+</a>
+        
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/media/iOS%E6%A1%86%E6%9E%B6_AFNetWorking04cer@40.png" alt="iOS框架_AFNetWorking04cer@40"></p>
+
+      
+
+      
+      
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/11/22/OC_ThirdPart_AFN_04_cer/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-OC_ThirdPart_AFN_03_ResponseSerializer" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/22/OC_ThirdPart_AFN_03_ResponseSerializer/">AFNetworking 探究：三、响应序列化</a>
+    </h1>
+  
+
+        
+          <a href="/2020/11/22/OC_ThirdPart_AFN_03_ResponseSerializer/" class="archive-article-date">
+  	<time datetime="2020-11-22T07:51:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-22</time>
+</a>
+        
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/media/iOS%E6%A1%86%E6%9E%B6_AFNetWorking03ResponseSerializer@40.png" alt="iOS框架_AFNetWorking03ResponseSerializer@40"></p>
+
+      
+
+      
+      
+      
+    </div>
+    
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/11/22/OC_ThirdPart_AFN_03_ResponseSerializer/">展开全文 >></a>
         </p>
       
 
@@ -909,7 +917,7 @@
     	<div class="footer-left">
         &copy; 
         
-        2020
+        2020-2021
         yangzai360
         
     	</div>
