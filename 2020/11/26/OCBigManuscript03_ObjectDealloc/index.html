@@ -21,12 +21,12 @@
 <meta property="og:site_name" content="扬仔的技术博客">
 <meta property="og:description" content="[TOC] 复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。 第三篇：对象销毁流程 未完成!NFY Not finished yet. 基本的流程已经梳理完了，图显得有些突兀，主要是因为右上角的那个方法中有很多官方的注释，以及我没有对其进行拆解和简化。 这里面有一些知识点没有特别细致的展开，例如：  sidetable 结构">
 <meta property="og:locale">
-<meta property="og:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF3_%E5%AF%B9%E8%B1%A1Dealloc-3.png">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/02/23/oc-di-ceng-da-shou-gao3dui-xiangdealloc3.png?x-oss-process=image/auto-orient,1/quality,q_90">
 <meta property="article:published_time" content="2020-11-25T19:35:40.000Z">
-<meta property="article:modified_time" content="2020-11-25T19:35:40.000Z">
+<meta property="article:modified_time" content="2021-02-23T08:09:14.927Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yangzai360.top/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF3_%E5%AF%B9%E8%B1%A1Dealloc-3.png">
+<meta name="twitter:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/02/23/oc-di-ceng-da-shou-gao3dui-xiangdealloc3.png?x-oss-process=image/auto-orient,1/quality,q_90">
   
     <link rel="alternative" href="/atom.xml" title="扬仔的技术博客" type="application/atom+xml">
   
@@ -236,7 +236,7 @@
 </ul>
 <a id="more"></a>
 
-<p><img src="/media/OC%E5%BA%95%E5%B1%82%E5%A4%A7%E6%89%8B%E7%A8%BF3_%E5%AF%B9%E8%B1%A1Dealloc-3.png" alt="OC底层大手稿3_对象Dealloc"></p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/02/23/oc-di-ceng-da-shou-gao3dui-xiangdealloc3.png?x-oss-process=image/auto-orient,1/quality,q_90" alt="OC底层大手稿3_对象Dealloc"></p>
 <h1 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h1><p>最近面了一些试，某位非常有水平的面试官问了我一个有意思的问题:</p>
 <pre><code>delloc 的时候增加引用计数，会防止销毁吗？</code></pre>
 <p>当时猜测了一下，没答很全面，好好梳理一下 delloc 的流程。</p>
