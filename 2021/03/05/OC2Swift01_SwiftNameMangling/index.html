@@ -14,18 +14,22 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="扬仔的技术博客">
-<meta property="og:url" content="http://yangzai360.top/index.html">
+  <meta name="description" content="From Brad.Cox to Chris.Lattner. 尝试利用一些业余时间研究下 Swift，写一些由 OC 到 Swift 的变化。 当我使用 ClassDump 对一个项目操作的时候，输出了一些看不懂的东西，今天研究一下这奇怪的字符串到底是什么意思？！（后来知道了这是一个 OC Swift 混编的工程）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift 函数重载原理：Name Mangling - Swift_0x01">
+<meta property="og:url" content="http://yangzai360.top/2021/03/05/OC2Swift01_SwiftNameMangling/index.html">
 <meta property="og:site_name" content="扬仔的技术博客">
+<meta property="og:description" content="From Brad.Cox to Chris.Lattner. 尝试利用一些业余时间研究下 Swift，写一些由 OC 到 Swift 的变化。 当我使用 ClassDump 对一个项目操作的时候，输出了一些看不懂的东西，今天研究一下这奇怪的字符串到底是什么意思？！（后来知道了这是一个 OC Swift 混编的工程）">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-03-05T14:49:21.543Z">
+<meta property="article:modified_time" content="2021-03-15T15:35:35.778Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="扬仔的技术博客" type="application/atom+xml">
   
   
-  <title>扬仔的技术博客</title>
+  <title>Swift 函数重载原理：Name Mangling - Swift_0x01 | 扬仔的技术博客</title>
   
   
     <link rel="icon" href="/img/favicon-32x32-yulia.png">
@@ -196,85 +200,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-OC2Swift02_Class" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-OC2Swift01_SwiftNameMangling" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/10/OC2Swift02_Class/">Swift 与 OC 编译过程对比 - Swift_0x02</a>
-    </h1>
-  
-
-        
-          <a href="/2021/03/10/OC2Swift02_Class/" class="archive-article-date">
-  	<time datetime="2021-03-10T14:59:11.210Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-10</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>占坑！</p>
-
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/03/10/OC2Swift02_Class/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-OC2Swift01_SwiftNameMangling" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/05/OC2Swift01_SwiftNameMangling/">Swift 函数重载原理：Name Mangling - Swift_0x01</a>
+    <h1 class="article-title" itemprop="name">
+      Swift 函数重载原理：Name Mangling - Swift_0x01
     </h1>
   
 
@@ -291,229 +224,102 @@
         <p>From Brad.Cox to Chris.Lattner.</p>
 <p>尝试利用一些业余时间研究下 Swift，写一些由 OC 到 Swift 的变化。</p>
 <p>当我使用 <a target="_blank" rel="noopener" href="https://github.com/nygard/class-dump">ClassDump</a> 对一个项目操作的时候，输出了一些看不懂的东西，今天研究一下这奇怪的字符串到底是什么意思？！（后来知道了这是一个 OC Swift 混编的工程）</p>
-      
+<a id="more"></a>
 
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIViewController.h&gt;</span></span></span><br><span class="line">@interface _TtC8BalaBalaKit11LoadingView : UIViewController &#123;</span><br><span class="line">&#125;</span><br><span class="line">- (id)initWithCoder:(id)arg1;</span><br><span class="line">- (id)initWithNibName:(id)arg1 bundle:(id)arg2;</span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/03/05/OC2Swift01_SwiftNameMangling/">展开全文 >></a>
-        </p>
-      
+<p>通过 Reveal 分析 UI，我大概知道这个类是 <code>BalaBalaKit.LoadingView</code>，通过查看 MachO 发现 <code>__TEXT</code> 段中有 <code>__swift5_typeref</code>，其中的数据跟这些很类似，所以这些就是Swift输出的类名。</p>
+<p>Swift 这样进行转换的原因是<strong>为了防止不同的库不会出现命名冲突</strong>。</p>
+<h1 id="OC-amp-C"><a href="#OC-amp-C" class="headerlink" title="OC &amp; C"></a>OC &amp; C</h1><p>OC 的符号表中没有这些复杂的符号重整，OC 使用 Selector + Type Encoding，并且 OC 在一个类下是不允许重载 Selector 的。</p>
+<p>C 和 OC 在语言设计上，就避免了符号冲突，所以虽然做了 Name Magling，但是并没有什么实际的用处，只是为了历史性的考虑。</p>
+<p>C 语言有轻微的 Name Mangling，即会将 <code>void main()&#123;return 0;&#125;</code> 符号化为：<code>_main</code>，增加一个下划线。</p>
+<p>OC 举一个栗子：Point类下的 <code>+ (id) initWithX: (int) number andY: (int) number;</code>方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+ (id) initWithX: (int) number andY: (int) number;</span><br><span class="line">- (id) value;</span><br><span class="line"></span><br><span class="line">_c_Point_initWithX_andY_</span><br><span class="line">_i_Point_value</span><br></pre></td></tr></table></figure>
 
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
+<h1 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h1><p>我们知道 C++ 是允许函数重载的，也就是对于下面的第一个 fooInt 方法和 fooDouble 两个方法是可以共存的：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123; <span class="keyword">return</span> a * <span class="number">2</span>; &#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">double</span> a)</span> </span>&#123; <span class="keyword">return</span> a * <span class="number">2.0</span>; &#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> foo(<span class="number">1</span>) + foo(<span class="number">1.0</span>); &#125;</span><br><span class="line"></span><br><span class="line"><span class="number">0000000100000f</span>30 T __Z3food</span><br><span class="line"><span class="number">0000000100000f</span>10 T __Z3fooi</span><br><span class="line"><span class="number">0000000100000000</span> T __mh_execute_header</span><br><span class="line"><span class="number">0000000100000f</span>60 T _main</span><br></pre></td></tr></table></figure>
 
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
+<p>C++编译器遵循一套严格的 mangles 规则，参考这个链接<a target="_blank" rel="noopener" href="http://mentorembedded.github.io/cxx-abi/abi.html#mangling">Itanium C++ ABI documentation</a></p>
+<p>以 <code>int foo(double a)</code> 为例，重整后的符号为 <code>__Z3fooi</code></p>
+<p>大致意思如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">_ _Z 3 foo d</span><br><span class="line"></span><br><span class="line">-   : 代表C风格的符号</span><br><span class="line">_Z  : 这个前缀标记这个符号是一个mangled（重整）的全局C++名字</span><br><span class="line">3   : 字符长度，foo 这个名字，有3个字符</span><br><span class="line">foo : </span><br><span class="line">d   : 代表&#96;double&#96;，如果是 &#96;int&#96; 的话就是&#96;i&#96;</span><br></pre></td></tr></table></figure>
 
+<h1 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h1><p>Swift 的重整规则基于 C++，也有些不同，重整的符号中包含更多的信息和概念。</p>
+<p>栗子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">xcrun swiftc -emit-library -o test -</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">myClass</span>&#123;</span></span><br><span class="line">    public func calculate(x: Int) -&gt; Int &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">nm -g test</span><br><span class="line"><span class="number">0000000000002b</span>b0 T _$s4test7myClassC9calculate1xS2i_tF</span><br><span class="line">_$s4test7myClassC9calculate1xS2i_tF</span><br><span class="line"></span><br><span class="line">_  <span class="comment">// 通用起始</span></span><br><span class="line"> $s <span class="comment">// &#x27;$s&#x27; global  // Swift 稳定mangling版本</span></span><br><span class="line">  <span class="number">4</span>test <span class="comment">// 字符长度，模块名</span></span><br><span class="line">  <span class="number">7</span>myClass <span class="comment">// 方法归属的类名</span></span><br><span class="line"> C <span class="comment">// 从属关系，myClass 是 test 模块中的 Class</span></span><br><span class="line">  <span class="number">9</span>calculate <span class="comment">// 字符 calculate</span></span><br><span class="line">   <span class="number">1</span>x <span class="comment">// 参数类型</span></span><br><span class="line">   S2i <span class="comment">// 堆栈中放入两个 Swift.Int</span></span><br><span class="line">_</span><br><span class="line">tF <span class="comment">// 从属关系，calculate 是 test.myClass 的 Function</span></span><br><span class="line"></span><br><span class="line">这里解释一下S2i，这个是从后往前取的，参数往里放是栈结构，先进后出，第一个进栈的是参数 `x:Int`  第二个是返回的参数 Int，所以S2i两个`Swift.Int`。</span><br><span class="line">如果入参是 `x:String`，反参是 Int，那就变成是 `SSSi` 了。</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 此段过期，是以前的老版本</span></span><br><span class="line"><span class="comment">_TFC4test7MyClass9calculatefS0_FT1xSi_Si</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">_T // Swift通用起始标记</span></span><br><span class="line"><span class="comment">  F // Non-curried function</span></span><br><span class="line"><span class="comment">    C // Function of a class. (method)</span></span><br><span class="line"><span class="comment">      4test // 字符长度，模块名</span></span><br><span class="line"><span class="comment">        7MyClass // 方法归属的类名</span></span><br><span class="line"><span class="comment">          9calculate // 函数名</span></span><br><span class="line"><span class="comment">            f // 非柯里化函数（Uncurried Function）</span></span><br><span class="line"><span class="comment">              S0 // 指定 类实例 为类型堆栈的第一个参数</span></span><br><span class="line"><span class="comment">                _FT // 参数开始</span></span><br><span class="line"><span class="comment">                  1x // 第一个参数参数名</span></span><br><span class="line"><span class="comment">                    Si // Swift 内置类型 Swift.Int</span></span><br><span class="line"><span class="comment">                _Si // 返回类型，同上 Swift.Int</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果：</span></span><br><span class="line">test.MyClass.calculate(test.MyClass) -&gt; (x: Swift.Int) -&gt; Swift.Int</span><br></pre></td></tr></table></figure>
 
+<p>栗子2：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> didi ~  xcrun swiftc -emit-library -o test -</span><br><span class="line"><span class="keyword">public</span> func 💛 (lhs: Int, rhs: Int) -&gt; Int &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> didi ~  nm -g test</span><br><span class="line"><span class="number">0000000000002</span>d60 T _$s4test004GrIh3lhs3rhsS2i_SitF</span><br><span class="line"></span><br><span class="line">_  <span class="comment">// 通用起始</span></span><br><span class="line">  $s <span class="comment">// &#x27;$s&#x27; global  // Swift 稳定mangling版本</span></span><br><span class="line">    <span class="number">4</span>test <span class="comment">// 符号 4是长度</span></span><br><span class="line">      <span class="number">004</span>GrIh <span class="comment">// 00 特殊字符 GrIh 就是 emoji U+1F49B</span></span><br><span class="line">        <span class="number">3l</span>hs <span class="comment">// 参数 3是字符串长度</span></span><br><span class="line">        <span class="number">3</span>rhs <span class="comment">// 参数 3是字符串长度</span></span><br><span class="line">         S2i <span class="comment">// 解释参数的类型，两个Swift.Int</span></span><br><span class="line">         _ <span class="comment">// end??? 待填坑</span></span><br><span class="line">          Si <span class="comment">// Swift.Int</span></span><br><span class="line">           tF <span class="comment">// 从属关系，💛 是 test 的 Function ???</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//结果：</span></span><br><span class="line">test.💛(Swift.Int, Swift.Int) -&gt; Swift.Int</span><br></pre></td></tr></table></figure>
 
+<h2 id="字符替换："><a href="#字符替换：" class="headerlink" title="字符替换："></a>字符替换：</h2><p>如果上面 caculate 函数的参数命名中包含了前面出现过的字符串会如何呢？</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">没有字符串重叠的时候是:</span><br><span class="line"><span class="number">0000000000002b</span>b0 T _$s4test7myClassC9calculate1xS2i_tF</span><br><span class="line"></span><br><span class="line"> didi ~  xcrun swiftc -emit-library -o test -</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">myClass</span> &#123;</span></span><br><span class="line">    public func calculateMyClassEnd(x: Int) -&gt; Int &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> didi ~  nm -g test</span><br><span class="line"><span class="number">0000000000002b</span>c0 T _$s4test7myClassC011calculateMyC3End1xS2i_tF</span><br></pre></td></tr></table></figure>
 
-  
-    <article id="post-RAC_01_Starter" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/28/RAC_01_Starter/">RAC 学习探究 一、简单起步</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/28/RAC_01_Starter/" class="archive-article-date">
-  	<time datetime="2020-11-27T16:22:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-28</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[TOC]</p>
-<p>我文章中的所有源码基于 <a target="_blank" rel="noopener" href="https://github.com/ReactiveCocoa/ReactiveObjC">ReactiveCocoa - ReactiveObjC v3.1</a></p>
-<p>编程范式简单分为：<br>面向对象 面向过程 链式 函数式 响应式</p>
-<p>reactiveObjC：编程范式集大成者</p>
-<p>此篇文章，先记录 RAC 简单的记录使用的一些方法</p>
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/28/RAC_01_Starter/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-RAC_02_CreateSignal" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/28/RAC_02_CreateSignal/">RAC 学习探究 二、创建订阅信号流程</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/28/RAC_02_CreateSignal/" class="archive-article-date">
-  	<time datetime="2020-11-27T16:22:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-28</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[TOC]</p>
-<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/02/23/16058131900481.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="-w814"></p>
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/28/RAC_02_CreateSignal/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-OCBigManuscript03_ObjectDealloc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/26/OCBigManuscript03_ObjectDealloc/">OC Runtime 大手稿：三、对象销毁流程</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/26/OCBigManuscript03_ObjectDealloc/" class="archive-article-date">
-  	<time datetime="2020-11-25T19:35:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-26</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[TOC]</p>
-<p>复杂度高的项目系统，我惯于花时间梳理出大手稿，作为参考，根据这个思路，我花时间对于OC底层的机制进行梳理，产出大手稿若干。</p>
-<p>第三篇：对象销毁流程</p>
-<p>未完成!NFY Not finished yet.</p>
-<p>基本的流程已经梳理完了，图显得有些突兀，主要是因为右上角的那个方法中有很多官方的注释，以及我没有对其进行拆解和简化。</p>
-<p>这里面有一些知识点没有特别细致的展开，例如：</p>
-<ul>
-<li>sidetable 结构和应用操作的整理汇总</li>
-<li>weak 散列表的操作展开讲</li>
-<li>最后一些流程用到的方法查找函数是仅仅提供给查找 <code>构造函数</code> 和 <code>析构函数</code> 使用的</li>
+<h1 id="以上"><a href="#以上" class="headerlink" title="以上"></a>以上</h1><p>对专业人员，从算法的意义上讲，读取变形的名称是相当简单的，但是对于人眼来说则是不必要的困难。<br>这就是为什么存在拆解工具的原因。</p>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><p><strong>关于curried &amp; uncurried function:</strong><br>上面案例中的方法d是一个<code>uncurried function</code>，因为参数是一个一个传递进去的，并不是当做一个多元元组传递进去的。（可能理解有误。。）<br>这个概念是跟函数式编程相关的，暂未深入了解，挖个坑，稍后填坑。<br>ref:<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/27403874/how-is-this-exactly-a-curried-function">stackOverFlow:How is this exactly a curried function?</a></p>
+<hr>
+<h1 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/apple/swift/blob/main/docs/ABI/Mangling.rst">最权威：官方 GitHub Doc</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.mikeash.com/pyblog/friday-qa-2014-08-15-swift-name-mangling.html">https://www.mikeash.com/pyblog/friday-qa-2014-08-15-swift-name-mangling.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Name_mangling#Swift">wikipedia:Name mangling</a></li>
+<li><a target="_blank" rel="noopener" href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html#mangling">https://itanium-cxx-abi.github.io/cxx-abi/abi.html#mangling</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/apple/swift/blob/main/docs/ABIStabilityManifesto.md#mangling">官方SwiftDoc关于mangling的章节</a></li>
 </ul>
+<p>其他：<br><a target="_blank" rel="noopener" href="https://github.com/aidansteele/osx-abi-macho-file-format-reference">OS X ABI Mach-O File Format Reference</a></p>
+<!--
+https://www.jianshu.com/p/f17aa6ecb3a3
+不能仅仅基于不同的返回类型而实现函数重载。返回值是不影响函数签名的。
+
+* [Swift 之父 Chris Lattner 访谈录](https://www.sohu.com/a/190263247_662745)
+* [Chris Lattner 访谈录(下)](https://www.jianshu.com/p/b8d509bad15c  )
+* [Objective-C之父Brad J. Cox去世，他推动了今天苹果的软件生态](https://blog.csdn.net/m0_46163918/article/details/113109433)
+-->
       
 
       
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢 请给我一支兰州<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
+      
+      
+        <div class="post-copyright">
+          <ul>
+            <li class="post-copyright-author">
+              <strong>Post author：</strong>
+              yangzai360
+            </li>
+            <li class="post-copyright-link">
+              <strong>Post link：</strong>
+              <a href="http://yangzai360.top/2021/03/05/OC2Swift01_SwiftNameMangling/" title="Swift 函数重载原理：Name Mangling - Swift_0x01">http://yangzai360.top/2021/03/05/OC2Swift01_SwiftNameMangling/</a>
+            </li>
+            <li class="post-copyright-license">
+              <strong>Copyright Notice：</strong>
+              All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
+            </li>
+          </ul>
+        </div>
       
     </div>
     
@@ -525,16 +331,84 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/26/OCBigManuscript03_ObjectDealloc/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://qr.liantu.com/api.php?text=http://yangzai360.top/2021/03/05/OC2Swift01_SwiftNameMangling/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2021/03/10/OC2Swift02_Class/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Swift 与 OC 编译过程对比 - Swift_0x02
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/11/28/RAC_01_Starter/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">RAC 学习探究 一、简单起步</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -549,361 +423,38 @@
         </div>
         
         
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-CWC03_CooksFavoriteKnife" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/25/CWC03_CooksFavoriteKnife/">可以使用的隐藏工具</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/25/CWC03_CooksFavoriteKnife/" class="archive-article-date">
-  	<time datetime="2020-11-25T12:51:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-25</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[TOC]</p>
-<p>本篇英文名叫 <code>Cook&#39;s favorite knife hiding in desk</code>，英语很简单，翻译过来的意思是苹果给开发者提供的一些隐藏的工具。</p>
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/25/CWC03_CooksFavoriteKnife/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OC-amp-C"><span class="toc-number">1.</span> <span class="toc-text">OC &amp; C</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C"><span class="toc-number">2.</span> <span class="toc-text">C++</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Swift"><span class="toc-number">3.</span> <span class="toc-text">Swift</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E6%9B%BF%E6%8D%A2%EF%BC%9A"><span class="toc-number">3.1.</span> <span class="toc-text">字符替换：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A5%E4%B8%8A"><span class="toc-number">4.</span> <span class="toc-text">以上</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A1%A5%E5%85%85"><span class="toc-number">5.</span> <span class="toc-text">补充</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5%EF%BC%9A"><span class="toc-number">6.</span> <span class="toc-text">参考链接：</span></a></li></ol>
+                    </div>
+                </span>
             </div>
         </div>
         
-        
     </div>
 </aside>
 
 
 
-
-  
-    <article id="post-OC_GCD_03_synchronized" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/22/OC_GCD_03_synchronized/">GCD探究三：synchronized原理</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/22/OC_GCD_03_synchronized/" class="archive-article-date">
-  	<time datetime="2020-11-22T09:19:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-22</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>synchronized 关键字来加锁的最大好处就是写起来非常方便，但是锁的性能分析文章都说它是性能最差的。</p>
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/22/OC_GCD_03_synchronized/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-OC_ThirdPart_AFN_02_MultipartFormRequest" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/22/OC_ThirdPart_AFN_02_MultipartFormRequest/">AFNetworking 探究：二、MultipartForm 表单请求</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/22/OC_ThirdPart_AFN_02_MultipartFormRequest/" class="archive-article-date">
-  	<time datetime="2020-11-22T07:53:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-22</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/02/23/ios-kuang-jiaafnetworking02multipartformrequest40.png?x-oss-process=image/auto-orient,1/quality,q_90" alt="iOS框架_AFNetWorking02MultipartFormRequest@40"></p>
-
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/22/OC_ThirdPart_AFN_02_MultipartFormRequest/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-OC_ThirdPart_AFN_06_UIImageCategory" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/22/OC_ThirdPart_AFN_06_UIImageCategory/">AFNetworking 探究：六、UIImageCategory背后</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/22/OC_ThirdPart_AFN_06_UIImageCategory/" class="archive-article-date">
-  	<time datetime="2020-11-22T07:52:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-22</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/02/23/ios-kuang-jiaafnetworking06uiimagecategory40.png?x-oss-process=image/auto-orient,1/quality,q_90" alt="iOS框架_AFNetWorking06UIImageCategory@40"></p>
-
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/22/OC_ThirdPart_AFN_06_UIImageCategory/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-OC_ThirdPart_AFN_05_NetworkingReachability" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/22/OC_ThirdPart_AFN_05_NetworkingReachability/">AFNetworking 探究：五、网络可达：reachability</a>
-    </h1>
-  
-
-        
-          <a href="/2020/11/22/OC_ThirdPart_AFN_05_NetworkingReachability/" class="archive-article-date">
-  	<time datetime="2020-11-22T07:52:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-22</time>
-</a>
-        
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/02/23/ios-kuang-jiaafnetworking05networkingreachability4.png?x-oss-process=image/auto-orient,1/quality,q_90" alt="iOS框架_AFNetWorking05NetworkingReachability@40"></p>
-
-      
-
-      
-      
-      
-    </div>
-    
-    
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/22/OC_ThirdPart_AFN_05_NetworkingReachability/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next »</a>
-    </nav>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 
 
@@ -933,8 +484,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
