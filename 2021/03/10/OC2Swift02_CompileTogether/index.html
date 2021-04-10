@@ -14,18 +14,44 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="扬仔的技术博客">
-<meta property="og:url" content="http://yangzai360.top/archives/page/3/index.html">
+  <meta name="description" content="尝试系统地串联起 OC 和 Swift 的编译过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift 与 OC 编译过程对比 - Swift_0x02">
+<meta property="og:url" content="http://yangzai360.top/2021/03/10/OC2Swift02_CompileTogether/index.html">
 <meta property="og:site_name" content="扬仔的技术博客">
+<meta property="og:description" content="尝试系统地串联起 OC 和 Swift 的编译过程。">
 <meta property="og:locale">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/18/16160022335904.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165916399478.png?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/19/16160883659534.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165878421286.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://nondot.org/~sabre/img/ChrisPhoto4.jpg">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165918762464.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165917944198.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/19/16161396434077.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/22/16164166210201.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/23/16164345679405.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/23/16164358567945.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165720787884.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165172380782.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165749718920.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165756554503.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165725686575.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165766916303.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165798873909.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165858469695.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165861954797.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165863765989.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="article:published_time" content="2021-03-10T14:59:11.000Z">
+<meta property="article:modified_time" content="2021-04-10T07:49:39.169Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/18/16160022335904.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
   
     <link rel="alternative" href="/atom.xml" title="扬仔的技术博客" type="application/atom+xml">
   
   
-  <title>Archives | 扬仔的技术博客</title>
+  <title>Swift 与 OC 编译过程对比 - Swift_0x02 | 扬仔的技术博客</title>
   
   
     <link rel="icon" href="/img/favicon-32x32-yulia.png">
@@ -196,170 +222,465 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-OC2Swift02_CompileTogether" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/10/CWC02_OCRuntimeInAction_CookActuallyUsedInCooking/" class="archive-article-date">
-  	<time datetime="2020-11-09T16:09:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-10</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/10/CWC02_OCRuntimeInAction_CookActuallyUsedInCooking/">常用 Runtime 操作整理</a>
+    <h1 class="article-title" itemprop="name">
+      Swift 与 OC 编译过程对比 - Swift_0x02
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/10/CWC01_KitchenToolsThatCookLoves/" class="archive-article-date">
-  	<time datetime="2020-11-09T16:08:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-10</time>
+        
+          <a href="/2021/03/10/OC2Swift02_CompileTogether/" class="archive-article-date">
+  	<time datetime="2021-03-10T14:59:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-10</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/10/CWC01_KitchenToolsThatCookLoves/">Apple 源码用到的一些数据结构</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
+        
+        
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/05/OCBigManuscript04_msgSend/" class="archive-article-date">
-  	<time datetime="2020-11-04T20:23:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/05/OCBigManuscript04_msgSend/">OC Runtime 大手稿：四、msgSend 全流程</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/04/OCBigManuscript02_ObjectAllocInit/" class="archive-article-date">
-  	<time datetime="2020-11-03T19:00:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/04/OCBigManuscript02_ObjectAllocInit/">OC Runtime 大手稿：二、实例化源码流程</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
+    <div class="article-entry" itemprop="articleBody">
       
-        </div></section>
+        <p>尝试系统地串联起 OC 和 Swift 的编译过程。</p>
+<a id="more"></a>
+
+<p>[TOC]</p>
+<h1 id="1-为什么想写这篇文章"><a href="#1-为什么想写这篇文章" class="headerlink" title="1. 为什么想写这篇文章"></a>1. 为什么想写这篇文章</h1><p>工程一些模块迁移到 Swift 后，编写代码的时候会遇到一些奇奇怪怪的问题，这些问题都是在编译链接时期出现的，为了了解这些问题的产生原因，以及 Swift 编译的过程与 Clang 的区别，再以及混编工程是如何运作的，简单看了一下全是全是全是一堆看不懂的概念，把一些问题和了解之后的原理记录了下来，特此总结一篇文章，尝试系统地串联起 OC 和 Swift 的编译过程。</p>
+<p>这篇文章分三大部分，第一部分介绍历史，第二部分通过对比学习了 Clang 和 Swift 编译器的编译过程都做了什么事情，第三部分记录混编工程中 Xcode 的工作。</p>
+<h1 id="2-苹果编译器的发展背景"><a href="#2-苹果编译器的发展背景" class="headerlink" title="2. 苹果编译器的发展背景"></a>2. 苹果编译器的发展背景</h1><p><strong>这段很长一部分没什么干货和价值，可以跳过。但是历史非常有意思，我的文笔有限，写的非常不精彩，但是把事实描述出来还是足够了。如果说解技术问题要知其然并知其所以然，我认知知其然是技术底层细节架构等，所以然就是很简单的历史故事。</strong></p>
+<p>今天苹果的开发生态的形成有很多散碎的历史因素，这段用一万多字把这些历史因素整理串联起来，做一个简单的概述。你会发现有一些因素是贯穿始终的，比如 Steven.Jobs 和 Linus 这两个人的人物性格、编程技术的发展、时代的局限性等。</p>
+<h2 id="2-1-OC-GCC"><a href="#2-1-OC-GCC" class="headerlink" title="2.1 OC + GCC ?"></a>2.1 OC + GCC ?</h2><p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/18/16160022335904.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="GCC Logo"></p>
+<p>OC 和 GCC 为什么会在一起？从历史时间线上首先从 OC 开始。OC 的发展期初萌芽阶段跟 Apple 没什么关系，跟 SmallTalk 语言有关。</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165916399478.png?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<p>今年 1 月份，OC 之父 Brad Cox 去世了。OC 是 Cox 在一家 IT 公司上班期间与同事 Tom 一起编写的，那为什么 OC 基于 C 呢？因为这家公司用的编程语言是 C 语言，然后 Cox 和 Tom 非常喜欢当时的一门 Smalltalk 语言，于是他俩早在 1980 年就编写了OC，OC 现在的消息传递机制就是基于 Smalltalk 的。然后 1983 年，Cox 与 Love 合伙成立了 PPI 公司，开始卖 OC 以及相关库，也就是后来帮主自传里面提到的 StepStone！另外1986年Cox甚至写了本书讲OC的思想多么**。</p>
+<p>你说巧不巧？OC 开始编写的时候，刚刚好是乔帮主被 Apple 轰出来的那一年。</p>
+<p>GCC 是一个从 1985 年就开始的 C 语言编译器，创始人是 Stallman，后来快速发展，可以编译C++、Fortran、Pascal 等语言(当然后来也支持了Java、OC)。当时 GCC 是非常优秀的编译器，比同类编译器性能可以高达30%，并且支持多种语言。这就使得当时美国很多商业公司都采用了 GCC，甚至包括 HP。帮主的自传里也多次提到 HP，乔布斯 12 岁的第一份暑假零工就是打电话给 HP 创始人要机械器件获得到的。</p>
+<p>85年同年，因为百事可乐公司的原因，NeXT 公司创立。</p>
+<p>三年后也就是 1988 年，NeXT 从 StepStone 手上买了 OC 的授权。至于为什么帮主选择了OC？原因有很多，NeXT的技术硬需求是：GUI、面向对象、动态性，首先是GUI往回看后来用 OC 开发出来的 NeXTSTEP 操作系统往上支撑的是一个非常重 GUI 的系统。其次是面向对象+动态性，OC 提供的面向对象+动态性是任何其他所谓的面向对象语言都无法提供的。当时 C++ 对于 GUI 的支持并不好，相比之下乔布斯非常青睐 Smalltalk 式消息传递机制的 OC，这段自传中有大量的篇幅回顾。另外就是性格原因，再次创业的乔布斯对于技术甚至语言有非常强的控制欲。总之很多历史原因使得帮主选择了 OC 作为 NeXT 的主要开发语言。</p>
+<p>另外 OC 中有大量的语言特性是授权给 NeXT 后以及 Apple 时期添加的，例如@Property、Protocol、ARC 等。</p>
+<p>NeXT 技术发展的过程中，商业和技术上的考量，乔布斯最开始是特别喜欢 Stallman 的，NeXT 把 OC 引入了 GCC，后期整个 NeXT 的技术栈就是 OC + GCC。</p>
+<p>脑洞大一点，可以说如果没有<strong>百事可乐</strong>的话，就没有今天我们用的 Mac、iPhone、OC、LLVM、Swift等这套东西…</p>
+<h2 id="2-2-GCC-后期暴露的问题"><a href="#2-2-GCC-后期暴露的问题" class="headerlink" title="2.2 GCC 后期暴露的问题"></a>2.2 GCC 后期暴露的问题</h2><p>当时 Apple 一度从巅峰陷入了绝境，《连线》杂志在1997年的六月还发表了一篇文章，名为<a target="_blank" rel="noopener" href="https://www.wired.com/1997/06/apple-3/">《101种拯救Apple的方法》</a>，包括改LOGO、卖给摩托罗拉、设计出一台内置卡布奇诺咖啡机的PC…..等</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/19/16160883659534.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="101种拯救Apple的方法"></p>
+<p>周所周知后来 NeXT 被 Apple 收购。促成放弃原有系统 Copland，收购 NeXTSTEP 的关键人物是 Ellen Hancock，她去 Apple 之前在 IBM 工作了将近29年，一度成为IBM 资深副总裁，后来乔布斯回归之后，把她排挤出公司了。</p>
+<p>回到 Apple 之后，NeXTSTEP 就演化为 Rhapsody，并最终成为 Mac OS X，随着发展，Apple 对 OC 和 C 语言新增了很多新特性，但是当时 GCC 因为各种原因，支持的不到位。所以相似的情节就发生了：：：：：：</p>
+<p>Apple 从 GCC 的主分支中拆分出来了自己的开发分支，自己来维护。然后同时 GCC 的主分支继续高歌猛进一直在迭代版本，使得 Apple 的分支远远落后 GCC 的主分支。</p>
+<p>GCC 的第二个问题是代码质量问题，后来公司越发展，代码质量越差，Apple 想要很多功能例如IDE 支持、把 GCC 更好地组件模块化。GCC 都不支持。</p>
+<p>Apple 给了 GCC 大量的资金，前期确实解决了很多的问题。长期以往这些 GCC 的打工人，可能开源自由的灵魂没有什么打工魂，不像桔厂员工…就是他们的态度总是让 Apple 觉得特别膈应，并以自己在开源世界的地位恫吓苹果，那你想，帮主是一个完美主义+控制欲的人，他能忍？</p>
+<p>最终 Apple 由于受不了这些项目组人员的态度、协议、代码质量，我自己搞。因此才有了苹果在外寻找新的合作项目的种子。</p>
+<p>当时 GCC 在当时比较是一个非常非常优秀的项目，像 GCC、LLVM、Linux、Unix 这些宏伟的项目，不是靠研发可以研发出来的，即使是 Apple 也只能靠寻觅合作来扩展核心技术项目。</p>
+<h2 id="插入：苹果跟-Linux-的分道扬镳"><a href="#插入：苹果跟-Linux-的分道扬镳" class="headerlink" title="插入：苹果跟 Linux 的分道扬镳"></a>插入：苹果跟 Linux 的分道扬镳</h2><p>如果当时 Apple 采用了 Linux，那我觉得今天的 Apple 生态完全会是另一个局面。</p>
+<p>事情是这样的，乔布斯回归苹果之后，开始构思下一代基于 NeXTSTEP 的操作系统，当时苹果的 BSD 生态并比不上名声大噪的 Linux，研发需要投入大量的人力物力，然而苹果作为一家商业公司，主要竞品是 MS，更需要借力打力，联合开源组织可以借助大量的力量推动 Mac OS 的发展，能省下很多钱。所以促成了他两的一次交流。</p>
+<p>帮主构思了一套把 Linux 作为 MacOS 内核的重要组成部分的一个伟大蓝图，并且得到 Linus 的认同合作，使得 Linus 鼓动麾下一大群优秀的开发者加入 Apple，这是当时 Apple 非常想看到的一个结果。而且再提一嘴，在 乔布斯回归苹果之前，苹果就以及和 Linux 系统有着深厚的合作，有兴趣的可以深挖关键词 MkLinux，这是一个把 Linux 内核跑在 Mach 上的系统，这个系统对后来 Linux 的可移植性，以及 MaxOSX 的 XNU 内核都有关键的作用。</p>
+<p>当然没有谈成，完全谈崩了，两个人的角度和立场完全不同，他俩的性格呢非常相似，唯我独尊、控制欲强等等。谈崩之后，Apple 整个技术体系也彻彻底底地放弃了与 Linux 和所有合作。</p>
+<p>乔布斯觉得 Linux 这种开源软件的代码质量和推进速度根本无法支撑他想要的软件生态。GCC 后来确实印证了这一点。</p>
+<p>Linus 呢？后来 Mac 转型 Unix 内核发布之后，他多次公开嘲笑 Mac 的技术非常落后，远远比不上他，批评 Mac 的文件管理系统是垃圾。然而在后面 Mac 高歌猛进的时候，Linus 只能眼巴巴地看着，后来 Linus 也承认了自己当时的问题。</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165878421286.jpg?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<h2 id="2-3-LLVM-的诞生"><a href="#2-3-LLVM-的诞生" class="headerlink" title="2.3 LLVM 的诞生"></a>2.3 LLVM 的诞生</h2><p><img src="http://nondot.org/~sabre/img/ChrisPhoto4.jpg" alt="Chri Lattner 个人博客照片"></p>
+<p>2000年，Chris Lattner 大学毕业，考了GRE，最终前往伊利大学，伊利诺伊大学读计算机硕士博士，这个学校就是后来 Apple 投入大量资金合作LLVM的学校！</p>
+<p>Chris 在伊利看了很多遍龙书，就是编译原理，发表了一篇又一篇的论文。他在硕士毕业论文里提出了一套完整的在编译时、链接时、运行时甚至是在闲置时优化程序的编译思想，直接奠定了 LLVM 的基础。</p>
+<p>LLVM 的诞生是为了解决一个 OpenGL 的函数的通用调用问题，后来到他念博士时 LLVM 已经非常成熟，使用 GCC 作为前端来对程序进行语义分析，产生 IF（Intermidiate Format）（类似今天的 IR），然后 LLVM 使用分析结果完成代码优化和生成。</p>
+<p>这项研究让他在 2005 年毕业时就成为了业界小有名气的编译器专家，然而他不知道的事，背后 Apple 的眼睛已经盯上了他。Chris 很希望可以继续编写 LLVM，他想把它做成颠覆性的产品，当时只有苹果允许他入职之后全职继续实现 LLVM，他不假思索地就加入了 Apple。这段是他自己说的。</p>
+<p>并且在短短几年内，LLVM 成为最领先的开源软件技术。这无异于扇了 Linux 小组、GCC 小组一记响亮的耳光。</p>
+<p>刚进入 Apple，Chris Lattner 就大展身手：首先在 OpenGL 小组做代码优化，把 LLVM 运行时的编译架在 OpenGL 栈上，这样 OpenGL 栈能够产出更高效率的图形代码。如果显卡足够高级，这些代码会直接扔入 GPU 执行。但对于一些不支持全部 OpenGL 特性的显卡（比如当时的Intel卡），LLVM 则能够把这些指令优化成高效的 CPU 指令，使程序依然能够正常运行。这个强大的 OpenGL 实现被用在了后来发布的 Mac OS X 10.5上。同时，LLVM 的链接优化被直接加入到 Apple 的代码链接器上，而 LLVM-GCC 也被同步到使用 GCC 4.0 代码。</p>
+<h2 id="2-4-From-GCC-to-Clang"><a href="#2-4-From-GCC-to-Clang" class="headerlink" title="2.4 From GCC to Clang"></a>2.4 From GCC to Clang</h2><p>除了上面这些历史原因呢，从技术上来说 GCC 确实取得了巨大的成功，GCC 的初衷是提供一款免费的开源编译器，仅此而已，后来支持了越来越多的语言，GCC 架构的问题也逐渐暴露出来。</p>
+<p>当时的 Apple 对于语言、技术等控制欲是非常强的。以及乔布斯有自己的一套对于技术生态的构思，这些都是 GCC 远远达不到的。</p>
+<p>基于 LLVM 的优秀设计，使得 GCC 以及成为了其中的一个独立子模块，Apple 也打算从零开始写前端编译器，完全替代掉 GCC。</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165918762464.jpg?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<p>Clang 2007 年开始开发，C 编译器最早完成，而由于 Objective-C 只是 C 语言的一个简单扩展，相对简单，很多情况下甚至可以等价地改写为 C 语言对 Objective-C 运行库的函数调用，因此在 2009 年时，已经完全可以用于生产环境。C++ 在后来也得到了支持。</p>
+<p>因为实现了多模块的复用以及很多优化，Clang 发布的时候，Clang 的编译性能是 GCC 的三倍！</p>
+<p><strong>时代局限性</strong>：这所谓的时代局限性也是 OC 当时所处的局限性，这也是后期 Swift 替代 OC 的主要原因。因为编程技术只有短短几十年的历史，远不及其他上百上千年的学科，每个5年都有它的历史局限性。随时时间推移，大量的编程实践积累了大量的编程技术和思想上的发展，越来越多的优秀编程语言进行各种扩充，而 OC 由于历史局限和一些设计上的包袱，OC 期初也只是对 C 语言进行了一层扩充，其一些特性是使用汇编来实现的。大量的新特性无法进行添加和灵活变动，所以只能靠全新的语言来更替，这也跟 Swift 选择开源 + 专职社区公开维护息息相关。</p>
+<p>参考案例，项目用到地图模块的时候，发现虚拟机上地图特别特别的卡，拖动起来卡的不行，后来运行到真机上非常流畅，这个原因有两点：首先工程在Debug环境运行的时候，IR 中间代码优化的等级，在 debug 的时候选择的是 LowLevel，基本相当于不怎么优化。第二个核心原因是因为 Clang 对于 X86 生成的机器码的执行效率是远远低于 Arm CPU 的，毕竟真机上的 A 系列 CPU 是 Apple 自家设计生产的。</p>
+<p>前端的代码质量，即使是开源社区也能做的很好，但是后端的机器码的执行效率的，跟前端相比，则完全是另一个工种，其性能直接与项目预算相关，这是开源组织不具备的，所以 LLVM 的后端效率，是开源的 GCC 无法比拟的。另外举栗例如，尽管英特尔的 ICC 编译器只有少数人参与，但是却以机器码性能而著名。</p>
+<p>我知道的东西就那么多，这里不细说太多，不然正文没东西写了。。。</p>
+<h2 id="2-5-From-OC-to-Swift"><a href="#2-5-From-OC-to-Swift" class="headerlink" title="2.5 From OC to Swift"></a>2.5 From OC to Swift</h2><p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165917944198.jpg?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<p>随着编程语言的不断演进，很多很多新的编程思想的实践，OC 的缺点也逐渐暴露出来，比如不支持命名空间；不支持运算符重载；不支持多重继承；使用动态运行时类型，所有的方法都是函数点语法调用，很多编译时的优化方法都用不到等。</p>
+<p>另一个原因是时代的局限性，上面提过了。</p>
+<p>不仅仅满足于 LLVM 的 Chris ，发起了 Swift 项目，后来就是大家都知道的事情了。</p>
+<h1 id="3-LLVM-简介"><a href="#3-LLVM-简介" class="headerlink" title="3. LLVM 简介"></a>3. LLVM 简介</h1><h2 id="3-1-经典编译器理论模型"><a href="#3-1-经典编译器理论模型" class="headerlink" title="3.1 经典编译器理论模型"></a>3.1 经典编译器理论模型</h2><p>在 LLVM 之前就已接有了经典编译器三段式模型设计理论:</p>
+<p>前端负责源代码：预处理 -&gt; 词法 -&gt; AST语法树 -&gt; IR 中间代码<br>优化器负责IR优化：专门优化中间代码（见下图）<br>后端负责转换机器码：最大化利用目标机器特殊指令，提高性能</p>
+<p>对于中间的优化器，我们可以使用通用的中间代码。</p>
+<p>这种三段式的结构还有一个好处，开发前端的人只需要知道如何将源代码转换为优化器能够理解的中间代码就可以了，他不需要知道优化器的工作原理，也不需要了解目标机器的知识。这大大降低了编译器的开发难度，使更多的开发人员可以参与进来。不同的技能栈是一个社会分工问题而不是一个技术问题，这在实践中非常重要，特别是对于那些想要尽量减少协作障碍的开源项目。</p>
+<p>通过切换不同的编译器前前端和后端，就可以支持不同的编程语言以及目标机器架构，如下图</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/19/16161396434077.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="Retargetablity"></p>
+<p>当需要支持多种「编程语言」时，只需要添加多个「前端」就可以了。<br>当需要支持多种「目标机器」时，只需要添加多个「后端」就可以了。</p>
+<p><strong>「虽然但是」</strong> 这种三段式的编译器有很多优点，并且被写到了教科书上，但是在实际中这一结构却从来没有被完美实现过。</p>
+<h2 id="3-2-LLVM"><a href="#3-2-LLVM" class="headerlink" title="3.2 LLVM"></a>3.2 LLVM</h2><p>LLVM 这个名字是一个简写，但是现在它是整个项目的一个统称。「引用2」中 Chris 提到，LLVM 设计之初就被定义为：</p>
+<pre><code>一系列接口清晰的可重用库。</code></pre>
+<p>在此之前没有任何人按照三段式设计进行过实践，LLVM 是第一个。比较类似的成功案例也有很多，例如 JVM、一些复用 C 语言作为中间代码的编译器、以及 GCC，但是有各自的问题。JVM提供即时编译的编译器，任何对接了字节码规范的编译器都可以使用 JIT 即时编译，但是 JVM 强制要求前段语言对接字节码规范以及使用 GC。C 语言作为中间代码的编译器不能良好的支持 C 语言不支持的特性。</p>
+<p>那 GCC 呢？GCC 虽然遵循了编译器的三段式设计，而且成功开发了多个编译器前端，以及根据不同的后端机提供了不同的后端。但是 GCC 从一开始就设计为一个整体，对外提供的大多都是一条龙服务，你无法去操作它的IR，无法将任何功能从系统中剥离出来使用，其大量代码都是强耦合的。另外 GCC 无法抽离子模块的原因有很多：被滥用的全局变量、不可变变量（类似 Swift 中的 let）没有严格的限制、数据结构设计不严谨、庞大的代码库等。</p>
+<p>Chris 举过一个栗子，GCC（即使是2010年的4.5版本）的中间代码 GIMPLE IR，后端的同学在后端生成 debug Info 的时候，要遍历前端生成的抽象语法树，前端的同学也有类似的困扰，等等一系列不可清晰表达的问题，使得工种的工作非常困难，开发人员非常稀少。</p>
+<p>在 LLVM 中所有的功能都以「接口清晰的可重用库」的形式来提供，包括对代码进行分析优化生成等工作的集成库、在集成库的基础上提供的工具集，包括汇编器、链接器、调试器等。</p>
+<p>LLVM 项目最大的一个特点就是模块化设计拆分做到极致的设计，因为这良好的设计，为 LLVM 所有的特性提供了可能性。Chris 也谈到：</p>
+<pre><code>LLVM的模块化最初并不是为了直接实现本文所述的任何目标而设计的。而是一种自我防卫的机制：很明显，我们很难在第一次尝试时就能把所有事情都做到最好。而模块化优化程序是为了使隔离更加容易，以便用更好的实现方式替换掉旧的实现。</code></pre>
+<h2 id="3-3-中间代码-IR-amp-相关-LLVM-库"><a href="#3-3-中间代码-IR-amp-相关-LLVM-库" class="headerlink" title="3.3 中间代码 IR  &amp; 相关 LLVM 库"></a>3.3 中间代码 IR  &amp; 相关 LLVM 库</h2><p>以前狗哥线下分享的 PPT 里引用过一句话「程序中没有什么是加一个中间层不能解决的。如果有，那就两层。」（来源世上首个CS博士）</p>
+<p>LLVM 设计中最重要的一环就是「LLVM IR（中间码）」，LLVM IR 就是代码在编译器中的表达形式。LLVM IR 是一种采用 SSA 形式的 IR（Immediate Representation）中间代码表达，也是一种有明确语义的语言。其主要作用有2：</p>
+<ul>
+<li>向前对接所有高级语言的编译器前段，在 IR 中所有的高级语言都是平等的</li>
+<li>在编译优化层用来做中间分析和转换的载体。</li>
+</ul>
+<p>LLVM IR 的设计考虑了许多具体目标，包括支持轻量运行时优化、跨功能/过程间优化、全程序分析、重构转换等等</p>
+<p>其中，SSA 代表 static single-assignment，它表示 IR 中出现的每个变量只会被赋值一次，帮助简化编译器优化算法。在观察 Clang 和 Swift 编译过程产生的 SIL 以及中间 IR 代码有大量的中间过程变量（命名为%0<del>%11、以及!0</del>!14等，见 Clang 和 Swift 编译过程举例篇幅），原因就是因为 SSA 分析产生的中间变量。</p>
+<p>这样的一段C代码对应的IR如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="title">add1</span><span class="params">(<span class="keyword">unsigned</span> a, <span class="keyword">unsigned</span> b)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> a+b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="title">add2</span><span class="params">(<span class="keyword">unsigned</span> a, <span class="keyword">unsigned</span> b)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (a == <span class="number">0</span>) <span class="keyword">return</span> b;</span><br><span class="line">  <span class="keyword">return</span> add2(a<span class="number">-1</span>, b+<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">define i32 @add1(i32 %a, i32 %b) &#123;</span><br><span class="line"><span class="symbol">entry:</span></span><br><span class="line">  %tmp1 = <span class="keyword">add</span> i32 %a, %b</span><br><span class="line">  <span class="keyword">ret</span> i32 %tmp1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">define i32 @add2(i32 %a, i32 %b) &#123;</span><br><span class="line"><span class="symbol">entry:</span></span><br><span class="line">  %tmp1 = icmp eq i32 %a, <span class="number">0</span></span><br><span class="line">  br i1 %tmp1, label %done, label %recurse</span><br><span class="line"></span><br><span class="line"><span class="symbol">recurse:</span></span><br><span class="line">  %tmp2 = <span class="keyword">sub</span> i32 %a, <span class="number">1</span></span><br><span class="line">  %tmp3 = <span class="keyword">add</span> i32 %b, <span class="number">1</span></span><br><span class="line">  %tmp4 = <span class="keyword">call</span> i32 @add2(i32 %tmp2, i32 %tmp3)</span><br><span class="line">  <span class="keyword">ret</span> i32 %tmp4</span><br><span class="line"></span><br><span class="line"><span class="symbol">done:</span></span><br><span class="line">  <span class="keyword">ret</span> i32 %b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>@代表全局标识，%是局部变量，i32就是int32，i32**是int32指针，剩下一些 br call add sub 就是一些常见的汇编指令。</p>
+<p>IR 看起来像是一个奇奇怪怪的汇编语言，使用强类型的简单类型系统，与 x86 和 arm64 Assembly 另一个重要区别是 LLVM IR 不使用固定的命名寄存器，它使用以 ％ 字符命名的临时寄存器，对应上面提到的 SSA。</p>
+<p>LLVM IR 对于前面的各种语言来说可以轻松对应转换成语言明确的 IR，对后面的编译器来说更是完美，有很强的表现力，可以高效地被 Pass 进行优化。</p>
+<p>LLVM 中有三中不同形式的 IR 表示：</p>
+<ol>
+<li>InMemory IR：内存中的 IR，编译器使用</li>
+<li>OnDisk IR：硬盘中用 bitcode 表示的 IR，适用于 JIT 编译器快速加载</li>
+<li>LLVM assembly language：这种就是 <code>.ll</code> 文件，人类能看懂的文本格式汇编</li>
+</ol>
+<p>这三种 IR 是等价的，可以互相转换，见下图：</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/22/16164166210201.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="LLVM对于源码、IR、汇编、可执行文件的转化"></p>
+<p>使用的一些 LLVM 库：</p>
+<ul>
+<li>llvm-as：把 LLVM IR 从「第三种」转换成「第二种」</li>
+<li>llvm-dis：as 的逆过程</li>
+<li>opt：对 IR 做优化</li>
+<li>llc：把 IR 编译成汇编代码</li>
+<li>lli：JIT 编译器 实时解释执行 IR</li>
+</ul>
+<p>这些库作为 LLVM 的 Tools，源码<a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/tree/main/llvm/tools">在这里</a></p>
+<p>学习 Swift 的最佳途径 Playground 的原理就是使用 On-disk IR 去运行 llvm-lli，直接让 JIL 编译器进行解释。</p>
+<p>LLVM工具官方文档 <a target="_blank" rel="noopener" href="https://llvm.org/docs/CommandGuide/index.html">LLVM CommandGuide</a><br>Clang 官方文档 <a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/UsersManual.html">Clang User Manual</a></p>
+<h2 id="3-4-IR-的-Pass-优化"><a href="#3-4-IR-的-Pass-优化" class="headerlink" title="3.4 IR 的 Pass 优化"></a>3.4 IR 的 Pass 优化</h2><p>LLVM 的优化通过代码中指定 IR 优化等级来完成，因为 SSA 的简单性质，LLVM 的优化通过集成父类 Pass 来完成一趟一趟的遍历优化。</p>
+<p>在 Xcode 中，我们通过设置这个属性了修改优化的等级，优化的等级越高，编译时间越长，代码的执行性能越高：<br><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/23/16164345679405.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="Xcode设置Optimization Level"></p>
+<p>clang 生成 LL 文件或者 s 汇编文件的时候，通过参数 -O 来指定优化等级：-O0、-O1、-O2、-O3、-Os</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clang -Os -S main.m</span><br><span class="line">clang -Os -S -emit-llvm main.m</span><br></pre></td></tr></table></figure>
+
+<p>在 LLVM 2.8 版本中，一个-O3级别的优化，会足足执行 67 个 Pass 进行优化，这些 Pass 子实例通过 <a target="_blank" rel="noopener" href="https://github.com/apple/swift/blob/main/lib/SILOptimizer/PassManager/PassManager.cpp">PassManager</a> 来管理，在进行一个优化程序执行的时候 Manager 读取信息来管理整个的优化过程。</p>
+<p>因为 LLVM 极致模块化拆分的设计，LLVM 的代码优化不仅仅在编译时，在链接时和安装时也会进行一些根据跨文件的更深程度的一些优化，例如针对链接产物的内联、跨文件的常量合并、跨源文件的级别的冗余代码消除、以及根据目标机器的特性进行优化，如图</p>
+<p>Link-Time &amp; Install-Time Optimization:</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/23/16164358567945.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="Link-Time &amp; Install-Time Optimization"></p>
+<h2 id="3-5-IR-的测试用例工具"><a href="#3-5-IR-的测试用例工具" class="headerlink" title="3.5 IR 的测试用例工具"></a>3.5 IR 的测试用例工具</h2><p>强大的项目需要更加强大的 QA，没有 QA 再大的船也是注定要翻的。</p>
+<p>LLVM 使用 LLVM BugPoint 工具来自动执行所有的功能的自动化测试，通过 opt 命令来执行，通过 FileCheck 来对比 opt 的执行输出和预期正确的输出，如果有问题，BugPoint 就会最小范围的抛出有问题的IR代码、以及递送相关的出错的组件和正常工作的组件。</p>
+<p>以上 LLVM 简介部分结束。</p>
+<p>SSA 部分参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_29674357/article/details/78731713">LLVM SSA 介绍</a><br><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/24992774">知乎问题：Phi node 是如何实现它的功能的？</a></p>
+<p>其他参考：<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/66793637">IR语法讲解</a><br><a target="_blank" rel="noopener" href="https://kaleidoscope-llvm-tutorial-zh-cn.readthedocs.io/zh_CN/latest/">基于LLVM 设计实现新的编程语言</a><br><a target="_blank" rel="noopener" href="https://llvm.org/docs/WritingAnLLVMPass.html">编写自定义的后端pass实现代码优化混淆等</a></p>
+<h1 id="4-C-Language-编译器-Clang"><a href="#4-C-Language-编译器-Clang" class="headerlink" title="4. C Language 编译器 Clang"></a>4. C Language 编译器 Clang</h1><p>Clang 是服务于 C、CXX、OC 的 LLVM 前端编译器。Clang 生成的 AST 仅仅是 GCC 的五分之一不到，编译 OC 的效率更是 3 倍之多。</p>
+<p>另外的一篇文章，展开两个前端编译器的编译过程步骤，戳我：<br><a target="_blank" rel="noopener" href="http://wiki.intra.xiaojukeji.com/pages/viewpage.action?pageId=547868809">Clang &amp; Swift 编译</a></p>
+<p>里面提到通过命令获取Clang编译过程如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">               +- 0: input, &quot;main.m&quot;, objective-c</span><br><span class="line">            +- 1: preprocessor, &#123;0&#125;, objective-c-cpp-output</span><br><span class="line">         +- 2: compiler, &#123;1&#125;, ir</span><br><span class="line">      +- 3: backend, &#123;2&#125;, assembler</span><br><span class="line">   +- 4: assembler, &#123;3&#125;, object</span><br><span class="line">+- 5: linker, &#123;4&#125;, image</span><br><span class="line">6: bind-arch, &quot;x86_64&quot;, &#123;5&#125;, image</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-1-预处理-preprocessor"><a href="#4-1-预处理-preprocessor" class="headerlink" title="4.1: 预处理 preprocessor"></a>4.1: 预处理 preprocessor</h2><pre><code>clang -E main.m -o main.i</code></pre>
+<p>Clang 的编译第一步预处理，做头文件的展开替换、预编译指令例如<code>#ifndef</code>等、宏定义的展开等。</p>
+<p>Clang 对每个.m 文件的预处理结果，我们可以通过Xcode <code>Related item</code> 窗口中的 <code>Preprocess</code> 按钮来查看。</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165720787884.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="Xcode Preprocess"></p>
+<p>（头文件替换的部分需要在混编段落详细展开，OC Swift 混编工程实践的时候遇到了一些这方面的问题)</p>
+<h2 id="4-2-Clang-词法分析-lexical-anaysis"><a href="#4-2-Clang-词法分析-lexical-anaysis" class="headerlink" title="4.2 Clang 词法分析 lexical anaysis"></a>4.2 Clang 词法分析 lexical anaysis</h2><pre><code>clang -Xclang -dump-tokens main.m</code></pre>
+<p>Clang 的词法分析通过递归遍历源文件字节流，组织成有意义的词素 (lexeme)，输出单词序列 tokens。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">int &#x27;int&#x27;    [StartOfLine] [LeadingSpace]   Loc=&lt;main.m:4:5&gt;</span><br><span class="line">identifier <span class="string">&#x27;a&#x27;</span>   [LeadingSpace] Loc=&lt;main.m:<span class="number">4</span>:<span class="number">9</span>&gt;</span><br><span class="line">equal <span class="string">&#x27;=&#x27;</span>    [LeadingSpace] Loc=&lt;main.m:<span class="number">4</span>:<span class="number">11</span>&gt;</span><br><span class="line">identifier &#x27;add&#x27;     [LeadingSpace] Loc=&lt;main.m:4:13&gt;</span><br><span class="line">l_paren <span class="string">&#x27;(&#x27;</span>     Loc=&lt;main.m:<span class="number">4</span>:<span class="number">16</span>&gt;</span><br><span class="line">numeric_constant <span class="string">&#x27;1&#x27;</span>        Loc=&lt;main.m:<span class="number">4</span>:<span class="number">17</span>&gt;</span><br><span class="line">comma <span class="string">&#x27;,&#x27;</span>       Loc=&lt;main.m:<span class="number">4</span>:<span class="number">18</span>&gt;</span><br><span class="line">numeric_constant <span class="string">&#x27;2&#x27;</span>        Loc=&lt;main.m:<span class="number">4</span>:<span class="number">19</span>&gt;</span><br><span class="line">r_paren <span class="string">&#x27;)&#x27;</span>     Loc=&lt;main.m:<span class="number">4</span>:<span class="number">20</span>&gt;</span><br><span class="line">semi <span class="string">&#x27;;&#x27;</span>        Loc=&lt;main.m:<span class="number">4</span>:<span class="number">21</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-3-Clang-的语法分析-semantic-analysis"><a href="#4-3-Clang-的语法分析-semantic-analysis" class="headerlink" title="4.3 Clang 的语法分析 semantic analysis"></a>4.3 Clang 的语法分析 semantic analysis</h2><pre><code>clang -Xclang -ast-dump main.m</code></pre>
+<p>语法分析将上一步的tokens解析成抽象语法树木，通过节点 Node 的特性，进行了语法是否正确的检验，例如不识别的方法调用、不匹配的类型等。</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165172380782.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="Clang ASY"></p>
+<p>大量的 Clang 插件都是通过遍历 AST 来完成的，比如最简单的 warning 一个 NSString 的 property 建议使用 copy 关键词来修饰这种。</p>
+<p>参考<br><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/IntroductionToTheClangAST.html">https://clang.llvm.org/docs/IntroductionToTheClangAST.html</a></p>
+<h2 id="4-4-生成中间代码-codegen"><a href="#4-4-生成中间代码-codegen" class="headerlink" title="4.4 生成中间代码 codegen"></a>4.4 生成中间代码 codegen</h2><pre><code>clang -S -emit-llvm main.m</code></pre>
+<p>CodeGen 通过对 AST 进行遍历，生成 ll 格式的 IR。并且完成了一系列动作：</p>
+<p>生成各种结构体，包括不仅限于类生成、Category&amp;Protocol的生成、OC的一些语法降级成objc_msgSend这种C的函数调用、自动实现Getter/Setter、处理synthesize、Block结构生成、ARC自动插入objc-storeStrong&amp;objc-storeWeak、自动释放池插入。</p>
+<p>大部分的处理在这里：<br><a target="_blank" rel="noopener" href="http://clang.llvm.org/doxygen/CGObjC_8cpp_source.html">http://clang.llvm.org/doxygen/CGObjC_8cpp_source.html</a></p>
+<p>tips：OC 中的 dealloc 方法中，为什么我们不需要手动去调用父类的 dealloc 方法？<br>因为 CodeGen 上面这个的 720 行代码，就帮助我们完成了自动调用 super 的 dealloc 方法，并且还帮助我们生成了 dealloc 方法的所有 ivar 的释放。</p>
+<h1 id="5-Swift-编译器译编-tfiwS"><a href="#5-Swift-编译器译编-tfiwS" class="headerlink" title="5. Swift 编译器译编 tfiwS"></a>5. Swift 编译器译编 tfiwS</h1><p>Swift 的编译器内部包含了 Clang，扩展了 Swiftc：</p>
+<pre><code>Swift 编译器 = Clang + Swiftc</code></pre>
+<p>Swift 编译过程不能按照 Clang 的一一对应，大概经历这样几个过程：</p>
+<pre><code>语法分析 Parse --&gt; 语义分析 Sema --&gt; 
+SILGen --&gt; IRGen --&gt; 汇编 --&gt; MachO</code></pre>
+<p><strong>Swift 没有预处理过程</strong>，所以之前在 OC 中通过宏定义完成的一些常量等，在 Swift 中通通不可用…</p>
+<h2 id="5-1-Parse-语法解析器"><a href="#5-1-Parse-语法解析器" class="headerlink" title="5.1 Parse 语法解析器"></a>5.1 Parse 语法解析器</h2><p><a target="_blank" rel="noopener" href="https://github.com/apple/swift/tree/main/lib/Parse">https://github.com/apple/swift/tree/main/lib/Parse</a></p>
+<p>解析器是一个简单的递归解析器（在lib/Parse中实现），带有一个集成的、手工编码的 lexer.cpp。解析器负责生成没有任何语义或类型信息的抽象语法树（abstractsyntax Tree，AST），并针对输入源的语法问题发出警告或错误。</p>
+<h2 id="5-2-Sema-语义分析"><a href="#5-2-Sema-语义分析" class="headerlink" title="5.2 Sema 语义分析"></a>5.2 Sema 语义分析</h2><pre><code>swiftc -dump-ast -O main.swift</code></pre>
+<p><a target="_blank" rel="noopener" href="https://github.com/apple/swift/tree/master/lib/Sema">https://github.com/apple/swift/tree/master/lib/Sema</a></p>
+<p>语义分析：语义分析（在lib/Sema中实现）负责获取解析后的 AST，并将其转换为格式良好、完全检查类型的 AST 形式，附上了所有类型的信息，针对源代码中的语义问题抛出 warning 或 error。</p>
+<p>语义分析包括类型推断，如果成功，则表示可以安全地从检查类型的AST生成代码。</p>
+<h2 id="5-3-Clang-importer"><a href="#5-3-Clang-importer" class="headerlink" title="5.3 Clang importer"></a>5.3 Clang importer</h2><p>Clang importer（在lib/ClangImporter中实现）导入 Clang 模块，并将它们导出的 C OC api 映射到相应的 Swift api 中。</p>
+<p>这里的部分在 6. 混合项目中讲解。</p>
+<h2 id="5-4-raw-SIL-amp-SIL"><a href="#5-4-raw-SIL-amp-SIL" class="headerlink" title="5.4 raw SIL &amp; SIL"></a>5.4 raw SIL &amp; SIL</h2><p><a target="_blank" rel="noopener" href="https://github.com/apple/swift/blob/master/docs/SIL.rst">SIL官方设计文档</a></p>
+<p>SIL 又是一种高级的、特定于 Swift 的中间语言，适合进一步分析和优化 Swift 代码。SIL 也是一种 SSA 形式的 IR。</p>
+<pre><code>swiftc -emit-silgen [-O] main.swift</code></pre>
+<p>lib/SILGen 这个库会将类型检查的 AST 降低为所谓的 raw SIL，这是一种原始的SIL，通过以下命令再进一步进行优化，输出优化之后的 SIL.</p>
+<pre><code>swiftc -emit-sil -Onone main.swift</code></pre>
+<p>SIL 的这部分优化（在lib/Analysis、lib/ARC、lib/LoopTransforms和lib/Transforms中实现）对程序执行额外的高级、特定于 Swift 的优化，包括不限于：自动引用计数优化、非虚拟化和通用专门化等</p>
+<h2 id="5-5-IRGen-生成-IR"><a href="#5-5-IRGen-生成-IR" class="headerlink" title="5.5 IRGen 生成 IR"></a>5.5 IRGen 生成 IR</h2><p>LLVM IR 生成：IR 生成（在lib/IRGen中实现）将 SIL 降低到 LLVM IR，此时 LLVM 可以继续优化它并生成机器代码。</p>
+<h1 id="6-OC-Swift-混编中的相互识别"><a href="#6-OC-Swift-混编中的相互识别" class="headerlink" title="6. OC Swift 混编中的相互识别"></a>6. OC Swift 混编中的相互识别</h1><p>通过前面的段落我们了解，两个语言的交汇处在IR语言，那IR之前的工作就是符号的查找，之后在 linker 和应用启动的阶段做符号地址的填充。</p>
+<p>起初对几个类进行了 Swift 的重构，项目也顺利运行起来了，但是随后发现了一些问题，就是使用桥接文件让 Swift 去访问 OC 代码不能跟 CocoaPods 很好的结合，也非常不方便。</p>
+<h2 id="6-1-Swift-类互相寻找过程"><a href="#6-1-Swift-类互相寻找过程" class="headerlink" title="6.1 Swift 类互相寻找过程"></a>6.1 Swift 类互相寻找过程</h2><p>———— 没有 Header File 的 Swift 们互相寻找的过程。</p>
+<p>Swift 的类只有一个文件，而且同一个模块内的 Swift 类都可以直接互相调用。但是 OC 有一个 header 文件，通过头文件引用的方法，在预处理阶段把引用的头文件在类前面展开。</p>
+<p>Xcode 10 之前，Swiftc 在 Parse 的时候会对同模块内被当前文件引用的类文件进行扫描。</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165749718920.jpg?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<p>在这个模型的基础上，假设共有 N 个 .swift 文件，那么每个文件都会被扫描 N 次，其中只有一次编译扫描，剩下的 N-1 次都是在被引用扫描，如上图。</p>
+<p>那么 Xcode 10 之后的 swiftc 进行了优化，根据依赖关系对swift文件进行了分组，多个 Group 平行编译，这样就减少了上段中N次扫描的次数，减少重复扫描的次数。</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165756554503.jpg?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<p>Swiftc 扫描结果 interface，通过 Xcode 的 <code>Related Item</code> 中的 <code>generate interface</code> 查看：</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165725686575.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="Related Item- generate interface"></p>
+<h2 id="6-2-Swift-如何访问-OC-类"><a href="#6-2-Swift-如何访问-OC-类" class="headerlink" title="6.2 Swift 如何访问 OC 类"></a>6.2 Swift 如何访问 OC 类</h2><p>即使是一个纯 Swift 的项目这个步骤也是必然存在的，至少系统内的 UIKIT 依旧是 OC 编写的。</p>
+<p>前面的「Clang importer」省略了一部分就是关于这里的处理，Sema 之后 swiftc 调用了自身的包含的 clang 模块，进行了 C系文件–&gt; Module 的转化，并 Import 了进来。</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165766916303.jpg?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<p>Swift 访问 OC Symbols 的渠道：</p>
+<ol>
+<li>Bridging-Header.h 桥接文件</li>
+<li>外部的 C系framework –&gt; moduleMap</li>
+<li>模块内部的 C系类 –&gt; umbrella header</li>
+</ol>
+<p>说明：一般来说，模块内的 moduleMap 会把 umbrella header 作为头文件。</p>
+<h2 id="6-3-OC-访问-Swift"><a href="#6-3-OC-访问-Swift" class="headerlink" title="6.3 OC 访问 Swift"></a>6.3 OC 访问 Swift</h2><p>编写好了对用 OC 的 Swift 类，下一个问题就是修改原来模块的入口。「裂开表情」</p>
+<p>OC 访问 Swift 通用就是通过生成的 -swift.h 文件，这个文件的访问在module内外部有一些小区别。</p>
+<p>在 OC 中访问 Swift，比较简单，只需要在前面</p>
+<pre><code>#import moduleName-Swift.h</code></pre>
+<p>简单来说这个引用等同于我们在 Swift 中 import 另一个 swift 的 module。</p>
+<pre><code>import moduleName</code></pre>
+<p>这个文件中对 Module 内部暴露了所有添加了 @objc 修饰的 public &amp; internal 的 API。然鹅，internal 是默认的修饰符，所有一个 API 加上 @objc 就可以完成对 Module 内的 OC 提供。</p>
+<p>Module 作为 Framework 的形式对外暴露的时候，如果需要外部的 OC 访问，internal 就不可见了，必须修饰为 public。</p>
+<p>下图的右边部分就是 swift 类自动生成的 OBJC header，可以看到，第一行通过 SWIFT_CLASS(“_Tt10ModuleName17SwiftManglingName”) 映射了 <code>Swift Name Mangling</code> 之后的 Swift 符号。</p>
+<p>关于这个奇奇怪怪的符号：_Tt10ModuleName17SwiftManglingName，参考 <a target="_blank" rel="noopener" href="http://wiki.intra.xiaojukeji.com/display/~jieyang/Swift+Name+Mangling">Swift Name Mangling</a></p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165798873909.jpg?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<p>@objc(RenameObjcName) 这样的调用可以自定义其在 OC 中的符号。</p>
+<h3 id="6-3-1-关于-moduleName-swift-h-生成过程"><a href="#6-3-1-关于-moduleName-swift-h-生成过程" class="headerlink" title="6.3.1 关于 moduleName-swift.h 生成过程"></a>6.3.1 关于 moduleName-swift.h 生成过程</h3><p>在 Targer 的编译过程中，moduleName-swift.h 头文件是根据 Swiftmodule 文件构建出来的，在 ClangImporter 阶段完成。</p>
+<p>Swiftmodule 是什么呢？用 Clang 的话说，它相当于一个指定了 Swift 版本的 Clang 中 .h 头文件的集合，实际上就是如此，WWDC2018-415 中的这幅图说明了这一点：</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165858469695.jpg?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<p>Swiftc 通过对每一个小文件进行编译的时候产出一个一个的 .o 文件和 .swiftmodule 文件，Swiftmodule 最后会进行一次合并，合并成一个完整的文件，这个文件绑定了：</p>
+<ul>
+<li>当前编译器环境</li>
+<li>当前 module 中之前编译过程中产生的所有 .swiftmodule 文件</li>
+<li>并吐出来一个这个 moduleName-swift.h 文件</li>
+</ul>
+<h3 id="Swiftmodule-相关编译参数"><a href="#Swiftmodule-相关编译参数" class="headerlink" title="Swiftmodule 相关编译参数"></a>Swiftmodule 相关编译参数</h3><p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165861954797.jpg?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<p>通过修改这个 Install Objective-C Compatiblity Heade ，来控制编译参数SWIFT_INSTALL_OBJC_HEADER，可以控制 moduleName-swift.h 文件的生成与否。</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/03/24/16165863765989.jpg?x-oss-process=image/auto-orient,1/quality,q_90"></p>
+<p>通过修改这个值，来控制编译参数 DEFINES_MODULE，可以控制 modulemap 文件的生成与否。如果压根儿不需要 OC，确实可以关掉这个。</p>
+<h1 id="summary"><a href="#summary" class="headerlink" title="summary"></a>summary</h1><p>奇奇怪怪的无用知识又增长了呢：</p>
+<ul>
+<li>为什么 OC 一定要基于 C？</li>
+<li>为什么 NeXT 选择了 OC 语言？</li>
+<li>NeXT 使用了 GCC 作为编译器的原因</li>
+<li>Apple 使用 LLVM + Clang 替代了 GCC 的原因</li>
+</ul>
+<p>研究收获：</p>
+<ul>
+<li>认识了经典编译器的三段式理论，以及第一个成功的实践LLVM</li>
+<li>基于GCC在三段式上的失控案例，从故事中理解了模块分层接口设计是多么的重要</li>
+<li>认识 IR 的存在，以及三种表现形式</li>
+<li>IR 通过后端层层 pass 执行遍历算法来进行中间代码的优化</li>
+<li>Clang 的预处理做了哪些操作？为什么 Swift 不能使用 OC 中定义的宏？</li>
+<li>常见 Xcode 插件的实现理论基础</li>
+<li>初试 IR 和 SIL 语言基于的 SSA 理论，为后续压缩和优化提供了便利</li>
+<li>OC 引用 Swift （-swift.h 文件）的方式和原理</li>
+<li>Swift 引用 OC (.modulemap 文件)符号的方式和原理</li>
+</ul>
+<p>不足：<br>太多比较有意思的点值得深挖，后续有空继续深入研究更新后续wiki。</p>
+<h1 id="Footnotes"><a href="#Footnotes" class="headerlink" title="Footnotes:"></a>Footnotes:</h1><ol>
+<li><p><a target="_blank" rel="noopener" href="http://aosabook.org/en/llvm.html">开源应用程序的体系结构，四本开源架构书</a></p>
+<pre><code> Chris.L 亲自介绍 LLVM 的一篇书籍，这个 site 是一个众星云集的关于开源应用架构的四本开源书籍的站点</code></pre>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.sohu.com/a/190263247_662745">Swift 之父 Chris Lattner 访谈录（超长完整版）</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zh.wikiredia.com/index.php?wiki=GCC">GCC编译器中文维基百科</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c2880460c6cd">Swift的高级中间语言：SIL</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://llvm.org/docs/LangRef.html">官方文档语法参考</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://blog.llvm.org/2017/03/devirtualization-in-llvm-and-clang.html">LLVM Clang 去虚拟化</a></p>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_46163918/article/details/113109433">Cox去世</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wahy/p/4817243.html">Objective-C发展历史</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bcdaren.com/640686936541106177/blog_content.html">三大编译器gcc、llvm 和 clang</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/OOP_ObjC/Articles/ooWhy.html">官方文档回答为什么使用OC</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.51cto.com/3500841/663001">Mac OS X 背后的故事 一  - 池建强 - 公众号 : MacTalk</a><a target="_blank" rel="noopener" href="https://blog.51cto.com/3500841/663002">二</a><a target="_blank" rel="noopener" href="https://blog.51cto.com/3500841/663003">三</a></p>
+<p><a target="_blank" rel="noopener" href="https://llvm.org/docs/WritingAnLLVMPass.html">LLVM 后端 Pass: LLVM org Guides 文档</a><br><a target="_blank" rel="noopener" href="https://developer.apple.com/videos/developer-tools/swift/">WWDC Swift 视频</a></p>
+<h2 id="IR-amp-SSA相关参考"><a href="#IR-amp-SSA相关参考" class="headerlink" title="IR &amp; SSA相关参考"></a>IR &amp; SSA相关参考</h2><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Static_single_assignment_form#Converting_to_SSA">SSA wikipedia</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_29674357/article/details/78731713">LLVM SSA 介绍</a><br><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/24992774">Phi node 是如何实现它的功能的？</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/66793637">更详细的关于IR语法的文章</a></p>
+<h2 id="实体书参考"><a href="#实体书参考" class="headerlink" title="实体书参考"></a>实体书参考</h2><p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26820613/">LLVM Cookbook中文版</a><br><a target="_blank" rel="noopener" href="https://book.douban.com/subject/34802579/">LLVM编译器实战教程</a></p>
+<h2 id="Swift编译"><a href="#Swift编译" class="headerlink" title="Swift编译"></a>Swift编译</h2><p><a target="_blank" rel="noopener" href="https://swift.org/swift-compiler">https://swift.org/swift-compiler</a><br><a target="_blank" rel="noopener" href="https://developer.apple.com/videos/play/wwdc2018/415/">wwdc2018-415:Behind the Scenes of the Xcode Build Process</a></p>
+
       
+
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢 请给我一支兰州<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="archives">
+      
+      
+      
+        <div class="post-copyright">
+          <ul>
+            <li class="post-copyright-author">
+              <strong>Post author：</strong>
+              yangzai360
+            </li>
+            <li class="post-copyright-link">
+              <strong>Post link：</strong>
+              <a href="http://yangzai360.top/2021/03/10/OC2Swift02_CompileTogether/" title="Swift 与 OC 编译过程对比 - Swift_0x02">http://yangzai360.top/2021/03/10/OC2Swift02_CompileTogether/</a>
+            </li>
+            <li class="post-copyright-license">
+              <strong>Copyright Notice：</strong>
+              All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
+            </li>
+          </ul>
+        </div>
+      
+    </div>
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/06/16/OCBigManuscript01_StructGlimpse/" class="archive-article-date">
-  	<time datetime="2017-06-16T09:18:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/06/16/OCBigManuscript01_StructGlimpse/">OC Runtime 大手稿：一、整体数据结构</a>
-    </h1>
-  
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://qr.liantu.com/api.php?text=http://yangzai360.top/2021/03/10/OC2Swift02_CompileTogether/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2021/04/09/Intro_AudioRecord01/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          iOS 音频采集整理
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2021/03/05/OC2Swift01_SwiftNameMangling/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Swift 函数重载原理：Name Mangling - Swift_0x01</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%83%B3%E5%86%99%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0"><span class="toc-number">1.</span> <span class="toc-text">1. 为什么想写这篇文章</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E8%8B%B9%E6%9E%9C%E7%BC%96%E8%AF%91%E5%99%A8%E7%9A%84%E5%8F%91%E5%B1%95%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">2. 苹果编译器的发展背景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-OC-GCC"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 OC + GCC ?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-GCC-%E5%90%8E%E6%9C%9F%E6%9A%B4%E9%9C%B2%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 GCC 后期暴露的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%EF%BC%9A%E8%8B%B9%E6%9E%9C%E8%B7%9F-Linux-%E7%9A%84%E5%88%86%E9%81%93%E6%89%AC%E9%95%B3"><span class="toc-number">2.3.</span> <span class="toc-text">插入：苹果跟 Linux 的分道扬镳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-LLVM-%E7%9A%84%E8%AF%9E%E7%94%9F"><span class="toc-number">2.4.</span> <span class="toc-text">2.3 LLVM 的诞生</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-From-GCC-to-Clang"><span class="toc-number">2.5.</span> <span class="toc-text">2.4 From GCC to Clang</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-From-OC-to-Swift"><span class="toc-number">2.6.</span> <span class="toc-text">2.5 From OC to Swift</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-LLVM-%E7%AE%80%E4%BB%8B"><span class="toc-number">3.</span> <span class="toc-text">3. LLVM 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E7%BB%8F%E5%85%B8%E7%BC%96%E8%AF%91%E5%99%A8%E7%90%86%E8%AE%BA%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 经典编译器理论模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-LLVM"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 LLVM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E4%B8%AD%E9%97%B4%E4%BB%A3%E7%A0%81-IR-amp-%E7%9B%B8%E5%85%B3-LLVM-%E5%BA%93"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 中间代码 IR  &amp; 相关 LLVM 库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-IR-%E7%9A%84-Pass-%E4%BC%98%E5%8C%96"><span class="toc-number">3.4.</span> <span class="toc-text">3.4 IR 的 Pass 优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-IR-%E7%9A%84%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%B7%A5%E5%85%B7"><span class="toc-number">3.5.</span> <span class="toc-text">3.5 IR 的测试用例工具</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-C-Language-%E7%BC%96%E8%AF%91%E5%99%A8-Clang"><span class="toc-number">4.</span> <span class="toc-text">4. C Language 编译器 Clang</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E9%A2%84%E5%A4%84%E7%90%86-preprocessor"><span class="toc-number">4.1.</span> <span class="toc-text">4.1: 预处理 preprocessor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Clang-%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90-lexical-anaysis"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 Clang 词法分析 lexical anaysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-Clang-%E7%9A%84%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90-semantic-analysis"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 Clang 的语法分析 semantic analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-%E7%94%9F%E6%88%90%E4%B8%AD%E9%97%B4%E4%BB%A3%E7%A0%81-codegen"><span class="toc-number">4.4.</span> <span class="toc-text">4.4 生成中间代码 codegen</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Swift-%E7%BC%96%E8%AF%91%E5%99%A8%E8%AF%91%E7%BC%96-tfiwS"><span class="toc-number">5.</span> <span class="toc-text">5. Swift 编译器译编 tfiwS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-Parse-%E8%AF%AD%E6%B3%95%E8%A7%A3%E6%9E%90%E5%99%A8"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 Parse 语法解析器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-Sema-%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 Sema 语义分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-Clang-importer"><span class="toc-number">5.3.</span> <span class="toc-text">5.3 Clang importer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-raw-SIL-amp-SIL"><span class="toc-number">5.4.</span> <span class="toc-text">5.4 raw SIL &amp; SIL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-5-IRGen-%E7%94%9F%E6%88%90-IR"><span class="toc-number">5.5.</span> <span class="toc-text">5.5 IRGen 生成 IR</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-OC-Swift-%E6%B7%B7%E7%BC%96%E4%B8%AD%E7%9A%84%E7%9B%B8%E4%BA%92%E8%AF%86%E5%88%AB"><span class="toc-number">6.</span> <span class="toc-text">6. OC Swift 混编中的相互识别</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-Swift-%E7%B1%BB%E4%BA%92%E7%9B%B8%E5%AF%BB%E6%89%BE%E8%BF%87%E7%A8%8B"><span class="toc-number">6.1.</span> <span class="toc-text">6.1 Swift 类互相寻找过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-Swift-%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AE-OC-%E7%B1%BB"><span class="toc-number">6.2.</span> <span class="toc-text">6.2 Swift 如何访问 OC 类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-OC-%E8%AE%BF%E9%97%AE-Swift"><span class="toc-number">6.3.</span> <span class="toc-text">6.3 OC 访问 Swift</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-1-%E5%85%B3%E4%BA%8E-moduleName-swift-h-%E7%94%9F%E6%88%90%E8%BF%87%E7%A8%8B"><span class="toc-number">6.3.1.</span> <span class="toc-text">6.3.1 关于 moduleName-swift.h 生成过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Swiftmodule-%E7%9B%B8%E5%85%B3%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0"><span class="toc-number">6.3.2.</span> <span class="toc-text">Swiftmodule 相关编译参数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#summary"><span class="toc-number">7.</span> <span class="toc-text">summary</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Footnotes"><span class="toc-number">8.</span> <span class="toc-text">Footnotes:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#IR-amp-SSA%E7%9B%B8%E5%85%B3%E5%8F%82%E8%80%83"><span class="toc-number">8.1.</span> <span class="toc-text">IR &amp; SSA相关参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BD%93%E4%B9%A6%E5%8F%82%E8%80%83"><span class="toc-number">8.2.</span> <span class="toc-text">实体书参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Swift%E7%BC%96%E8%AF%91"><span class="toc-number">8.3.</span> <span class="toc-text">Swift编译</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
   
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/2/">« Prev</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 
 
@@ -390,8 +711,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

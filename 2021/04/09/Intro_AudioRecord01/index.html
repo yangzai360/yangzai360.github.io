@@ -14,18 +14,26 @@
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="扬仔的技术博客">
-<meta property="og:url" content="http://yangzai360.top/archives/page/3/index.html">
+  <meta name="description" content="音频采集相关知识，AduioToolBox 的音频采集原理，音频队列架构，iOS音频录制的过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 音频采集整理">
+<meta property="og:url" content="http://yangzai360.top/2021/04/09/Intro_AudioRecord01/index.html">
 <meta property="og:site_name" content="扬仔的技术博客">
+<meta property="og:description" content="音频采集相关知识，AduioToolBox 的音频采集原理，音频队列架构，iOS音频录制的过程。">
 <meta property="og:locale">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/04/10/16180378942778.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/04/10/16180379155712.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="og:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/04/10/16180379469482.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
+<meta property="article:published_time" content="2021-04-09T03:33:35.502Z">
+<meta property="article:modified_time" content="2021-04-10T07:48:39.210Z">
 <meta property="article:author" content="yangzai360">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/04/10/16180378942778.jpg?x-oss-process=image/auto-orient,1/quality,q_90">
   
     <link rel="alternative" href="/atom.xml" title="扬仔的技术博客" type="application/atom+xml">
   
   
-  <title>Archives | 扬仔的技术博客</title>
+  <title>iOS 音频采集整理 | 扬仔的技术博客</title>
   
   
     <link rel="icon" href="/img/favicon-32x32-yulia.png">
@@ -196,170 +204,480 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Intro_AudioRecord01" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/10/CWC02_OCRuntimeInAction_CookActuallyUsedInCooking/" class="archive-article-date">
-  	<time datetime="2020-11-09T16:09:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-10</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/10/CWC02_OCRuntimeInAction_CookActuallyUsedInCooking/">常用 Runtime 操作整理</a>
+    <h1 class="article-title" itemprop="name">
+      iOS 音频采集整理
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/10/CWC01_KitchenToolsThatCookLoves/" class="archive-article-date">
-  	<time datetime="2020-11-09T16:08:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-10</time>
+        
+          <a href="/2021/04/09/Intro_AudioRecord01/" class="archive-article-date">
+  	<time datetime="2021-04-09T03:33:35.502Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-09</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/10/CWC01_KitchenToolsThatCookLoves/">Apple 源码用到的一些数据结构</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
+        
+        
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/05/OCBigManuscript04_msgSend/" class="archive-article-date">
-  	<time datetime="2020-11-04T20:23:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/05/OCBigManuscript04_msgSend/">OC Runtime 大手稿：四、msgSend 全流程</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/11/04/OCBigManuscript02_ObjectAllocInit/" class="archive-article-date">
-  	<time datetime="2020-11-03T19:00:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/11/04/OCBigManuscript02_ObjectAllocInit/">OC Runtime 大手稿：二、实例化源码流程</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
+    <div class="article-entry" itemprop="articleBody">
       
-        </div></section>
+        <p>音频采集相关知识，AduioToolBox 的音频采集原理，音频队列架构，iOS音频录制的过程。</p>
+<a id="more"></a>
+
+<p><strong>为啥莫名其妙地开始看音频的东西？</strong><br>工作相关，梳理相关模块需要先了解原理和知识。</p>
+<h1 id="1-音频采集原理"><a href="#1-音频采集原理" class="headerlink" title="1. 音频采集原理"></a>1. 音频采集原理</h1><p>音频的采集工作涉及诸多生疏的概念，例如<code>编码</code>、<code>格式</code>、<code>缓冲</code>、<code>队列</code>等，首先需要将这来生疏的概念梳理清楚。</p>
+<p>音频的采集由三阶段工作组成，首先是录音的硬件设备，这部分我们不需要关心，系统提供的API帮我们处理了模拟信号采集到数字信号的过程。</p>
+<h3 id="1-1-音频队列-AudioQueue"><a href="#1-1-音频队列-AudioQueue" class="headerlink" title="1.1 音频队列 AudioQueue"></a>1.1 音频队列 AudioQueue</h3><p>所有的音频播放和录制都是通过操作 AudioQueue 来完成的，通过 <code>AudioQueueRef</code> 这个数据结构来表示，声明在 AudioQueue.h 中，作用如下：</p>
+<ol>
+<li>连接音频相关硬件</li>
+<li>管理内存</li>
+<li>为不同的压缩格式提供编码器</li>
+<li>录制</li>
+<li>播放</li>
+</ol>
+<p>录制的音频队列创建使用<code>AudioQueueNewInput</code>函数，播放的队列创建使用<code>AudioQueueNewOutput</code>函数。</p>
+<p>实际开发需要做的是将 AudioQueue 组合其他的 CoreAduio 接口，已实现符合我们规范的音频方案。</p>
+<p>音频队列内部包含三个重要的东西：</p>
+<ul>
+<li>多个（默认3个）音频队列缓冲区：audio queue <strong>buffers</strong></li>
+<li>一个缓冲队列：<strong>buffer queue</strong></li>
+<li>一个用户自己实现的回调函数：audio queue <strong>callback function</strong></li>
+</ul>
+<p>下图引用自<code>Audio Queue Services Programming Guide</code>，展示了这三部分的工作原理</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/04/10/16180378942778.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="音频队列架构"></p>
+<p>需要注意的是：<br>AudioQueue 向前的输入设备，默认使用的是用户连接的设备，可 iOS 默认是连接的耳机、内置麦克风等。<br>AudioQueue 向后的 CallbackFunction 之后的行为完全是用户自定义的，是上传还是发送还是存储到 disk 中用户可以自己实现，这种场景非常多，例如录音完直接发送、录音 app 保存到磁盘、噪音实时监测不需要任何数据保存等…</p>
+<h3 id="1-2-音频队列缓冲区-AudioQueueBuffer"><a href="#1-2-音频队列缓冲区-AudioQueueBuffer" class="headerlink" title="1.2 音频队列缓冲区 AudioQueueBuffer"></a>1.2 音频队列缓冲区 AudioQueueBuffer</h3><p><code>音频队列缓冲区</code>的数据结构，声明于：<code>AudioQueue.h</code>，如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">AudioQueueBuffer</span> &#123;</span></span><br><span class="line">    <span class="keyword">const</span> UInt32   mAudioDataBytesCapacity;</span><br><span class="line">    <span class="keyword">void</span> *<span class="keyword">const</span>    mAudioData; <span class="comment">// 指向缓冲区</span></span><br><span class="line">    UInt32         mAudioDataByteSize;</span><br><span class="line">    <span class="keyword">void</span>           *mUserData;</span><br><span class="line">&#125; AudioQueueBuffer;</span><br><span class="line"><span class="keyword">typedef</span> AudioQueueBuffer *AudioQueueBufferRef;</span><br></pre></td></tr></table></figure>
+
+<p>这个结构中的 mAudioData 指针指向的就是真正的缓冲区数据。</p>
+<h3 id="1-3-缓冲区队列-BufferQueue"><a href="#1-3-缓冲区队列-BufferQueue" class="headerlink" title="1.3 缓冲区队列 BufferQueue"></a>1.3 缓冲区队列 BufferQueue</h3><p>缓冲区队列就像任务队列一样，它是一个缓冲区的有序列表，这里我们需要知道，队列在实际录制中的作用。</p>
+<p>一个音频队列可以使用任意数量的缓冲区，但是一般来说我们使用3个就可以，实际的录制过程是这样的：</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/04/10/16180379155712.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="音频录制的过程"></p>
+<p>上图中步骤：</p>
+<ol>
+<li>录音设备开始用捕获的数据填充缓冲区。</li>
+<li>第一个缓冲区数据填满之后，音频队列调用了 CallBack 将其交出，然后将新的数据向下一个缓冲区进行填充。</li>
+<li>交出的缓冲区被CallBack函数处理（不一定是写入磁盘，而已程序自定义逻辑）</li>
+<li>Callback 函数交回缓冲区将其重新利用。</li>
+<li>重复第二步。</li>
+<li>重复第三步。</li>
+</ol>
+<h3 id="1-4-音频队列回调函数-Callback-function"><a href="#1-4-音频队列回调函数-Callback-function" class="headerlink" title="1.4 音频队列回调函数 Callback function"></a>1.4 音频队列回调函数 Callback function</h3><p>大部分的编程工作都是在回调函数上，因为这里是我们编写的录制组件接收数据的地方，也是调用最频繁的地方。</p>
+<p>根据缓冲区的设置，根据容量，会计算出调用回调函数的间隔时间，一般在半秒到几秒之间。</p>
+<p>另外就是向上图的过程4中记录的那样，我们需要将目前返回的这个缓冲区在函数结束的时候加入到缓冲区的末尾，方法是通过调用函数 <code>AudioQueueEnqueueBuffer</code> 实现将缓冲区加入到缓冲区的末尾。</p>
+<p>录制的 CallBack 和播放的 CallBack 结构上不同，录制音频的 CallBack 如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">AudioQueueInputCallback (</span><br><span class="line">    <span class="keyword">void</span>                               *inUserData,</span><br><span class="line">    AudioQueueRef                      inAQ,</span><br><span class="line">    AudioQueueBufferRef                inBuffer,</span><br><span class="line">    <span class="keyword">const</span> AudioTimeStamp               *inStartTime,</span><br><span class="line">    UInt32                             inNumberPacketDescriptions,</span><br><span class="line">    <span class="keyword">const</span> AudioStreamPacketDescription *inPacketDescs</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>各字段解释说明如下：</p>
+<ul>
+<li>inUserData：通常是一个穿件用来保存音频队列和它的缓冲区状态信息的自定义结构、音频文件（AudioFileID类型）代表写入的文件、以及音频格式的信息</li>
+<li>inAQ 调用回调函数的音频队列</li>
+<li>inBuffer 进入回调函数的刚刚被填满的缓冲，根据inUserData中指定的格式格式化。</li>
+<li>inStartTime 采样的参考时间，正常的录制不会使用这个参数</li>
+<li>inNumberPacketDescriptions 是inPacketDescs下一个参数中描述符的数量。加入在录制一个VBR可变比特率音频（variable bitrate），音频队列会提供这个参数给回调函数，这个参数里的值可以让程序传递给AudioFileWritePackets函数。CBR（常量比特率）的录制不使用包描述符，会将inPacketDescs设置为NULL</li>
+<li>inPacketDescs 一组对应于缓冲区采样信息的包描述符。</li>
+</ul>
+<p>播放音频时的回调函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AudioQueueOutputCallback (</span><br><span class="line">    <span class="keyword">void</span>                  *inUserData,</span><br><span class="line">    AudioQueueRef         inAQ,</span><br><span class="line">    AudioQueueBufferRef   inBuffer</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-编码和音频数据格式"><a href="#1-5-编码和音频数据格式" class="headerlink" title="1.5 编码和音频数据格式"></a>1.5 编码和音频数据格式</h3><p>采集和播放必然涉及编码解码组件，这个处理是在回调函数之前的，所以回调函数不需要处理编码解码的过程。</p>
+<p>AudioQueue 的 AudioStreamBasicDescription 中有一个域用来描述音频数据格式。当你在 MFormatID 域中指定了格式之后，音频队列就会使用相应的解码器，然后指定相应的采样率和声道数。</p>
+<p>下图是音频录制中进行音频转换的过程</p>
+<p><img src="http://yangzai360.oss-cn-beijing.aliyuncs.com/2021/04/10/16180379469482.jpg?x-oss-process=image/auto-orient,1/quality,q_90" alt="音频转换"></p>
+<ol>
+<li>程序告诉音频队列开始录制，并指定数据格式</li>
+<li>音频队列获取新的音频数据，并根据指定的格式使用编解码器对其进行转换。然后，音频队列将调用该回调，并将其交给包含适当格式的音频数据的缓冲区</li>
+<li>回调将格式化的音频数据写入磁盘。这样回调不需要了解数据格式</li>
+</ol>
+<h1 id="2-实现步骤"><a href="#2-实现步骤" class="headerlink" title="2. 实现步骤"></a>2. 实现步骤</h1><p>总览：</p>
+<ol>
+<li>定义一个自定义结构，包括状态、格式、缓冲区大小、保存路劲</li>
+<li>编写回调函数</li>
+<li>可选：指定每个缓冲区的大小</li>
+<li>填充第一步的自定义结构</li>
+<li>创建AudioQueue以及缓冲区，以及写入的文件</li>
+<li>通知AudioQueue开始录制</li>
+<li>录制完毕的时候通知停止录制，然后释放它，以及释放缓冲区</li>
+</ol>
+<h2 id="2-1-自定义结构"><a href="#2-1-自定义结构" class="headerlink" title="2.1 自定义结构"></a>2.1 自定义结构</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kNumberBuffers = <span class="number">3</span>;                            <span class="comment">// 1</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">AQRecorderState</span> &#123;</span></span><br><span class="line">    AudioStreamBasicDescription  mDataFormat;                   <span class="comment">// 2</span></span><br><span class="line">    AudioQueueRef                mQueue;                        <span class="comment">// 3</span></span><br><span class="line">    AudioQueueBufferRef          mBuffers[kNumberBuffers];      <span class="comment">// 4</span></span><br><span class="line">    AudioFileID                  mAudioFile;                    <span class="comment">// 5</span></span><br><span class="line">    UInt32                       bufferByteSize;                <span class="comment">// 6</span></span><br><span class="line">    SInt64                       mCurrentPacket;                <span class="comment">// 7</span></span><br><span class="line">    <span class="keyword">bool</span>                         mIsRunning;                    <span class="comment">// 8</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>使用这个结构来管理音频格式和音频队列状态信息。</p>
+<ol>
+<li>设置使用的音频队列缓冲区的数量，一般是3</li>
+<li>一个AudioStreamBasicDescription结构(CoreAudioTypes.h)，标识写入磁盘的音频数据的格式，音频队列也会使用它来指定mQueue域，mDataFormat域是由app业务测来初始化的。</li>
+<li>创建的音频队列AudioQueueRef</li>
+<li>音频队列所管理的音频队列缓冲区的指针数组</li>
+<li>程序录制音频时写入的文件的音频文件对象</li>
+<li>每个音频队列缓冲区的字节大小，它的值在随后的例子中的DeriveBufferSize函数中计算出来，它在音频队列创建之后，开始录制音频之前计算出来</li>
+<li>从当前音频队列缓冲区写入文件的第一个包（packet）的索引</li>
+<li>布尔值，用来指示音频队列是否在运行中</li>
+</ol>
+<h2 id="2-2-编写回调函数"><a href="#2-2-编写回调函数" class="headerlink" title="2.2 编写回调函数"></a>2.2 编写回调函数</h2><p>接下来要编写回调函数，这个回调函数做两件事情：</p>
+<ol>
+<li>接受刚刚填充好的缓冲区，取数据</li>
+<li>将这个缓冲区返回缓冲队列重新利用</li>
+</ol>
+<h3 id="2-2-1-回调函数声明"><a href="#2-2-1-回调函数声明" class="headerlink" title="2.2.1 回调函数声明"></a>2.2.1 回调函数声明</h3><p>在AudioQueue.h头文件中声明的AudioQueueInputCallback。</p>
+<p>录制用音频队列回调函数声明:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">HandleInputBuffer</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">void</span>                                *aqData,             <span class="comment">// 1</span></span></span></span><br><span class="line"><span class="function"><span class="params">    AudioQueueRef                       inAQ,                <span class="comment">// 2</span></span></span></span><br><span class="line"><span class="function"><span class="params">    AudioQueueBufferRef                 inBuffer,            <span class="comment">// 3</span></span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> AudioTimeStamp                *inStartTime,        <span class="comment">// 4</span></span></span></span><br><span class="line"><span class="function"><span class="params">    UInt32                              inNumPackets,        <span class="comment">// 5</span></span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> AudioStreamPacketDescription  *inPacketDesc        <span class="comment">// 6</span></span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>一般来说，aqData是一个自定义的数据结构，他包含了音频队列的状态信息，就像“Define a Custom Structure to Manage State.”中的一样。</li>
+<li>拥有这个回调函数的音频队列</li>
+<li>包含录制数据的音频队列缓冲区</li>
+<li>音频队列缓冲区中第一个采样的的时间（对于简单的录制，这个是不需要的）</li>
+<li>inPacketDesc域中packet descriptions的数量，如果是0，表明这是个CBR数据</li>
+<li>对于压缩数据格式如果需要packet descriptions，这个packet descriptions是由编码器产生的</li>
+</ol>
+<h3 id="2-2-2-缓冲区数据写入磁盘"><a href="#2-2-2-缓冲区数据写入磁盘" class="headerlink" title="2.2.2 缓冲区数据写入磁盘"></a>2.2.2 缓冲区数据写入磁盘</h3><p>这个回调函数使用AudioFile.h头文件中声明的AudioFileWritePackets函，</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AudioFileWritePackets (                     <span class="comment">// 1</span></span><br><span class="line">    pAqData-&gt;mAudioFile,                    <span class="comment">// 2</span></span><br><span class="line">    <span class="literal">false</span>,                                  <span class="comment">// 3</span></span><br><span class="line">    inBuffer-&gt;mAudioDataByteSize,           <span class="comment">// 4</span></span><br><span class="line">    inPacketDesc,                           <span class="comment">// 5</span></span><br><span class="line">    pAqData-&gt;mCurrentPacket,                <span class="comment">// 6</span></span><br><span class="line">    &amp;inNumPackets,                          <span class="comment">// 7</span></span><br><span class="line">    inBuffer-&gt;mAudioData                    <span class="comment">// 8</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>AudioFileWritePackets 将缓冲区的内容写入音频数据文件</li>
+<li>pAqData表示音频文件对象(类型为：AudioFileID)，pAqData变量是指向自定义结构的指针</li>
+<li>false表示在写入时不处理任何缓存</li>
+<li>正在写入的音频数据的字节数。该inBuffer变量表示音频队列传递给回调的音频队列缓冲区</li>
+<li>音频数据包描述的副本。值NULL表示不需要数据包描述（例如，对于CBR音频数据）</li>
+<li>要写入的第一个数据包的数据包索引</li>
+<li>输入时，要写入的数据包数。输出时，实际写入的数据包数</li>
+<li>将新的音频数据写入音频文件</li>
+</ol>
+<h3 id="2-2-3-缓冲区入队"><a href="#2-2-3-缓冲区入队" class="headerlink" title="2.2.3 缓冲区入队"></a>2.2.3 缓冲区入队</h3><p>使用完缓冲区的数据之后，使得缓冲区重新入队</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AudioQueueEnqueueBuffer (                    <span class="comment">// 1</span></span><br><span class="line">    pAqData-&gt;mQueue,                         <span class="comment">// 2</span></span><br><span class="line">    inBuffer,                                <span class="comment">// 3</span></span><br><span class="line">    <span class="number">0</span>,                                       <span class="comment">// 4</span></span><br><span class="line">    <span class="literal">NULL</span>                                     <span class="comment">// 5</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>该AudioQueueEnqueueBuffer函数将音频体重阈值添加到音频长度的阈值。</li>
+<li>将指定的音频队列缓冲区添加到的音频队列</li>
+<li>buffer</li>
+<li>音频为音频数据的数据中的数据包描述数。设置为，0因为此参数未使用记录</li>
+<li>数据包描述摘要，描述音频编码附件的数据。设置为，NULL因为此参数未使用记录</li>
+</ol>
+<h3 id="2-2-4-完整的-CallBack"><a href="#2-2-4-完整的-CallBack" class="headerlink" title="2.2.4 完整的 CallBack"></a>2.2.4 完整的 CallBack</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">HandleInputBuffer</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">void</span>                                 *aqData,</span></span></span><br><span class="line"><span class="function"><span class="params">    AudioQueueRef                        inAQ,</span></span></span><br><span class="line"><span class="function"><span class="params">    AudioQueueBufferRef                  inBuffer,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> AudioTimeStamp                 *inStartTime,</span></span></span><br><span class="line"><span class="function"><span class="params">    UInt32                               inNumPackets,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> AudioStreamPacketDescription   *inPacketDesc</span></span></span><br><span class="line"><span class="function"><span class="params">)</span> </span>&#123;</span><br><span class="line">    AQRecorderState *pAqData = (AQRecorderState *) aqData;               <span class="comment">// 1</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> (inNumPackets == <span class="number">0</span> &amp;&amp;                                             <span class="comment">// 2</span></span><br><span class="line">          pAqData-&gt;mDataFormat.mBytesPerPacket != <span class="number">0</span>)</span><br><span class="line">       inNumPackets =</span><br><span class="line">           inBuffer-&gt;mAudioDataByteSize / pAqData-&gt;mDataFormat.mBytesPerPacket;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> (AudioFileWritePackets (                                          <span class="comment">// 3</span></span><br><span class="line">            pAqData-&gt;mAudioFile,</span><br><span class="line">            <span class="literal">false</span>,</span><br><span class="line">            inBuffer-&gt;mAudioDataByteSize,</span><br><span class="line">            inPacketDesc,</span><br><span class="line">            pAqData-&gt;mCurrentPacket,</span><br><span class="line">            &amp;inNumPackets,</span><br><span class="line">            inBuffer-&gt;mAudioData</span><br><span class="line">        ) == noErr) &#123;</span><br><span class="line">            pAqData-&gt;mCurrentPacket += inNumPackets;                     <span class="comment">// 4</span></span><br><span class="line">    &#125;</span><br><span class="line">   <span class="keyword">if</span> (pAqData-&gt;mIsRunning == <span class="number">0</span>)                                         <span class="comment">// 5</span></span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line"> </span><br><span class="line">    AudioQueueEnqueueBuffer (                                            <span class="comment">// 6</span></span><br><span class="line">        pAqData-&gt;mQueue,</span><br><span class="line">        inBuffer,</span><br><span class="line">        <span class="number">0</span>,</span><br><span class="line">        <span class="literal">NULL</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>自定义结构的实例化</li>
+<li>数据包的数量</li>
+<li>缓冲区的内容写入文件</li>
+<li>如果成功写入数据，增加音频数据文件的数据包index值，准备写入下一个</li>
+<li>如果已经停止就返回</li>
+<li>把缓冲区入队</li>
+</ol>
+<h2 id="2-3-计算音频缓冲区大小"><a href="#2-3-计算音频缓冲区大小" class="headerlink" title="2.3 计算音频缓冲区大小"></a>2.3 计算音频缓冲区大小</h2><p>音频队列服务要求应用程序为您使用的音频队列缓冲区指定大小。下面的函数展示了一种方法。<br>它衍生出一个足够大的缓冲区来保存给定的音频数据。</p>
+<p>这里的计算考虑了要录制的音频数据格式。格式包括可能影响缓冲区大小的所有因素，例如音频通道的数量。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DeriveBufferSize</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    AudioQueueRef                audioQueue,                  <span class="comment">// 1</span></span></span></span><br><span class="line"><span class="function"><span class="params">    AudioStreamBasicDescription  &amp;ASBDescription,             <span class="comment">// 2</span></span></span></span><br><span class="line"><span class="function"><span class="params">    Float64                      seconds,                     <span class="comment">// 3</span></span></span></span><br><span class="line"><span class="function"><span class="params">    UInt32                       *outBufferSize               <span class="comment">// 4</span></span></span></span><br><span class="line"><span class="function"><span class="params">)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> maxBufferSize = <span class="number">0x50000</span>;                 <span class="comment">// 5</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">int</span> maxPacketSize = ASBDescription.mBytesPerPacket;       <span class="comment">// 6</span></span><br><span class="line">    <span class="keyword">if</span> (maxPacketSize == <span class="number">0</span>) &#123;                                 <span class="comment">// 7</span></span><br><span class="line">        UInt32 maxVBRPacketSize = <span class="keyword">sizeof</span>(maxPacketSize);</span><br><span class="line">        AudioQueueGetProperty (</span><br><span class="line">                audioQueue,</span><br><span class="line">                kAudioQueueProperty_MaximumOutputPacketSize,</span><br><span class="line">                <span class="comment">// 在 Mac OS X v10.5 应该使用：</span></span><br><span class="line">                <span class="comment">//   kAudioConverterPropertyMaximumOutputPacketSize</span></span><br><span class="line">                &amp;maxPacketSize,</span><br><span class="line">                &amp;maxVBRPacketSize</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    Float64 numBytesForTime =</span><br><span class="line">        ASBDescription.mSampleRate * maxPacketSize * seconds; <span class="comment">// 8</span></span><br><span class="line">    *outBufferSize =</span><br><span class="line">    UInt32 (numBytesForTime &lt; maxBufferSize ?</span><br><span class="line">        numBytesForTime : maxBufferSize);                     <span class="comment">// 9</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>需要操作的这个音频队列</li>
+<li>音频队列的AudioStreamBasicDescription结构</li>
+<li>为每个音频队列缓冲区指定的大小，以音频的秒数为单位</li>
+<li>输出时，每个音频队列缓冲区的大小，以字节为单位</li>
+<li>音频队列缓冲区大小的上限，以字节为单位。在本例中，上限设置为320 KB。这相当于大约5秒钟的立体声、24位音频，采样率为96 kHz</li>
+<li>对于CBR音频数据，从AudioStreamBasicDescription结构中获取（常量）数据包大小。使用此值作为最大数据包大小。该赋值的副作用是确定要记录的音频数据是CBR还是VBR。如果是VBR，则音频队列的AudioStreamBasicDescription结构将每个数据包的字节值列为0</li>
+<li>对于VBR音频数据，查询音频队列以获得估计的最大数据包大小</li>
+<li>派生缓冲区大小（以字节为单位）</li>
+<li>如果需要，将缓冲区大小限制为先前设置的上限</li>
+</ol>
+<h2 id="2-4-特殊格式元数据的处理"><a href="#2-4-特殊格式元数据的处理" class="headerlink" title="2.4 特殊格式元数据的处理"></a>2.4 特殊格式元数据的处理</h2><p>一些压缩的音频格式，需要用包含音频元数据的结构，称之为 Magic Cookies，称之为<strong>馍干</strong>。如果需要录制这种格式的音频文件，必须先处理好 MC 数据结构，先从音频队列中获取MC，然后将其添加到音频文件中，再进行录制的操作。</p>
+<p>下面这个函数就是从音频中途获取 MC 的信息，并将其替换为音频文件，代码需要在录制之前就调用此类函数，然后录制之后再调用，某些编码解码器会在录制停止的时候更新MC数据。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">OSStatus <span class="title">SetMagicCookieForFile</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    AudioQueueRef inQueue,                                      <span class="comment">// 1</span></span></span></span><br><span class="line"><span class="function"><span class="params">    AudioFileID   inFile                                        <span class="comment">// 2</span></span></span></span><br><span class="line"><span class="function"><span class="params">)</span> </span>&#123;</span><br><span class="line">    OSStatus result = noErr;                                    <span class="comment">// 3</span></span><br><span class="line">    UInt32 cookieSize;                                          <span class="comment">// 4</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> (</span><br><span class="line">            AudioQueueGetPropertySize (                         <span class="comment">// 5</span></span><br><span class="line">                inQueue,</span><br><span class="line">                kAudioQueueProperty_MagicCookie,</span><br><span class="line">                &amp;cookieSize</span><br><span class="line">            ) == noErr</span><br><span class="line">    ) &#123;</span><br><span class="line">        <span class="keyword">char</span>* magicCookie =</span><br><span class="line">            (<span class="keyword">char</span> *) <span class="built_in">malloc</span> (cookieSize);                       <span class="comment">// 6</span></span><br><span class="line">        <span class="keyword">if</span> (</span><br><span class="line">                AudioQueueGetProperty (                         <span class="comment">// 7</span></span><br><span class="line">                    inQueue,</span><br><span class="line">                    kAudioQueueProperty_MagicCookie,</span><br><span class="line">                    magicCookie,</span><br><span class="line">                    &amp;cookieSize</span><br><span class="line">                ) == noErr</span><br><span class="line">        )</span><br><span class="line">            result =    AudioFileSetProperty (                  <span class="comment">// 8</span></span><br><span class="line">                            inFile,</span><br><span class="line">                            kAudioFilePropertyMagicCookieData,</span><br><span class="line">                            cookieSize,</span><br><span class="line">                            magicCookie</span><br><span class="line">                        );</span><br><span class="line">        <span class="built_in">free</span> (magicCookie);                                     <span class="comment">// 9</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;                                              <span class="comment">// 10</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>正在用于录制的音频队列。</li>
+<li>你正在录制的音频文件。</li>
+<li>指示此函数成功或失败的结果变量。</li>
+<li>一个变量来保存神奇的cookie数据大小。</li>
+<li>从音频队列获取magic cookie的数据大小，并将其存储在cookieSize变量中。</li>
+<li>分配一个字节数组来保存魔法cookie信息。</li>
+<li>通过查询音频队列的kaudioqueproperty\u MagicCookie属性获取magic cookie。</li>
+<li>设置要录制到的音频文件的魔法cookie。AudioFileSetProperty函数在AudioFile.h头文件中声明。</li>
+<li>释放临时cookie变量的内存。</li>
+<li>返回此函数的成功或失败。</li>
+</ol>
+<h2 id="2-5-设置音频格式进行录制"><a href="#2-5-设置音频格式进行录制" class="headerlink" title="2.5 设置音频格式进行录制"></a>2.5 设置音频格式进行录制</h2><p>如何为音频体制设置音频数据格式。音频格式使用此格式记录到文件。</p>
+<p>要设置音频数据格式，需要指定：</p>
+<ul>
+<li>音频数据格式类型（例如线性PCM，AAC等）</li>
+<li>采样率（例如44.1 kHz）</li>
+<li>音频通道数（例如2，用于立体声）</li>
+<li>位深度（例如16位）</li>
+<li>每个包的帧数（例如，线性PCM每包使用一帧）</li>
+<li>音频文件类型（例如，CAF，AIFF等）</li>
+<li>文件类型所需的音频数据格式的详细信息</li>
+</ul>
+<p>下面这段代码说明了如何设置录音的音频格式，为每个属性使用固定的选项。<br>在产品代码中，通常允许用户指定音频格式的某些或所有方面。<br>无论哪种方法，目标都是填充 AQRecorderState 自定义结构的 mDataFormat 字段。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">AQRecorderState aqData;                                       <span class="comment">// 1</span></span><br><span class="line"> </span><br><span class="line">aqData.mDataFormat.mFormatID         = kAudioFormatLinearPCM; <span class="comment">// 2</span></span><br><span class="line">aqData.mDataFormat.mSampleRate       = <span class="number">44100.0</span>;               <span class="comment">// 3</span></span><br><span class="line">aqData.mDataFormat.mChannelsPerFrame = <span class="number">2</span>;                     <span class="comment">// 4</span></span><br><span class="line">aqData.mDataFormat.mBitsPerChannel   = <span class="number">16</span>;                    <span class="comment">// 5</span></span><br><span class="line">aqData.mDataFormat.mBytesPerPacket   =                        <span class="comment">// 6</span></span><br><span class="line">   aqData.mDataFormat.mBytesPerFrame =</span><br><span class="line">      aqData.mDataFormat.mChannelsPerFrame * <span class="keyword">sizeof</span> (SInt16);</span><br><span class="line">aqData.mDataFormat.mFramesPerPacket  = <span class="number">1</span>;                     <span class="comment">// 7</span></span><br><span class="line"> </span><br><span class="line">AudioFileTypeID fileType             = kAudioFileAIFFType;    <span class="comment">// 8</span></span><br><span class="line">aqData.mDataFormat.mFormatFlags =                             <span class="comment">// 9</span></span><br><span class="line">    kLinearPCMFormatFlagIsBigEndian</span><br><span class="line">    | kLinearPCMFormatFlagIsSignedInteger</span><br><span class="line">    | kLinearPCMFormatFlagIsPacked;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>创建AQRecorderState自定义结构的实例。结构的mDataFormat字段包含AudioStreamBasicDescription结构。mDataFormat字段中设置的值提供音频队列的音频格式的初始定义，该音频队列也是您录制到的文件的音频格式。在清单2-10中，您获得了一个更完整的音频格式规范，核心音频根据格式类型和文件类型提供给您</li>
+<li>将音频数据格式类型定义为线性PCM。有关可用数据格式的完整列表，请参见核心音频数据类型参考</li>
+<li>将采样率定义为44.1 kHz</li>
+<li>将通道数定义为2</li>
+<li>将每个通道的位深度定义为16</li>
+<li>将每个数据包的字节数和每帧的字节数定义为4（即，每个采样2个通道乘以2个字节）</li>
+<li>将每个数据包的帧数定义为1</li>
+<li>将文件类型定义为AIFF。有关可用文件类型的完整列表，请参见AudioFile.h头文件中的音频文件类型枚举。可以指定已安装编解码器的任何文件类型，如使用编解码器和音频数据格式中所述</li>
+<li>设置指定文件类型所需的格式标志</li>
+</ol>
+<h2 id="2-6-创建音频队列"><a href="#2-6-创建音频队列" class="headerlink" title="2.6 创建音频队列"></a>2.6 创建音频队列</h2><h3 id="2-6-1-创建音频队列"><a href="#2-6-1-创建音频队列" class="headerlink" title="2.6.1 创建音频队列"></a>2.6.1 创建音频队列</h3><p>创建好了 Callback 和 音频格式 之后，就可以创建用于录制的音频队列了，创建的时候回使用到前面步骤配置好的回调、自定义结构和音频数据格式。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AudioQueueNewInput (                              <span class="comment">// 1</span></span><br><span class="line">    &amp;aqData.mDataFormat,                          <span class="comment">// 2</span></span><br><span class="line">    HandleInputBuffer,                            <span class="comment">// 3</span></span><br><span class="line">    &amp;aqData,                                      <span class="comment">// 4</span></span><br><span class="line">    <span class="literal">NULL</span>,                                         <span class="comment">// 5</span></span><br><span class="line">    kCFRunLoopCommonModes,                        <span class="comment">// 6</span></span><br><span class="line">    <span class="number">0</span>,                                            <span class="comment">// 7</span></span><br><span class="line">    &amp;aqData.mQueue                                <span class="comment">// 8</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>AudioQueueNewInput 函数创建一个新的录制音频队列</li>
+<li>音频数据格式</li>
+<li>回调函数</li>
+<li>自定义数据结构</li>
+<li>调用回调的运行循环。使用 NULL 指定默认行为，其中回调将在音频队列内部的线程上调用。这是一个典型的用法，它允许音频队列在应用程序的用户界面线程等待用户输入停止录制时进行录制</li>
+<li>可以调用回调的运行循环模式。通常使用 kCFRunLoopCommonModes 常量</li>
+<li>保留。必须为0</li>
+<li>输出时，新分配的录制音频队列</li>
+</ol>
+<h3 id="2-6-2-从音频队列中获取完整的音频格式"><a href="#2-6-2-从音频队列中获取完整的音频格式" class="headerlink" title="2.6.2 从音频队列中获取完整的音频格式"></a>2.6.2 从音频队列中获取完整的音频格式</h3><p>音频队列中可能比 AudioStreamBasicDescription 结构更完整，尤其是对于压缩格式。要获得完整的格式描述，调用 AudioQueueGetProperty 函数。创建要录制到的音频文件时使用完整的音频格式。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">UInt32 dataFormatSize = <span class="keyword">sizeof</span> (aqData.mDataFormat);       <span class="comment">// 1</span></span><br><span class="line"> </span><br><span class="line">AudioQueueGetProperty (                                    <span class="comment">// 2</span></span><br><span class="line">    aqData.mQueue,                                         <span class="comment">// 3</span></span><br><span class="line">    kAudioQueueProperty_StreamDescription,                 <span class="comment">// 4</span></span><br><span class="line">    <span class="comment">// in Mac OS X, instead use</span></span><br><span class="line">    <span class="comment">//    kAudioConverterCurrentInputStreamDescription</span></span><br><span class="line">    &amp;aqData.mDataFormat,                                   <span class="comment">// 5</span></span><br><span class="line">    &amp;dataFormatSize                                        <span class="comment">// 6</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>获取在查询音频队列的音频数据格式时要使用的预期属性值大小</li>
+<li>AudioQueueGetProperty 函数获取音频队列中指定属性的值</li>
+<li>从中获取音频数据格式的音频队列</li>
+<li>用于获取音频队列数据格式值的属性ID</li>
+<li>输出时，以 AudioStreamBasicDescription 结构的形式从音频队列中获取的完整音频数据格式</li>
+<li>输入时，AudioStreamBasicDescription 结构的预期大小。输出时，实际大小。录制应用程序不需要使用此值</li>
+</ol>
+<h2 id="2-7-创建音频文件"><a href="#2-7-创建音频文件" class="headerlink" title="2.7 创建音频文件"></a>2.7 创建音频文件</h2><p>音频数据记录到这个文件中，需要使用自定义结构中的文件格式和文件格式规范</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CFURLRef audioFileURL =</span><br><span class="line">    CFURLCreateFromFileSystemRepresentation (            <span class="comment">// 1</span></span><br><span class="line">        <span class="literal">NULL</span>,                                            <span class="comment">// 2</span></span><br><span class="line">        (<span class="keyword">const</span> UInt8 *) filePath,                        <span class="comment">// 3</span></span><br><span class="line">        <span class="built_in">strlen</span> (filePath),                               <span class="comment">// 4</span></span><br><span class="line">        <span class="literal">false</span>                                            <span class="comment">// 5</span></span><br><span class="line">    );</span><br><span class="line"> </span><br><span class="line">AudioFileCreateWithURL (                                 <span class="comment">// 6</span></span><br><span class="line">    audioFileURL,                                        <span class="comment">// 7</span></span><br><span class="line">    fileType,                                            <span class="comment">// 8</span></span><br><span class="line">    &amp;aqData.mDataFormat,                                 <span class="comment">// 9</span></span><br><span class="line">    kAudioFileFlags_EraseFile,                           <span class="comment">// 10</span></span><br><span class="line">    &amp;aqData.mAudioFile                                   <span class="comment">// 11</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>CFURLCreateFromFileSystemRepresentation函数在CFURL.h头文件中声明，它创建一个CFURL对象，表示要记录到的文件。</li>
+<li>使用NULL（或kCFAllocatorDefault）使用当前默认内存分配器。</li>
+<li>要转换为CFURL对象的文件系统路径。在生产代码中，通常会从用户处获取filePath的值。</li>
+<li>文件系统路径中的字节数。</li>
+<li>值false表示filePath表示文件，而不是目录。</li>
+<li>AudioFile.h头文件中的AudioFileCreateWithURL函数创建新的音频文件或初始化现有文件。</li>
+<li>创建新音频文件或在现有文件的情况下初始化的URL。URL是从步骤1中的CFURLCreateFromFileSystemRepresentation派生的。</li>
+<li>新文件的文件类型。在本章的示例代码中，这是以前通过kAudioFileAIFFType文件类型常量设置为AIFF的。请参见设置录音的音频格式。</li>
+<li>将记录到文件中的音频的数据格式，指定为AudioStreamBasicDescription结构。在本章的示例代码中，还设置了录音的音频格式。</li>
+<li>如果文件已经存在，则删除该文件。</li>
+<li>输出时，表示要录制到的音频文件的音频文件对象（AudioFileID类型）。</li>
+</ol>
+<h2 id="2-8-设置音频缓冲区Size"><a href="#2-8-设置音频缓冲区Size" class="headerlink" title="2.8 设置音频缓冲区Size"></a>2.8 设置音频缓冲区Size</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DeriveBufferSize (                               <span class="comment">// 1</span></span><br><span class="line">    aqData.mQueue,                               <span class="comment">// 2</span></span><br><span class="line">    aqData.mDataFormat,                          <span class="comment">// 3</span></span><br><span class="line">    <span class="number">0.5</span>,                                         <span class="comment">// 4</span></span><br><span class="line">    &amp;aqData.bufferByteSize                       <span class="comment">// 5</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>调用前面声明的函数，计算缓冲区大小</li>
+<li>正在为其设置缓冲区大小的音频队列</li>
+<li>正在录制的文件的音频数据格式。请参见设置录音的音频格式</li>
+<li>每个音频队列缓冲区应保留的音频秒数。这里设置的半秒通常是一个不错的选择</li>
+<li>输出时，每个音频队列缓冲区的大小，以字节为单位。此值放置在音频队列的自定义结构中</li>
+</ol>
+<h2 id="2-9-准备好一组音频缓冲区"><a href="#2-9-准备好一组音频缓冲区" class="headerlink" title="2.9 准备好一组音频缓冲区"></a>2.9 准备好一组音频缓冲区</h2><p>让音频队列准备好一组音频缓冲区。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; kNumberBuffers; ++i) &#123;           <span class="comment">// 1</span></span><br><span class="line">    AudioQueueAllocateBuffer (                       <span class="comment">// 2</span></span><br><span class="line">        aqData.mQueue,                               <span class="comment">// 3</span></span><br><span class="line">        aqData.bufferByteSize,                       <span class="comment">// 4</span></span><br><span class="line">        &amp;aqData.mBuffers[i]                          <span class="comment">// 5</span></span><br><span class="line">    );</span><br><span class="line"> </span><br><span class="line">    AudioQueueEnqueueBuffer (                        <span class="comment">// 6</span></span><br><span class="line">        aqData.mQueue,                               <span class="comment">// 7</span></span><br><span class="line">        aqData.mBuffers[i],                          <span class="comment">// 8</span></span><br><span class="line">        <span class="number">0</span>,                                           <span class="comment">// 9</span></span><br><span class="line">        <span class="literal">NULL</span>                                         <span class="comment">// 10</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>循环缓冲区的数量，分配并入队每个音频队列缓冲区</li>
+<li>AudioQueueAllocateBuffer函数要求音频队列分配音频队列缓冲区</li>
+<li>执行分配并拥有缓冲区的音频队列</li>
+<li>正在分配的新音频队列缓冲区的大小（字节）。请参阅编写函数以导出录音音频队列缓冲区大小</li>
+<li>输出时，新分配的音频队列缓冲区。指向缓冲区的指针放置在音频队列使用的自定义结构中</li>
+<li>audioqueuenbuffer函数将音频队列缓冲区添加到缓冲区队列的末尾</li>
+<li>要向其添加缓冲区的音频队列</li>
+<li>正在排队的音频队列缓冲区</li>
+<li>将缓冲区入队时，此参数未使用</li>
+<li>将缓冲区入队时，此参数未使用</li>
+</ol>
+<h2 id="2-10-录制"><a href="#2-10-录制" class="headerlink" title="2.10 录制"></a>2.10 录制</h2><p>前面都已经准备好，录制的时候就会非常简单：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">aqData.mCurrentPacket = <span class="number">0</span>;                           <span class="comment">// 1</span></span><br><span class="line">aqData.mIsRunning = <span class="literal">true</span>;                            <span class="comment">// 2</span></span><br><span class="line"> </span><br><span class="line">AudioQueueStart (                                    <span class="comment">// 3</span></span><br><span class="line">    aqData.mQueue,                                   <span class="comment">// 4</span></span><br><span class="line">    <span class="literal">NULL</span>                                             <span class="comment">// 5</span></span><br><span class="line">);</span><br><span class="line"><span class="comment">// Wait, on user interface thread, until user stops the recording</span></span><br><span class="line">AudioQueueStop (                                     <span class="comment">// 6</span></span><br><span class="line">    aqData.mQueue,                                   <span class="comment">// 7</span></span><br><span class="line">    <span class="literal">true</span>                                             <span class="comment">// 8</span></span><br><span class="line">);</span><br><span class="line"> </span><br><span class="line">aqData.mIsRunning = <span class="literal">false</span>;                           <span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>将数据包索引初始化为0，以便在音频文件开始时开始录制。</li>
+<li>在自定义结构中设置标志，以指示音频队列正在运行。录制音频队列回调使用此标志。</li>
+<li>AudioQueueStart函数在自己的线程上启动音频队列。</li>
+<li>要启动的音频队列。</li>
+<li>使用NULL表示音频队列应立即开始录制。</li>
+<li>AudioQueueStop函数停止并重置录制音频队列。</li>
+<li>要停止的音频队列。</li>
+<li>使用true使用同步停止。有关同步和异步停止的说明，请参阅音频队列控制和状态。</li>
+<li>在自定义结构中设置标志，以指示音频队列未运行。</li>
+</ol>
+<h2 id="2-11-善后首位"><a href="#2-11-善后首位" class="headerlink" title="2.11 善后首位"></a>2.11 善后首位</h2><p>善后工作：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AudioQueueDispose (                                 <span class="comment">// 1</span></span><br><span class="line">    aqData.mQueue,                                  <span class="comment">// 2</span></span><br><span class="line">    <span class="literal">true</span>                                            <span class="comment">// 3</span></span><br><span class="line">);</span><br><span class="line"> </span><br><span class="line">AudioFileClose (aqData.mAudioFile);                 <span class="comment">// 4</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>AudioQueueDispose 处理音频队列和所有相关的资源，包括所有缓冲区</li>
+<li>需要处理的音频队列</li>
+<li>true 表示 synchronously 立即回收</li>
+<li>管理用于录制的文件，这个 AudioFileClose 函数在 AudioFile.h 头文件中声明</li>
+</ol>
+<h1 id="3-Footnote"><a href="#3-Footnote" class="headerlink" title="3. Footnote"></a>3. Footnote</h1><p><a target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/MusicAudio/Conceptual/AudioQueueProgrammingGuide/Introduction/Introduction.html">Audio Queue Services Programming Guide</a></p>
+
       
+
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢 请给我一支兰州<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="archives">
+      
+      
+      
+        <div class="post-copyright">
+          <ul>
+            <li class="post-copyright-author">
+              <strong>Post author：</strong>
+              yangzai360
+            </li>
+            <li class="post-copyright-link">
+              <strong>Post link：</strong>
+              <a href="http://yangzai360.top/2021/04/09/Intro_AudioRecord01/" title="iOS 音频采集整理">http://yangzai360.top/2021/04/09/Intro_AudioRecord01/</a>
+            </li>
+            <li class="post-copyright-license">
+              <strong>Copyright Notice：</strong>
+              All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
+            </li>
+          </ul>
+        </div>
+      
+    </div>
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/06/16/OCBigManuscript01_StructGlimpse/" class="archive-article-date">
-  	<time datetime="2017-06-16T09:18:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/06/16/OCBigManuscript01_StructGlimpse/">OC Runtime 大手稿：一、整体数据结构</a>
-    </h1>
-  
+    
+    
+    <div class="article-info article-info-index">
+      
+      
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://qr.liantu.com/api.php?text=http://yangzai360.top/2021/04/09/Intro_AudioRecord01/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2021/03/10/OC2Swift02_CompileTogether/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Swift 与 OC 编译过程对比 - Swift_0x02</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E9%9F%B3%E9%A2%91%E9%87%87%E9%9B%86%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">1. 音频采集原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E9%9F%B3%E9%A2%91%E9%98%9F%E5%88%97-AudioQueue"><span class="toc-number">1.0.1.</span> <span class="toc-text">1.1 音频队列 AudioQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E9%9F%B3%E9%A2%91%E9%98%9F%E5%88%97%E7%BC%93%E5%86%B2%E5%8C%BA-AudioQueueBuffer"><span class="toc-number">1.0.2.</span> <span class="toc-text">1.2 音频队列缓冲区 AudioQueueBuffer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E7%BC%93%E5%86%B2%E5%8C%BA%E9%98%9F%E5%88%97-BufferQueue"><span class="toc-number">1.0.3.</span> <span class="toc-text">1.3 缓冲区队列 BufferQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E9%9F%B3%E9%A2%91%E9%98%9F%E5%88%97%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0-Callback-function"><span class="toc-number">1.0.4.</span> <span class="toc-text">1.4 音频队列回调函数 Callback function</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-%E7%BC%96%E7%A0%81%E5%92%8C%E9%9F%B3%E9%A2%91%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.0.5.</span> <span class="toc-text">1.5 编码和音频数据格式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.</span> <span class="toc-text">2. 实现步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%93%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 自定义结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E7%BC%96%E5%86%99%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 编写回调函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.2.1 回调函数声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-2-%E7%BC%93%E5%86%B2%E5%8C%BA%E6%95%B0%E6%8D%AE%E5%86%99%E5%85%A5%E7%A3%81%E7%9B%98"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.2.2 缓冲区数据写入磁盘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-3-%E7%BC%93%E5%86%B2%E5%8C%BA%E5%85%A5%E9%98%9F"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.2.3 缓冲区入队</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-4-%E5%AE%8C%E6%95%B4%E7%9A%84-CallBack"><span class="toc-number">2.2.4.</span> <span class="toc-text">2.2.4 完整的 CallBack</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E8%AE%A1%E7%AE%97%E9%9F%B3%E9%A2%91%E7%BC%93%E5%86%B2%E5%8C%BA%E5%A4%A7%E5%B0%8F"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 计算音频缓冲区大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E7%89%B9%E6%AE%8A%E6%A0%BC%E5%BC%8F%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 特殊格式元数据的处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-%E8%AE%BE%E7%BD%AE%E9%9F%B3%E9%A2%91%E6%A0%BC%E5%BC%8F%E8%BF%9B%E8%A1%8C%E5%BD%95%E5%88%B6"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 设置音频格式进行录制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-%E5%88%9B%E5%BB%BA%E9%9F%B3%E9%A2%91%E9%98%9F%E5%88%97"><span class="toc-number">2.6.</span> <span class="toc-text">2.6 创建音频队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-1-%E5%88%9B%E5%BB%BA%E9%9F%B3%E9%A2%91%E9%98%9F%E5%88%97"><span class="toc-number">2.6.1.</span> <span class="toc-text">2.6.1 创建音频队列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-2-%E4%BB%8E%E9%9F%B3%E9%A2%91%E9%98%9F%E5%88%97%E4%B8%AD%E8%8E%B7%E5%8F%96%E5%AE%8C%E6%95%B4%E7%9A%84%E9%9F%B3%E9%A2%91%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.6.2.</span> <span class="toc-text">2.6.2 从音频队列中获取完整的音频格式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-%E5%88%9B%E5%BB%BA%E9%9F%B3%E9%A2%91%E6%96%87%E4%BB%B6"><span class="toc-number">2.7.</span> <span class="toc-text">2.7 创建音频文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-%E8%AE%BE%E7%BD%AE%E9%9F%B3%E9%A2%91%E7%BC%93%E5%86%B2%E5%8C%BASize"><span class="toc-number">2.8.</span> <span class="toc-text">2.8 设置音频缓冲区Size</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-9-%E5%87%86%E5%A4%87%E5%A5%BD%E4%B8%80%E7%BB%84%E9%9F%B3%E9%A2%91%E7%BC%93%E5%86%B2%E5%8C%BA"><span class="toc-number">2.9.</span> <span class="toc-text">2.9 准备好一组音频缓冲区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-10-%E5%BD%95%E5%88%B6"><span class="toc-number">2.10.</span> <span class="toc-text">2.10 录制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-11-%E5%96%84%E5%90%8E%E9%A6%96%E4%BD%8D"><span class="toc-number">2.11.</span> <span class="toc-text">2.11 善后首位</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Footnote"><span class="toc-number">3.</span> <span class="toc-text">3. Footnote</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
   
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/2/">« Prev</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 
 
@@ -390,8 +708,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
